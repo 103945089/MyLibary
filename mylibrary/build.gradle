@@ -1,0 +1,71 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:design:27.1.1'
+    implementation  'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
+    implementation 'com.youth.banner:banner:1.4.9'
+    //网络框架okgo https://github.com/jeasonlzy/okhttp-OkGo
+    implementation 'com.lzy.net:okgo:3.0.4'
+    //log工具 https://github.com/orhanobut/logger
+    implementation 'com.orhanobut:logger:2.1.1'
+    //fastjson https://github.com/alibaba/fastjson
+    implementation 'com.alibaba:fastjson:1.2.44'
+    implementation files('libs/gson-2.3.jar')
+
+    configurations {
+        all*.exclude group: 'com.google.code.gson'
+    }
+
+    implementation 'com.android.support:multidex:1.0.0'
+    /*Glide原生图片加载*/
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'jp.wasabeef:glide-transformations:2.0.0'
+
+    implementation 'com.tenma.ventures:tm_core:1.0.18'
+    implementation 'com.tenma.ventures:tm_share_ss:1.0.18'
+
+    /*GSY*/
+    //完整版引入
+    implementation 'com.shuyu:gsyVideoPlayer-java:5.0.2'
+    implementation 'com.shuyu:gsyVideoPlayer-ex_so:5.0.2'
+
+    implementation "com.github.ctiao:DanmakuFlameMaster:0.9.16"
+
+}

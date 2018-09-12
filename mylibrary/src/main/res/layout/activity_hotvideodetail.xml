@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <VideoView
+            android:id="@+id/hotvideo"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            android:text="社科院回应高铁“霸座男一事：男子系13级研究生 并非工作人员。"
+            android:textColor="@color/text_black"
+            android:textSize="16sp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_time"
+                android:text="2018/05/06"
+                android:textColor="@color/text_grey"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="14sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="大屌萝莉"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:textSize="14sp"
+                android:padding="5dp"
+                android:textColor="@color/text_grey"
+                android:layout_marginRight="5dp"/>
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/list_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/text_grey"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:background="@color/text_grey"
+                android:hint="写评论"
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="6dp"/>
+
+            <TextView
+                android:id="@+id/tv_comment_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:gravity="center"
+                android:textColor="@color/text_grey"
+                android:text="发布"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bottom_initcocler">#ff999999</color>
+    <color name="red">#ffff1c4d</color>
+    <color name="gray_tra">#fff0f0f0</color>
+    <color name="colorPrimary">#4CC4FA</color>
+    <color name="colorPrimaryDark">#4CC4FA</color>
+    <color name="colorAccent">#4CC4FA</color>
+    <color name="bottom_title">#ffff1c4d</color>
+    <color name="forget_red">#ffff1e4e</color>
+    <color name="login_red">#ffff285f</color>
+    <color name="white">#ffffffff</color>
+    <color name="text_black">#333333</color>
+    <color name="text_grey">#666666</color>
+    <color name="white_grey">#f2f2f2</color>
+    <color name="price_red">#F93934</color>
+    <color name="half_transparent">#77000000</color>
+    <color name="bule">#4CC4FA </color>
+    <color name="vailde_bule">#14ADF2 </color>
+    <color name="gry_white">#F7F6F6 </color>
+    <color name="tab_bg">#3A474D </color>
+    <color name="transparent">#00000000</color>
+
+</resources>

@@ -9,11 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+
+import java.text.ParseException;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.bean.Search;
+import shopping.hlhj.com.mylibrary.db.DBHelper;
 
 public class SearchResultAdapter extends BaseAdapter {
 
@@ -65,8 +68,14 @@ public class SearchResultAdapter extends BaseAdapter {
         }
         Glide.with(context).load(searchBeanList.get(position).cover).into(holder.searchImg);
         holder.searchtitle.setText(searchBeanList.get(position).title);
-        holder.searchType.setText(searchBeanList.get(position).type + "");
-        holder.searchTime.setText(JavaUtils.StampstoTime(String.valueOf(searchBeanList.get(position).create_time), "HH:mm"));
+        holder.searchType.setText(searchBeanList.get(position).relese);
+        String s = JavaUtils.StampstoTime(String.valueOf(searchBeanList.get(position).create_time), "yyyy-MM-dd HH:mm:ss");
+        try {
+            String format = JavaUtils.format(s);
+            holder.searchTime.setText(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return convertView;
     }
 

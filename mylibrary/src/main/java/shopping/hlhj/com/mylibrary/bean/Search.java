@@ -65,6 +65,7 @@ public class Search implements Serializable {
             public String cover;
             public String video_url;
             public int create_time;
+            public String relese;
             public int type;
 
             @Override
@@ -75,8 +76,17 @@ public class Search implements Serializable {
                         ", cover='" + cover + '\'' +
                         ", video_url='" + video_url + '\'' +
                         ", create_time=" + create_time +
+                        ", relese='" + relese + '\'' +
                         ", type=" + type +
                         '}';
+            }
+
+            public String getRelese() {
+                return relese;
+            }
+
+            public void setRelese(String relese) {
+                this.relese = relese;
             }
 
             public int getId() {

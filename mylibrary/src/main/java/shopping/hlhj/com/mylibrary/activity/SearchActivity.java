@@ -28,24 +28,25 @@ import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.SearchAdapter;
 import shopping.hlhj.com.mylibrary.adapter.SearchResultAdapter;
 import shopping.hlhj.com.mylibrary.bean.Search;
+import shopping.hlhj.com.mylibrary.db.DBHelper;
 import shopping.hlhj.com.mylibrary.fragment.FragmentIndexChoice;
 import shopping.hlhj.com.mylibrary.presenter.SearchPresenter;
 
-public class SearchActivity extends BaseActivity<SearchPresenter> implements SearchPresenter.MyGridView{
+public class SearchActivity extends BaseActivity<SearchPresenter> implements SearchPresenter.MyGridView {
 
     private EditText etSearch;
     private ImageView imgBtnBack;
-    private TextView tvSearch,tvDel;
-    private LinearLayout llSearch,llSearchHot,llSearchHistroy;
+    private TextView tvSearch;
+    private LinearLayout llSearch, llSearchHot, llSearchHistroy;
     private RelativeLayout rlSearchHistroy;
     private FrameLayout fmSearchNomal;
-    private GridView gridView_histroy,gridView_hot;
+    private GridView gridView_histroy, gridView_hot;
     private GridView gdSearch;
     private SpringView spView;
-    private SearchAdapter searchAdapter;
     private SearchResultAdapter resultAdapter;
     private String string;
     private int page = 1;
+    private DBHelper dbHelper;
 
     @Override
     protected int getContentResId() {
@@ -64,7 +65,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         imgBtnBack = findViewById(R.id.btExit);
         etSearch = findViewById(R.id.etSearch);
         tvSearch = findViewById(R.id.tvSearch);
-        tvDel = findViewById(R.id.tv_del);
         llSearch = findViewById(R.id.ll_search);
         llSearchHot = findViewById(R.id.ll_search_hot);
         llSearchHistroy = findViewById(R.id.ll_search_histroy);
@@ -79,14 +79,20 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     protected void initData() {
+        dbHelper = new DBHelper(this);
+        dbHelper.getWritableDatabase();
         List<String> strings = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             strings.add("关键字");
         }
-        searchAdapter = new SearchAdapter(this,strings);
-        gridView_histroy.setAdapter(searchAdapter);
-        gridView_hot.setAdapter(searchAdapter);
-
+        List<String> stringList = dbHelper.findAll();
+        if (stringList == null || stringList.size() == 0) {
+            llSearchHistroy.setVisibility(View.GONE);
+        }
+        SearchAdapter hotAdapter = new SearchAdapter(this, strings, false);
+        SearchAdapter historyAdapter = new SearchAdapter(this, stringList, true);
+        gridView_histroy.setAdapter(historyAdapter);
+        gridView_hot.setAdapter(hotAdapter);
     }
 
     @Override
@@ -102,25 +108,20 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             @Override
             public void onClick(View v) {
                 string = etSearch.getText().toString();
-                if (null == string || "" == string || TextUtils.isEmpty(string)){
+                if (null == string || "" == string || TextUtils.isEmpty(string)) {
                     fmSearchNomal.setVisibility(View.VISIBLE);
                     llSearch.setVisibility(View.GONE);
-                }else {
+                } else {
                     //网络请求
                     setPresenter(new SearchPresenter(SearchActivity.this));
-                    getPresenter().loadSearchData(SearchActivity.this,string,page);
+                    getPresenter().loadSearchData(SearchActivity.this, string, page);
+                    //TODO 重复添加
+                    dbHelper.add(string);
                 }
             }
         });
         //先判断数据库是否为空在来展示
         rlSearchHistroy.setVisibility(View.VISIBLE);
-        tvDel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //清空历史记录数据库
-               llSearchHistroy.setVisibility(View.GONE);
-            }
-        });
         spView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
@@ -129,15 +130,15 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
             @Override
             public void onLoadmore() {
-                page ++;
+                page++;
             }
         });
     }
 
     @Override
     public void loadSuccess(List<Search.SearchData.SearchBean> searchBeanList) {
-        if (searchBeanList != null && searchBeanList.size() > 0){
-            resultAdapter = new SearchResultAdapter(this,searchBeanList);
+        if (searchBeanList != null && searchBeanList.size() > 0) {
+            resultAdapter = new SearchResultAdapter(this, searchBeanList);
             gdSearch.setAdapter(resultAdapter);
             gdSearch.setVisibility(View.VISIBLE);
             fmSearchNomal.setVisibility(View.GONE);

@@ -5,12 +5,11 @@
     android:scrollbars="none"
     android:orientation="vertical">
 
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
         <ScrollView
             android:id="@+id/scroller"
             android:layout_width="match_parent"
@@ -21,10 +20,6 @@
 
         </ScrollView>
 
-            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
+    </com.liaoinstan.springview.widget.SpringView>
 
 </RelativeLayout>

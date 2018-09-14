@@ -1,6 +1,7 @@
 package shopping.hlhj.com.mylibrary.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,20 +11,24 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.activity.SearchActivity;
 import shopping.hlhj.com.mylibrary.adapter.IndexAdapter;
 
 public class FragmentIndex extends Fragment{
 
     private TabLayout tabLayouts;
     private ViewPager mainviewPager;
+    private ImageView img_search;
     private Context context;
     private View rootView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_index,null);
+        context = getActivity();
         initView();
         initData();
         return rootView;
@@ -32,6 +37,7 @@ public class FragmentIndex extends Fragment{
     private void initView() {
         tabLayouts = rootView.findViewById(R.id.main_tab);
         mainviewPager = rootView.findViewById(R.id.main_viewpager);
+        img_search = rootView.findViewById(R.id.img_search);
         tabLayouts.setupWithViewPager(mainviewPager);
         tabLayouts.setTabMode(TabLayout.MODE_FIXED);
         IndexAdapter adapter = new IndexAdapter(getChildFragmentManager());
@@ -43,7 +49,12 @@ public class FragmentIndex extends Fragment{
     }
 
     private void initData() {
-
+        img_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context,SearchActivity.class));
+            }
+        });
     }
 
     @Override

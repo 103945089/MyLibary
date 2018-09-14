@@ -9,6 +9,7 @@
         android:id="@+id/img_special"
         android:layout_width="220dp"
         android:layout_height="140dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:layout_margin="3dp"/>
 
 </LinearLayout>

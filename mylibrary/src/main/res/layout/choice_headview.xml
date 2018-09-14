@@ -4,6 +4,7 @@
     xmlns:app1="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     app:ignore="NamespaceTypo">
 
@@ -14,6 +15,7 @@
         android:background="@color/text_black"
         app1:indicator_height="8dp"
         app1:indicator_width="8dp"
+        android:layout_gravity="center"
         app:is_auto_play="true" />
 
     <View
@@ -68,38 +70,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <VideoView
-                android:id="@+id/video_xinwen"
+            <ImageView
+                android:id="@+id/img_xinwen"
                 android:layout_width="match_parent"
-                android:layout_height="320dp" />
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/img_item1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1"
-                    android:background="@color/bule" />
+                <GridView
+                    android:id="@+id/grid_live"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:numColumns="3"/>
 
-                <ImageView
-                    android:id="@+id/img_item2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1"
-                    android:background="@color/red" />
-
-                <ImageView
-                    android:id="@+id/img_item3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:background="@color/tab_bg" />
             </LinearLayout>
 
             <RelativeLayout
@@ -289,8 +276,8 @@
             <ImageView
                 android:id="@+id/img_tuijian"
                 android:layout_width="match_parent"
-                android:layout_height="420dp"
-                android:background="@color/bule" />
+                android:layout_height="220dp"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/tv_tuijian_title"
@@ -302,12 +289,13 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_tuijian_type"
+                android:id="@+id/tv_tuijian_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="萌萌快跑 | 30分钟前"
                 android:textColor="@color/text_grey"
                 android:textSize="12sp" />
+
         </LinearLayout>
 
     </LinearLayout>

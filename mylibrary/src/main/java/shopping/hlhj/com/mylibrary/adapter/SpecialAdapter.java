@@ -33,6 +33,7 @@ public class SpecialAdapter extends RecyclerView.Adapter<SpecialAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Glide.with(context).load(specialList.get(position).channel_thumb).into(holder.img_special);
+        holder.ll_special.setTag(position);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class SpecialAdapter extends RecyclerView.Adapter<SpecialAdapter.ViewHold
             super(itemView);
             img_special = itemView.findViewById(R.id.img_special);
             ll_special = itemView.findViewById(R.id.ll_special);
-            img_special.setOnClickListener(onClickListener);
+            ll_special.setOnClickListener(onClickListener);
         }
     }
 

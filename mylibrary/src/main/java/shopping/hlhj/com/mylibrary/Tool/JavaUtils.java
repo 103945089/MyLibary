@@ -86,6 +86,7 @@ public class JavaUtils {
 
         return result;
     }
+
     public static boolean isContainChinese(String str) {
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(str);
@@ -118,7 +119,7 @@ public class JavaUtils {
     /**
      * @param time
      * @param patten yyyy/MM/dd HH:mm:ss
-     * @return  将时间戳转成时间
+     * @return 将时间戳转成时间
      */
     public static String StampstoTime(String time, String patten) {
         String t = new SimpleDateFormat(patten).format(new Date(Long.parseLong(time) * 1000L));
@@ -131,6 +132,95 @@ public class JavaUtils {
         Long timestamp = Long.parseLong(timestampString) * 1000;
         String date = new SimpleDateFormat(formats, Locale.CHINA).format(new Date(timestamp));
         return date;
+    }
+
+
+    public static final SimpleDateFormat FORMAT_TIMESTAMP = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd");
+
+    /********* 单位：毫秒 ********/
+
+    private static final long ONE_MINUTE = 60000L; // 一分钟
+    private static final long ONE_HOUR = 3600000L; // 一小时
+    private static final long ONE_DAY = 86400000L; // 一天
+    private static final long ONE_MONTH = 2592000000L; // 一个月（按30天计算）
+    private static final long ONE_YEAR = 31104000000L; // 一年
+
+    private static final String ONE_SECOND_AGO = "秒前";
+    private static final String ONE_MINUTE_AGO = "分钟前";
+    private static final String ONE_HOUR_AGO = "小时前";
+    private static final String ONE_DAY_AGO = "天前";
+    private static final String ONE_MONTH_AGO = "月前";
+    private static final String ONE_YEAR_AGO = "年前";
+
+    /**
+     * 获取刚刚、n秒前、n分钟前、n小时前、昨天、前天、n天前、n月前、n年前
+     *
+     * @param dateStr 日期字符串
+     * @return 格式化后串
+     * @throws ParseException
+     */
+    public static String format(String dateStr) throws ParseException {
+        Date date;
+        if (dateStr.contains(" ")) {
+            date = FORMAT_TIMESTAMP.parse(dateStr);
+        } else {
+            date = FORMAT_DATE.parse(dateStr);
+        }
+        long delta = new Date().getTime() - date.getTime();
+        if (delta < ONE_MINUTE) {
+            long seconds = toSeconds(delta);
+            return seconds <= 0 ? "刚刚" : seconds + ONE_SECOND_AGO;
+        }
+        if (delta < ONE_HOUR) {
+            long minutes = toMinutes(delta);
+            return (minutes <= 0 ? 1 : minutes) + ONE_MINUTE_AGO;
+        }
+        if (delta < ONE_DAY) {
+            long hours = toHours(delta);
+            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
+        }
+        if (delta < 2L * ONE_DAY) {
+            return "昨天";
+        }
+        if (delta < 3L * ONE_DAY) {
+            return "前天";
+        }
+        if (delta < ONE_MONTH) {
+            long days = toDays(delta);
+            return (days <= 0 ? 1 : days) + ONE_DAY_AGO;
+        }
+        if (delta < ONE_YEAR) {
+            long months = toMonths(delta);
+            return (months <= 0 ? 1 : months) + ONE_MONTH_AGO;
+        } else {
+            long years = toYears(delta);
+            return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
+        }
+    }
+
+    private static long toSeconds(long date) {
+        return date / 1000L;
+    }
+
+    private static long toMinutes(long date) {
+        return toSeconds(date) / 60L;
+    }
+
+    private static long toHours(long date) {
+        return toMinutes(date) / 60L;
+    }
+
+    private static long toDays(long date) {
+        return toHours(date) / 24L;
+    }
+
+    private static long toMonths(long date) {
+        return toDays(date) / 30L;
+    }
+
+    private static long toYears(long date) {
+        return toMonths(date) / 12L;
     }
 
 
@@ -162,37 +252,36 @@ public class JavaUtils {
     }
 
 
-
-    public static String getSpecifiedDayBefore(String specifiedDay, int days){
+    public static String getSpecifiedDayBefore(String specifiedDay, int days) {
         //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         Calendar c = Calendar.getInstance();
-        Date date=null;
+        Date date = null;
         try {
             date = new SimpleDateFormat("yyyy-MM-dd").parse(specifiedDay);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         c.setTime(date);
-        int day=c.get(Calendar.DATE);
-        c.set(Calendar.DATE,day-days);
+        int day = c.get(Calendar.DATE);
+        c.set(Calendar.DATE, day - days);
 
-        String dayBefore=new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        String dayBefore = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         return dayBefore;
     }
 
-    public static String getSpecifiedDayAfter(String specifiedDay, int days){
+    public static String getSpecifiedDayAfter(String specifiedDay, int days) {
         Calendar c = Calendar.getInstance();
-        Date date=null;
+        Date date = null;
         try {
             date = new SimpleDateFormat("yyyy-MM-dd").parse(specifiedDay);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         c.setTime(date);
-        int day=c.get(Calendar.DATE);
-        c.set(Calendar.DATE,day+days);
+        int day = c.get(Calendar.DATE);
+        c.set(Calendar.DATE, day + days);
 
-        String dayAfter=new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         return dayAfter;
     }
 
@@ -225,9 +314,9 @@ public class JavaUtils {
     }
 
     /**
-     * @param ss  整体内容
-     * @param needReplice  需要被替换的标识
-     * @param type 替换的标识
+     * @param ss          整体内容
+     * @param needReplice 需要被替换的标识
+     * @param type        替换的标识
      * @return 返回新的字符串
      */
     public static String repliceElementToAnotherElement(String ss, String needReplice, String type) {
@@ -254,8 +343,6 @@ public class JavaUtils {
     }
 
 
-
-
     /**
      * @param array
      * @return 将String数组转String类型集合并返回
@@ -263,7 +350,7 @@ public class JavaUtils {
     public static List<String> getArrayStringToList(String array[]) {
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < array.length; i++) {
-            if (null!=array[i]&&!"".equals(array[i].trim())) {
+            if (null != array[i] && !"".equals(array[i].trim())) {
                 list.add(array[i].trim());
             }
         }
@@ -284,35 +371,37 @@ public class JavaUtils {
         }
         return list;
     }
+
     /**
      * @param list 装有String类型的集合
      * @return 将集合String拼接成字符串并返回
      */
     public static String getStringFromListSting(List<String> list) {
-        String endString="";
-        if(list!=null&&list.size()>0){
+        String endString = "";
+        if (list != null && list.size() > 0) {
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < list.size(); i++) {
                 sb.append(list.get(i)).append(",");
             }
             endString = sb.substring(0, sb.toString().length() - 1);
-            System.out.println("endString"+endString);
+            System.out.println("endString" + endString);
         }
         return endString;
     }
+
     /**
      * @param list 装有Integer类型的集合
      * @return 将集合String拼接成字符串并返回
      */
     public static String getIntegerFromListSting(List<Integer> list) {
-        String endString="";
-        if(list!=null&&list.size()>0){
+        String endString = "";
+        if (list != null && list.size() > 0) {
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < list.size(); i++) {
                 sb.append(list.get(i)).append(",");
             }
             endString = sb.substring(0, sb.toString().length() - 1);
-            System.out.println("endInteger"+endString);
+            System.out.println("endInteger" + endString);
         }
         return endString;
     }
@@ -322,10 +411,10 @@ public class JavaUtils {
      * @param list
      * @return 将字符数集合转数组
      */
-    public static String[] getArrayToList(List<String> list){
-        String[] arrary= new String[list.size()];
-        for (int i=0;i<list.size();i++){
-            arrary[i]=list.get(i);
+    public static String[] getArrayToList(List<String> list) {
+        String[] arrary = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            arrary[i] = list.get(i);
         }
         return arrary;
     }
@@ -334,15 +423,15 @@ public class JavaUtils {
      * @param list
      * @return 去掉集合中 ""的新集合
      */
-    public static List<String> splitSpaceList(List<String> list){
-        List<String> newList= new ArrayList<String>();
-        if(list!=null){
-            for(int i=0;i<list.size();i++){
-                if(!"".equals(list.get(i))){
+    public static List<String> splitSpaceList(List<String> list) {
+        List<String> newList = new ArrayList<String>();
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                if (!"".equals(list.get(i))) {
                     newList.add(list.get(i));
                 }
             }
-        }else{
+        } else {
             System.out.println("集合为空");
         }
         return newList;
@@ -359,52 +448,53 @@ public class JavaUtils {
             sb.append(list.get(i)).append(bufftype);
         }
         String endString = sb.substring(0, sb.toString().length() - 1);
-        System.out.println("endString"+endString);
+        System.out.println("endString" + endString);
         return endString;
     }
 
     /**
      * @param arr 字符數組
-     * @return  将原来数组中含有空的内容去掉赋予给新的数组(String 数组)并返回
+     * @return 将原来数组中含有空的内容去掉赋予给新的数组(String 数组)并返回
      */
-    public static String[] getNewStringArray(String arr[]){
-        int length=arr.length;
+    public static String[] getNewStringArray(String arr[]) {
+        int length = arr.length;
         //第一个循环只是为了确定新数组的长度
-        for(int i=0;i<arr.length;i++){
-            if("".equals(arr[i])){
-                if(null==arr[i]){
+        for (int i = 0; i < arr.length; i++) {
+            if ("".equals(arr[i])) {
+                if (null == arr[i]) {
                     --length;
                 }
-            }else{
+            } else {
             }
         }
         //第二个是给新数组赋值
         String newArray[] = new String[length];
-        for(int i=0;i<arr.length;i++){
-            if(!"".equals(arr[i])&&null!=arr[i]){
-                newArray[i]=arr[i];
+        for (int i = 0; i < arr.length; i++) {
+            if (!"".equals(arr[i]) && null != arr[i]) {
+                newArray[i] = arr[i];
             }
         }
         return newArray;
     }
+
     /**
      * @param arr int數組
-     * @return   //将原来数组中含有空的内容去掉赋予给新的数组(int类型 数组)并返回
+     * @return //将原来数组中含有空的内容去掉赋予给新的数组(int类型 数组)并返回
      */
-    public static int[] getNewIntArray(int arr[]){
-        int length=arr.length;
+    public static int[] getNewIntArray(int arr[]) {
+        int length = arr.length;
         //第一个循环只是为了确定新数组的长度
-        for(int i=0;i<arr.length;i++){
-            if(!"".equals(arr[i])){
-            }else{
+        for (int i = 0; i < arr.length; i++) {
+            if (!"".equals(arr[i])) {
+            } else {
                 length--;
             }
         }
         //第二个是给新数组赋值
         int newArray[] = new int[length];
-        for(int i=0;i<arr.length;i++){
-            if(!"".equals(arr[i])){
-                newArray[i]=arr[i];
+        for (int i = 0; i < arr.length; i++) {
+            if (!"".equals(arr[i])) {
+                newArray[i] = arr[i];
             }
         }
         return newArray;
@@ -412,11 +502,12 @@ public class JavaUtils {
 
     /**
      * 这里使用LinkedHashMap 没有使用hashMap的原因是为了保证插入值的顺序是一直的
+     *
      * @param map Map<Integer,String> map
      * @return 返回一个map中value的值的集合
      */
-    public static List<String> forEachMapToList(LinkedHashMap<Integer,String> map){
-        List<String> newList= new ArrayList<String>();
+    public static List<String> forEachMapToList(LinkedHashMap<Integer, String> map) {
+        List<String> newList = new ArrayList<String>();
         Iterator<Map.Entry<Integer, String>> entries = map.entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<Integer, String> entry = entries.next();
@@ -431,63 +522,63 @@ public class JavaUtils {
      * @param values 需要被判断的字符串
      * @return true 未不包含
      */
-    public static boolean pattenKey(String patten, String values){
-        boolean flag=false;
-        if(!"".equals(values)&&null!=values){
-            for(int i=0;i<values.length();i++){
+    public static boolean pattenKey(String patten, String values) {
+        boolean flag = false;
+        if (!"".equals(values) && null != values) {
+            for (int i = 0; i < values.length(); i++) {
                 try {
-                    if(i==values.length()-1){
-                        flag=true;
-                        String str2=values.substring(values.length()-1,values.length());
-                        if(patten.contains(str2)){
-                            return  false;
+                    if (i == values.length() - 1) {
+                        flag = true;
+                        String str2 = values.substring(values.length() - 1, values.length());
+                        if (patten.contains(str2)) {
+                            return false;
                         }
-                        return  flag;
-                    }else{
-                        String str=values.substring(i,i+1);
-                        if(patten.contains(str)){
-                            return  false;
+                        return flag;
+                    } else {
+                        String str = values.substring(i, i + 1);
+                        if (patten.contains(str)) {
+                            return false;
                         }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        return  flag;
+        return flag;
     }
+
     /**
      * @param patten 判断是否有的字符—>串
      * @param values 需要被判断的字符串
      * @return true 包含
      */
-    public static boolean pattenKey(String patten, String values[]){
-        boolean flag=false;
-        for(int j=0;j<values.length;j++){
-            if(patten.contains(values[j])){
-                flag=true;
+    public static boolean pattenKey(String patten, String values[]) {
+        boolean flag = false;
+        for (int j = 0; j < values.length; j++) {
+            if (patten.contains(values[j])) {
+                flag = true;
             }
         }
-        return  flag;
+        return flag;
     }
-
 
 
     /**
      * @param num1 被除数
      * @param num2 除数
      * @param flag 是否乘100
-     * @return  返回两个数相除后的数
+     * @return 返回两个数相除后的数
      */
     public static String getRemainder(String num1, String num2, boolean flag) {
-        double choice =  Double.parseDouble(num1);
+        double choice = Double.parseDouble(num1);
         double all = Double.parseDouble(num2);
         double point = 0;
-        if (all >0) {
-            if(flag){
-                point = (choice / all)*100;
-            }else{
-                point =(choice / all);
+        if (all > 0) {
+            if (flag) {
+                point = (choice / all) * 100;
+            } else {
+                point = (choice / all);
             }
         }
         DecimalFormat df = new DecimalFormat("########.00");
@@ -500,14 +591,14 @@ public class JavaUtils {
      * @param patter 裁分标识
      * @return 返回数组
      */
-    public static String[] getfloor(String number, String patter){
-        if(null == number){
+    public static String[] getfloor(String number, String patter) {
+        if (null == number) {
             return new String[]{"0"};
         }
-        String args[] =null;
+        String args[] = null;
         //java特殊符号转义
         String str = "";
-        if(number.contains(patter)){
+        if (number.contains(patter)) {
             if ("+".equals(patter)) {
                 str = "\\+";
             } else if ("|".equals(patter)) {
@@ -519,26 +610,26 @@ public class JavaUtils {
             } else {
                 str = patter;
             }
-            args= number.split(str);
-        }else{
+            args = number.split(str);
+        } else {
             args = new String[1];
-            args[0]=number;
+            args[0] = number;
         }
         return args;
     }
 
 
-
     /**
      * 判断是不是json
+     *
      * @param json
      * @return
      */
-    public static boolean isJson(String json){
+    public static boolean isJson(String json) {
 
-        outPrint("responce"+json);
+        outPrint("responce" + json);
 
-        if(justturn(json)){
+        if (justturn(json)) {
 //            turnLogin();
         }
         boolean isjson = true;
@@ -551,10 +642,11 @@ public class JavaUtils {
             return isjson;
         }
     }
-    public static boolean isJson(String json, String tag){
-        outPrint(tag+json);
 
-        if(justturn(json)){
+    public static boolean isJson(String json, String tag) {
+        outPrint(tag + json);
+
+        if (justturn(json)) {
 //            turnLogin();
         }
 
@@ -577,48 +669,44 @@ public class JavaUtils {
 //        App.closeAllActivity();
 //    }
 
-    private static boolean justturn(String json){
-          /*  {"code":220,"mark":"登录状态无效或者已过期！","time":1513764806}*/
-          try {
-              com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(json);
-              int code = jsonObject.getInteger("code");
-              if (code == 220) {
-                  return true;
-              }
-          }catch (Exception e){
-              e.printStackTrace();
-          }
+    private static boolean justturn(String json) {
+        /*  {"code":220,"mark":"登录状态无效或者已过期！","time":1513764806}*/
+        try {
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(json);
+            int code = jsonObject.getInteger("code");
+            if (code == 220) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
 
-
-
-
     /**
-  * @param jsonString json字符串
-  * @return 将json字符串转换成map的集合
-  */
-    public static Map getMap4Json(String jsonString){
+     * @param jsonString json字符串
+     * @return 将json字符串转换成map的集合
+     */
+    public static Map getMap4Json(String jsonString) {
         JSONObject jsonObject = null;
-		try {
-			jsonObject = new JSONObject( jsonString );
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+        try {
+            jsonObject = new JSONObject(jsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Iterator keyIter = jsonObject.keys();
         String key;
         Object value;
         Map valueMap = new HashMap();
-        while( keyIter.hasNext())
-        {
-            key = (String)keyIter.next();
+        while (keyIter.hasNext()) {
+            key = (String) keyIter.next();
             try {
-				value = jsonObject.get(key);
-				 valueMap.put(key, value);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+                value = jsonObject.get(key);
+                valueMap.put(key, value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
         return valueMap;
@@ -629,43 +717,44 @@ public class JavaUtils {
      * @return
      */
 
-    public static String getNewdatafordot(Double number){
-        String st ="0.0";
+    public static String getNewdatafordot(Double number) {
+        String st = "0.0";
         try {
-            DecimalFormat df=new DecimalFormat("0.00");
-             st=df.format(number);
-        }catch (Exception e){
+            DecimalFormat df = new DecimalFormat("0.00");
+            st = df.format(number);
+        } catch (Exception e) {
             st = "0.0";
         }
         return st;
     }
-    public static String getNewdatafordot(String number){
-        DecimalFormat df=new DecimalFormat("0.00");
-        String st=df.format(Double.parseDouble(number));
+
+    public static String getNewdatafordot(String number) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        String st = df.format(Double.parseDouble(number));
         return st;
     }
 
-    public static String getNewdatafordotforpatten(String number){
-        String needStr="";
-        if(number.contains(".")){
-            String money[]=  number.split("\\.");
-            needStr=money[0];
-        }else{
-            needStr=number;
+    public static String getNewdatafordotforpatten(String number) {
+        String needStr = "";
+        if (number.contains(".")) {
+            String money[] = number.split("\\.");
+            needStr = money[0];
+        } else {
+            needStr = number;
         }
 
         return needStr;
     }
 
     /**
-     * @return  返回中间部分被隐藏的字符串
-    * */
-    public static String getPhoneHide(String number){
+     * @return 返回中间部分被隐藏的字符串
+     */
+    public static String getPhoneHide(String number) {
         StringBuffer buffer = new StringBuffer("");
-        if(number.length()>10){
+        if (number.length() > 10) {
 
-            for (int i=0;i< number.length();i++){
-                if(i>2 && i<7){
+            for (int i = 0; i < number.length(); i++) {
+                if (i > 2 && i < 7) {
                     buffer.append("*");
                     continue;
                 }
@@ -676,14 +765,15 @@ public class JavaUtils {
         System.out.println(buffer.toString());
         return buffer.toString();
     }
+
     /**
-     * @return  只返回后面部分显示的
-     * */
-    public static String getPhoneCenterHide(String number){
+     * @return 只返回后面部分显示的
+     */
+    public static String getPhoneCenterHide(String number) {
         StringBuffer buffer = new StringBuffer("");
-        if(number.length()>10){
-            for (int i=0;i< number.length();i++){
-                if(i>=0 && i<7){
+        if (number.length() > 10) {
+            for (int i = 0; i < number.length(); i++) {
+                if (i >= 0 && i < 7) {
                     buffer.append("*");
                     continue;
                 }
@@ -693,35 +783,34 @@ public class JavaUtils {
         System.out.println(buffer.toString());
         return buffer.toString();
     }
-
 
 
     /**
      * @param name1
      * @param name2
-     * @return  始终返回两个长度相等的字符串
+     * @return 始终返回两个长度相等的字符串
      */
-    public static String[] getLengAppend(String name1, String name2){
-        int name1lengt=name1.length();
-        int name2lengt=name2.length();
+    public static String[] getLengAppend(String name1, String name2) {
+        int name1lengt = name1.length();
+        int name2lengt = name2.length();
         StringBuffer stringBuffer = null;
-        int less=  name1lengt-name2lengt;
-        if(less>0){
+        int less = name1lengt - name2lengt;
+        if (less > 0) {
             stringBuffer = new StringBuffer(name2);
-            for(int i=0;i<less;i++){
+            for (int i = 0; i < less; i++) {
                 stringBuffer.append(" ");
             }
-            name2=stringBuffer.toString();
-        }else{
+            name2 = stringBuffer.toString();
+        } else {
             stringBuffer = new StringBuffer(name1);
-            for(int i = 0; i< Math.abs(less); i++){
+            for (int i = 0; i < Math.abs(less); i++) {
                 stringBuffer.append(" ");
             }
-            name1=stringBuffer.toString();
+            name1 = stringBuffer.toString();
         }
         String[] info = new String[2];
-        info[0]=name1;
-        info[1]=name2;
+        info[0] = name1;
+        info[1] = name2;
         return info;
     }
 
@@ -729,68 +818,70 @@ public class JavaUtils {
      * @param str 判断一个字符串是不是村字母
      * @return
      */
-    public static boolean justisAz(String str){
-        String reg ="^[a-zA-Z]*$";
+    public static boolean justisAz(String str) {
+        String reg = "^[a-zA-Z]*$";
         boolean isCract = str.matches(reg);
         return isCract;
     }
-    public static boolean justisAz1(String str){
-        String reg ="^[a-zA-Z\\s]*$";
+
+    public static boolean justisAz1(String str) {
+        String reg = "^[a-zA-Z\\s]*$";
         boolean isCract = str.matches(reg);
         return isCract;
     }
+
     /**
      * @param str 判断一个字符串是不是村数字
      * @return
      */
-    public static boolean justNumber(String str){
-        String reg="^[0-9\\.]*$";
+    public static boolean justNumber(String str) {
+        String reg = "^[0-9\\.]*$";
         boolean isCract = str.matches(reg);
         return isCract;
     }
+
     /**
      * @param str 判断一个字符串是不是只有数字 字母和/
      * @return
      */
-    public static boolean  justNumAz(String str){
-        String reg="^[A-Za-z0-9/]+$";
+    public static boolean justNumAz(String str) {
+        String reg = "^[A-Za-z0-9/]+$";
         boolean isCract = str.matches(reg);
         return isCract;
     }
 
 
     /**
-     * @param str 需要裁分的字符串
+     * @param str           需要裁分的字符串
      * @param startposition 裁分的开始位置
-     * @param endposition 裁分的结束位置
+     * @param endposition   裁分的结束位置
      * @return 返回裁分前和裁分后的数组content[0] 为第一段内容 content[1] 为第二段内容
      */
 
-    public static String[] getDivStringArrary(String str, int startposition, int endposition){
+    public static String[] getDivStringArrary(String str, int startposition, int endposition) {
         String[] content = new String[2];
-        String ct1=str.substring(startposition, endposition);
-        String ct2=str.substring(endposition,str.length());
-        content[0]=ct1;
-        content[1]=ct2;
+        String ct1 = str.substring(startposition, endposition);
+        String ct2 = str.substring(endposition, str.length());
+        content[0] = ct1;
+        content[1] = ct2;
         return content;
     }
 
 
-
-    public static boolean getdotHowleng(String str){
+    public static boolean getdotHowleng(String str) {
 /*        String reg= "^[0-9]+(.[0-9]{4})?$";
         boolean isCract = str.matches(reg);
         return isCract;*/
 
-        boolean isCract =false;
-        if(null !=str){
-            if(str.contains(".")){
-                String arg[]= str.split("\\.");
-                if(arg[1].length()<=4){
-                    isCract=true;
+        boolean isCract = false;
+        if (null != str) {
+            if (str.contains(".")) {
+                String arg[] = str.split("\\.");
+                if (arg[1].length() <= 4) {
+                    isCract = true;
                 }
-            }else{
-                isCract=true;
+            } else {
+                isCract = true;
             }
         }
         return isCract;
@@ -798,34 +889,38 @@ public class JavaUtils {
 
     /**
      * 当浮点型数据位数超过10位之后，数据变成科学计数法显示。用此方法可以使其正常显示。
+     *
      * @param value
      * @return Sting
      */
     public static String formatFloatNumber(double value) {
-        if(value != 0.00){
+        if (value != 0.00) {
             DecimalFormat df = new DecimalFormat("########.00");
             String result = df.format(value);
-            if(result.startsWith(".")){
-                result="0"+result;
+            if (result.startsWith(".")) {
+                result = "0" + result;
             }
             return result;
-        }else{
+        } else {
             return "0.00";
         }
     }
+
     public static String formatFloatNumber(Double value) {
-        if(value != null){
-            if(value.doubleValue() != 0.00){
+        if (value != null) {
+            if (value.doubleValue() != 0.00) {
                 DecimalFormat df = new DecimalFormat("########.00");
                 return df.format(value.doubleValue());
-            }else{
+            } else {
                 return "0.00";
             }
         }
         return "";
     }
+
     /**
      * md5加密方法
+     *
      * @param password
      * @return
      */

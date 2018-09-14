@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import master.flame.danmaku.controller.IDanmakuView;
@@ -48,6 +49,7 @@ import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.ui.widget.DanmakuView;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.DanamakuAdapter;
+import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 
 
 /**

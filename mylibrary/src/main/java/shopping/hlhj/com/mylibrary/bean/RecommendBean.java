@@ -65,18 +65,28 @@ public class RecommendBean implements Serializable {
             public String title;
             public int create_time;
             public String video_url;
+            public String release;
             public int type;
 
             @Override
             public String toString() {
-                return "RecommendData{" +
+                return "RecommenDatas{" +
                         "id=" + id +
                         ", cover='" + cover + '\'' +
                         ", title='" + title + '\'' +
                         ", create_time=" + create_time +
                         ", video_url='" + video_url + '\'' +
+                        ", release='" + release + '\'' +
                         ", type=" + type +
                         '}';
+            }
+
+            public String getRelease() {
+                return release;
+            }
+
+            public void setRelease(String release) {
+                this.release = release;
             }
 
             public int getId() {

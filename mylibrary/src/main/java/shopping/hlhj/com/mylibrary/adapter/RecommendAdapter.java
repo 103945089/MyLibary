@@ -12,10 +12,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
 import java.util.List;
 
+import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
 import shopping.hlhj.com.mylibrary.bean.RecommendBean;
 
 public class RecommendAdapter extends BaseAdapter{
@@ -65,14 +68,20 @@ public class RecommendAdapter extends BaseAdapter{
         }
         Glide.with(context).load(recommenDatas.get(position).cover).into(holder.imageView);
         holder.tilte.setText(recommenDatas.get(position).title);
-        holder.newstype.setText(recommenDatas.get(position).type + "");
-        holder.time.setText(recommenDatas.get(position).create_time + "");        //UNIX时间 需要转换
+        holder.newstype.setText(recommenDatas.get(position).getRelease());
+        String s = JavaUtils.StampstoTime(String.valueOf(recommenDatas.get(position).create_time), "yyyy-MM-dd HH:mm:ss"); //UNIX时间 需要转换
+        try {
+            String format = JavaUtils.format(s);
+            holder.time.setText(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,HotVideoActivity.class);
-                intent.putExtra("video_url",recommenDatas.get(position).video_url);
+                Intent intent = new Intent(context,HotVideoDetailActivity.class);
+                intent.putExtra("id",recommenDatas.get(position).id);
                 context.startActivity(intent);
             }
         });

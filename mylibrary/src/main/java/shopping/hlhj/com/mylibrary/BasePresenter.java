@@ -6,10 +6,9 @@ public abstract class BasePresenter<T extends BaseView>  {
 
     private WeakReference<T> weakReference;
 
-    private BasePresenter(T baseview){
+    public BasePresenter(T baseview){
         setView(baseview);
     }
-
 
     public T getView(){
         return weakReference != null ?weakReference.get() : null;

@@ -5,5 +5,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application>
         <activity android:name=".activity.MainActivity" />
+
+        <activity android:name=".activity.SearchActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.HotVideoDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.LiveNewsActivity" />
     </application>
+
 </manifest>

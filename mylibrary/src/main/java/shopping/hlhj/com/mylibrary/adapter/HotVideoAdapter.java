@@ -12,10 +12,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
 import shopping.hlhj.com.mylibrary.bean.HotAdSpecial;
 
 public class HotVideoAdapter extends BaseAdapter {
@@ -63,14 +68,20 @@ public class HotVideoAdapter extends BaseAdapter {
         }
         Glide.with(context).load(hotBeans.get(position).cover).into(holder.imageView);
         holder.tilte.setText(hotBeans.get(position).title);
-        holder.newstype.setText(hotBeans.get(position).type + "");
-        holder.time.setText(hotBeans.get(position).create_time + "");        //UNIX时间 需要转换
+        holder.newstype.setText(hotBeans.get(position).getRelease());
+        try {
+            String s = JavaUtils.StampstoTime(String.valueOf(hotBeans.get(position).getCreate_time()), "yyyy-MM-dd HH:mm:ss");
+            String format = JavaUtils.format(s);
+            holder.time.setText(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,HotVideoActivity.class);
-                intent.putExtra("video_url",hotBeans.get(position).video_url);
+                Intent intent = new Intent(context, HotVideoDetailActivity.class);
+                intent.putExtra("id", hotBeans.get(position).id);
                 context.startActivity(intent);
             }
         });

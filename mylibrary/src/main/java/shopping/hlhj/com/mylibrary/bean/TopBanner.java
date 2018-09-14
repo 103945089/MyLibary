@@ -121,23 +121,33 @@ public class TopBanner implements Serializable {
         }
 
         public class LiveBean {
-            private String live_title;
-            private String live_thumb;
-            private String live_desc;
-            private String live_source;
-            private String live_type;
-            private String live_status;
+            public int id;
+            public String live_title;
+            public String live_thumb;
+            public String live_desc;
+            public String live_source;
+            public String live_type;
+            public String live_status;
 
             @Override
             public String toString() {
                 return "LiveBean{" +
-                        "live_title='" + live_title + '\'' +
+                        "id=" + id +
+                        ", live_title='" + live_title + '\'' +
                         ", live_thumb='" + live_thumb + '\'' +
                         ", live_desc='" + live_desc + '\'' +
                         ", live_source='" + live_source + '\'' +
                         ", live_type='" + live_type + '\'' +
                         ", live_status='" + live_status + '\'' +
                         '}';
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
             }
 
             public String getLive_title() {
@@ -189,5 +199,4 @@ public class TopBanner implements Serializable {
             }
         }
     }
-
 }

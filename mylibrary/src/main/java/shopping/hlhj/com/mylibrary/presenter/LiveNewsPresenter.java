@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.youth.banner.BannerConfig;
 
 import java.util.List;
 
@@ -18,7 +19,9 @@ import shopping.hlhj.com.mylibrary.BasePresenter;
 import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.Search;
+import shopping.hlhj.com.mylibrary.bean.TopBanner;
 import shopping.hlhj.com.mylibrary.data.Constant;
+import shopping.hlhj.com.mylibrary.fragment.FragmentIndexChoice;
 
 public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsView> {
 
@@ -28,36 +31,39 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
 
     /**
      * 加载直播详情界面数据
+     *
      * @param context
      * @param id
      * @param uid
      */
-    public void loadLiveNesData(Context context,int id,int uid){
+    public void loadLiveNesData(Context context, int id, int uid) {
         OkGo.<String>get(Constant.DETAIL_URL)
                 .tag(context)
-                .params("id",id)
-                .params("uid",uid)
+                .params("id", id)
+                .params("uid", uid)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         String body = response.body();
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
-                        if (code == 200){
+                        if (code == 200) {
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("comment");
                             DetailBean.DetailDatas detailDatas = new Gson().fromJson(data.toString()
-                                    , new TypeToken<DetailBean.DetailDatas>() {}.getType());
+                                    , new TypeToken<DetailBean.DetailDatas>() {
+                                    }.getType());
                             List<DetailBean.DetailDatas.CommentBean> commentBeanList = new Gson().fromJson(jsonArray.toString()
-                                    , new TypeToken<List<DetailBean.DetailDatas.CommentBean>>(){}.getType());
-                            if (null != detailDatas){
+                                    , new TypeToken<List<DetailBean.DetailDatas.CommentBean>>() {
+                                    }.getType());
+                            if (null != detailDatas) {
                                 getView().loadSuccess(detailDatas);
-                            }else {
+                            } else {
                                 getView().loadFailed(jsonObject.getString("message"));
                             }
-                            if (null != commentBeanList && commentBeanList.size() > 0){
+                            if (null != commentBeanList && commentBeanList.size() > 0) {
                                 getView().loadCommentSuccess(commentBeanList);
-                            }else {
+                            } else {
                                 getView().loadFailed(jsonObject.getString("message"));
                             }
                         }
@@ -66,8 +72,41 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
 
     }
 
+    /**
+     * 直播加载更多
+     *
+     * @param context
+     */
+    public void loadLiveMoreData(Context context) {
+        OkGo.<String>get(Constant.BANNER_URL)
+                .tag(context)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        int code = jsonObject.getInteger("code");
+                        if (code == 200) {
+//                            JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("carousel");
+                            JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONArray("live");
+//                            List<TopBanner.Datas.BannerBean> bannerBeanList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<TopBanner.Datas.BannerBean>>() {
+//                            }.getType());
+                            List<TopBanner.Datas.LiveBean> liveBeanList = new Gson().fromJson(jsonArray1.toString(), new TypeToken<List<TopBanner.Datas.LiveBean>>() {
+                            }.getType());
+                            if (liveBeanList != null && liveBeanList.size() > 0 ) {
+                                getView().loadLiveMoreSuccess(liveBeanList);
+                            }else {
+                                getView().loadFailed(jsonObject.getString("message"));
+                            }
+                        }
+                    }
+                });
+    }
+
     public interface LiveNewsView extends BaseView {
         void loadSuccess(DetailBean.DetailDatas detailDatas);
+
+        void loadLiveMoreSuccess(List<TopBanner.Datas.LiveBean> liveBeans);
 
         void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans);
 

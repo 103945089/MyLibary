@@ -10,6 +10,8 @@ public class Constant {
     public static String BANNER_URL = POST_URL + "/Api/live_top";
     //专题&热门
     public static String HOT_URL = POST_URL + "/Api/hot_topics";
+    //热门更多
+    public static String HOT_MORE = POST_URL + "/Api/hot_list";
     //推荐
     public static String TUIJIAN_URL = POST_URL + "/Api/recommend";
 
@@ -18,4 +20,9 @@ public class Constant {
 
     //搜索
     public static String SEARCH_URL = POST_URL + "/Api/search_article";
+
+    //专题详情
+    public static String ARTICLE_DETAIL = POST_URL + "/Api/topics_detail";
+    //专题更多
+    public static String ARTICLE_MORE = POST_URL + "/Api/topics_list";
 }

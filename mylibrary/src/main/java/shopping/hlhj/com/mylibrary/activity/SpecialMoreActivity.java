@@ -1,25 +1,24 @@
 package shopping.hlhj.com.mylibrary.activity;
 
 import android.widget.ListView;
+
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
 
 import java.util.List;
+
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.MoreAdapter;
-import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
-import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
+import shopping.hlhj.com.mylibrary.presenter.SpecialPresenter;
 
-public class HotVideoActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView{
-
+public class SpecialMoreActivity extends BaseActivity<SpecialPresenter> implements SpecialPresenter.SpecialMoerView {
     private ListView listView;
     private SpringView springView;
     private int page = 1;
     private MoreAdapter moreAdapter;
-
     @Override
     protected int getContentResId() {
         return R.layout.activity_hotvideo;
@@ -38,8 +37,8 @@ public class HotVideoActivity extends BaseActivity<HotVideoPresenter> implements
 
     @Override
     protected void initData() {
-        setPresenter(new HotVideoPresenter(this));
-        getPresenter().loadMoreVideoData(this,page);
+        setPresenter(new SpecialPresenter(this));
+        getPresenter().loadSpecialData(this,page);
         springView.setHeader(new DefaultHeader(this));
         springView.setFooter(new DefaultFooter(this));
     }
@@ -50,33 +49,27 @@ public class HotVideoActivity extends BaseActivity<HotVideoPresenter> implements
             @Override
             public void onRefresh() {
                 page = 1;
-                getPresenter().loadMoreVideoData(HotVideoActivity.this,page);
+                getPresenter().loadSpecialData(SpecialMoreActivity.this,page);
                 springView.onFinishFreshAndLoad();
             }
 
             @Override
             public void onLoadmore() {
                 page ++;
-                getPresenter().loadMoreVideoData(HotVideoActivity.this,page);
+                getPresenter().loadSpecialData(SpecialMoreActivity.this,page);
                 springView.onFinishFreshAndLoad();
             }
         });
     }
 
-
     @Override
-    public void loadDataSuccess(DetailBean.DetailDatas detailDatas) {
-
+    public void loadSpecialMoerSuccess(List<MoreBean.MoreDatas> moreDatas) {
+        moreAdapter = new MoreAdapter(this,moreDatas,true);
+        listView.setAdapter(moreAdapter);
     }
 
     @Override
     public void loadFailed(String msg) {
 
-    }
-
-    @Override
-    public void loadHotMoreSuccess(List<MoreBean.MoreDatas> moreDatas) {
-        moreAdapter = new MoreAdapter(this,moreDatas,false);
-        listView.setAdapter(moreAdapter);
     }
 }

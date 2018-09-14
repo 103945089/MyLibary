@@ -122,6 +122,7 @@ public class TopBanner implements Serializable {
 
         public class LiveBean {
             public int id;
+            public int create_at;
             public String live_title;
             public String live_thumb;
             public String live_desc;
@@ -133,6 +134,7 @@ public class TopBanner implements Serializable {
             public String toString() {
                 return "LiveBean{" +
                         "id=" + id +
+                        ", create_at=" + create_at +
                         ", live_title='" + live_title + '\'' +
                         ", live_thumb='" + live_thumb + '\'' +
                         ", live_desc='" + live_desc + '\'' +
@@ -140,6 +142,14 @@ public class TopBanner implements Serializable {
                         ", live_type='" + live_type + '\'' +
                         ", live_status='" + live_status + '\'' +
                         '}';
+            }
+
+            public int getCreate_at() {
+                return create_at;
+            }
+
+            public void setCreate_at(int create_at) {
+                this.create_at = create_at;
             }
 
             public int getId() {

@@ -53,6 +53,10 @@ public class DetailBean implements Serializable {
         public String release;
         public String content;
         public int is_top;
+        public int nav_id;
+        public int read_num;
+        public int is_laud;
+        public int is_collection;
         public int status;
         public int like;
         public List<CommentBean> commentBeans;
@@ -71,10 +75,46 @@ public class DetailBean implements Serializable {
                     ", release='" + release + '\'' +
                     ", content='" + content + '\'' +
                     ", is_top=" + is_top +
+                    ", nav_id=" + nav_id +
+                    ", read_num=" + read_num +
+                    ", is_laud=" + is_laud +
+                    ", is_collection=" + is_collection +
                     ", status=" + status +
                     ", like=" + like +
                     ", commentBeans=" + commentBeans +
                     '}';
+        }
+
+        public int getNav_id() {
+            return nav_id;
+        }
+
+        public void setNav_id(int nav_id) {
+            this.nav_id = nav_id;
+        }
+
+        public int getRead_num() {
+            return read_num;
+        }
+
+        public void setRead_num(int read_num) {
+            this.read_num = read_num;
+        }
+
+        public int getIs_laud() {
+            return is_laud;
+        }
+
+        public void setIs_laud(int is_laud) {
+            this.is_laud = is_laud;
+        }
+
+        public int getIs_collection() {
+            return is_collection;
+        }
+
+        public void setIs_collection(int is_collection) {
+            this.is_collection = is_collection;
         }
 
         public int getId() {

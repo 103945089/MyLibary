@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,11 +32,6 @@ public class RecommendAdapter extends BaseAdapter{
         this.recommenDatas = recommenDatas;
     }
 
-    public void updataAdapter(Context context,List<RecommendBean.RecommendData.RecommenDatas> recommenDatas){
-        this.context = context;
-        this.recommenDatas = recommenDatas;
-        notifyDataSetChanged();
-    }
     @Override
     public int getCount() {
         return recommenDatas.size() == 0 ? null : recommenDatas.size();
@@ -58,10 +54,10 @@ public class RecommendAdapter extends BaseAdapter{
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.hot_item, null);
             holder.imageView = convertView.findViewById(R.id.img_hot);
-            holder.tilte = convertView.findViewById(R.id.tv_titel);
+            holder.tilte = convertView.findViewById(R.id.tvTittleHotItem);
             holder.time = convertView.findViewById(R.id.tv_time);
             holder.newstype = convertView.findViewById(R.id.tv_type);
-            holder.linearLayout = convertView.findViewById(R.id.linear_item);
+            holder.relativeLayout = convertView.findViewById(R.id.linear_item);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -77,7 +73,7 @@ public class RecommendAdapter extends BaseAdapter{
             e.printStackTrace();
         }
 
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,HotVideoDetailActivity.class);
@@ -90,7 +86,7 @@ public class RecommendAdapter extends BaseAdapter{
 
     class ViewHolder {
         ImageView imageView;
-        LinearLayout linearLayout;
+        RelativeLayout relativeLayout;
         TextView tilte, newstype, time;
     }
 }

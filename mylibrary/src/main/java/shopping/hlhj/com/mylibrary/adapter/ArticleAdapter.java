@@ -14,37 +14,31 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
-import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
-import shopping.hlhj.com.mylibrary.bean.HotAdSpecial;
+import shopping.hlhj.com.mylibrary.bean.ArticleBean;
 
-public class HotVideoAdapter extends BaseAdapter {
+public class ArticleAdapter extends BaseAdapter {
+
     private Context context;
-    private List<HotAdSpecial.HotAdSpecialData.HotBean> hotBeans;
+    private List<ArticleBean.ArticleDatas.ArticleDetailBean> articleDetailBeans;
 
-    public HotVideoAdapter(Context context, List<HotAdSpecial.HotAdSpecialData.HotBean> hotBeans) {
+    public ArticleAdapter(Context context, List<ArticleBean.ArticleDatas.ArticleDetailBean> articleDetailBeans) {
         this.context = context;
-        this.hotBeans = hotBeans;
+        this.articleDetailBeans = articleDetailBeans;
     }
 
     @Override
     public int getCount() {
-        if (null != hotBeans && hotBeans.size() > 4) {
-            return 4;
-        } else {
-            return hotBeans.size() == 0 ? null : hotBeans.size();
-        }
+        return articleDetailBeans.size() == 0 ? null : articleDetailBeans.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return hotBeans.get(position);
+        return articleDetailBeans.get(position);
     }
 
     @Override
@@ -54,9 +48,9 @@ public class HotVideoAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHodler holder = null;
+        ArticleViewHolder holder = null;
         if (convertView == null) {
-            holder = new ViewHodler();
+            holder = new ArticleViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.hot_item, null);
             holder.imageView = convertView.findViewById(R.id.img_hot);
             holder.tilte = convertView.findViewById(R.id.tvTittleHotItem);
@@ -65,13 +59,12 @@ public class HotVideoAdapter extends BaseAdapter {
             holder.relativeLayout = convertView.findViewById(R.id.linear_item);
             convertView.setTag(holder);
         } else {
-            holder = (ViewHodler) convertView.getTag();
+            holder = (ArticleViewHolder) convertView.getTag();
         }
-        Glide.with(context).load(hotBeans.get(position).cover).into(holder.imageView);
-        holder.tilte.setText(hotBeans.get(position).title);
-        holder.newstype.setText(hotBeans.get(position).getRelease());
+        Glide.with(context).load(articleDetailBeans.get(position).cover).into(holder.imageView);
+        holder.tilte.setText(articleDetailBeans.get(position).title);
         try {
-            String s = JavaUtils.StampstoTime(String.valueOf(hotBeans.get(position).getCreate_time()), "yyyy-MM-dd HH:mm:ss");
+            String s = JavaUtils.StampstoTime(String.valueOf(articleDetailBeans.get(position).getCreate_time()), "yyyy-MM-dd HH:mm:ss");
             String format = JavaUtils.format(s);
             holder.time.setText(format);
         } catch (ParseException e) {
@@ -82,14 +75,14 @@ public class HotVideoAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, HotVideoDetailActivity.class);
-                intent.putExtra("id", hotBeans.get(position).id);
+                intent.putExtra("id", articleDetailBeans.get(position).id);
                 context.startActivity(intent);
             }
         });
         return convertView;
     }
 
-    class ViewHodler {
+    class ArticleViewHolder {
         ImageView imageView;
         RelativeLayout relativeLayout;
         TextView tilte, newstype, time;

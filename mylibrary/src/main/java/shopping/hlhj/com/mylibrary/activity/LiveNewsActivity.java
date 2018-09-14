@@ -18,6 +18,7 @@ import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.TopBanner;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
 public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView {
@@ -114,6 +115,12 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         tv_live_titel.setText(detailDatas.title);
         tv_live_content.setText(detailDatas.content);
     }
+
+    @Override
+    public void loadLiveMoreSuccess(List<TopBanner.Datas.LiveBean> liveBeans) {
+
+    }
+
 
     @Override
     public void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans) {

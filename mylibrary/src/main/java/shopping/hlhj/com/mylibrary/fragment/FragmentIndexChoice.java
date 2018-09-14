@@ -35,15 +35,20 @@ import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.ImageLoader;
 
+import org.apache.cordova.LOG;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
+import shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity;
 import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
 import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
 import shopping.hlhj.com.mylibrary.activity.LiveNewsActivity;
+import shopping.hlhj.com.mylibrary.activity.LiveNewsMoreActivity;
+import shopping.hlhj.com.mylibrary.activity.SpecialMoreActivity;
 import shopping.hlhj.com.mylibrary.adapter.LiveNewsAdapter;
 import shopping.hlhj.com.mylibrary.adapter.RecommendAdapter;
 import shopping.hlhj.com.mylibrary.adapter.SpecialAdapter;
@@ -72,7 +77,7 @@ public class FragmentIndexChoice extends Fragment {
     private RecommendAdapter recommendAdapter;
     private LiveNewsAdapter liveNewsAdapter;
     private int page = 1;
-    private int liveId;
+    private int liveId,tuijianId;
 
     @Nullable
     @Override
@@ -141,7 +146,7 @@ public class FragmentIndexChoice extends Fragment {
         tvShipingMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(context, LiveNewsMoreActivity.class));
             }
         });
         tvRemenMore.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +158,7 @@ public class FragmentIndexChoice extends Fragment {
         tvZhuantiMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(context,SpecialMoreActivity.class));
             }
         });
         imgXinwen.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +178,9 @@ public class FragmentIndexChoice extends Fragment {
         Imgtuijian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context,HotVideoDetailActivity.class);
+                intent.putExtra("id",tuijianId);
+                startActivity(intent);
             }
         });
     }
@@ -189,7 +196,6 @@ public class FragmentIndexChoice extends Fragment {
         OkGo.<String>get(Constant.BANNER_URL)
                 .tag(context)
 //                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
-//                .retryCount(2)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -197,7 +203,6 @@ public class FragmentIndexChoice extends Fragment {
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
                         if (code == 200) {
-
                             JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("carousel");
                             JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONArray("live");
                             List<TopBanner.Datas.BannerBean> bannerBeanList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<TopBanner.Datas.BannerBean>>() {
@@ -257,7 +262,7 @@ public class FragmentIndexChoice extends Fragment {
                                 specialAdapter.setOnItemOnClick(new SpecialAdapter.OnItemOnClick() {
                                     @Override
                                     public void onItemClick(int position, View view) {
-                                        Intent intent = new Intent(context, HotVideoDetailActivity.class);
+                                        Intent intent = new Intent(context, ArticleDetailActivity.class);
                                         intent.putExtra("id",specialList.get(position).id);
                                         startActivity(intent);
                                     }
@@ -286,6 +291,7 @@ public class FragmentIndexChoice extends Fragment {
                                     new TypeToken<List<RecommendBean.RecommendData.RecommenDatas>>() {
                                     }.getType());
                             if (recommenDatas != null && recommenDatas.size() > 0) {
+                                tuijianId = recommenDatas.get(0).id;
                                 Glide.with(context).load(recommenDatas.get(0).cover).into(Imgtuijian);
                                 tvTuijianTitle.setText(recommenDatas.get(0).title);
                                 String s = JavaUtils.StampstoTime(String.valueOf(recommenDatas.get(0).getCreate_time()), "yyyy-MM-dd HH:mm:ss");
@@ -296,9 +302,6 @@ public class FragmentIndexChoice extends Fragment {
                                     grideViewOther.setAdapter(recommendAdapter);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
-                                }
-                                if (page == 1) {
-
                                 }
 
                             }

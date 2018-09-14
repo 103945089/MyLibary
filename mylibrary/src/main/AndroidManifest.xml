@@ -12,6 +12,10 @@
         <activity android:name=".activity.HotVideoDetailActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.LiveNewsActivity" />
+        <activity android:name=".activity.ArticleDetailActivity" />
+        <activity android:name=".activity.HotVideoActivity" />
+        <activity android:name=".activity.SpecialMoreActivity" />
+        <activity android:name=".activity.LiveNewsMoreActivity" />
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <VideoView
             android:id="@+id/hot_gsyvideo"
             android:layout_width="match_parent"
@@ -19,77 +20,99 @@
             android:layout_height="wrap_content"
             android:lines="2"
             android:padding="5dp"
-            android:text="社科院回应高铁“霸座男一事：男子系13级研究生 并非工作人员。"
+            android:text=""
             android:textColor="@color/text_black"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/tv_time"
-                android:text="2018/05/06"
-                android:textColor="@color/text_grey"
-                android:padding="3dp"
-                android:layout_marginLeft="5dp"
-                android:textSize="12sp"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="大屌萝莉"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:textSize="12sp"
+                android:layout_marginLeft="5dp"
                 android:padding="3dp"
+                android:text="2018/05/06"
                 android:textColor="@color/text_grey"
-                android:layout_marginRight="5dp"/>
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:padding="3dp"
+                android:text=""
+                android:textColor="@color/text_grey"
+                android:textSize="12sp" />
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/fengexian"/>
 
         <ListView
             android:id="@+id/list_comment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_comment_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="120dp"
+            android:text="暂无评论~快来抢沙发~" />
+
+
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/bottomBar"
-        android:paddingTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="#fff"
         android:paddingBottom="5dp"
-        android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingRight="10dp"
+        android:paddingTop="5dp">
+
         <ImageView
             android:id="@+id/btShare"
-            android:src="@drawable/ic_zb_fenxiagn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/ic_zb_fenxiagn"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/btSend"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_zb_fasong"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_zb_fasong" />
+
         <EditText
             android:id="@+id/et_Content"
-            android:layout_toLeftOf="@id/btSend"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
             android:layout_marginRight="10dp"
-            android:textSize="14sp"
+            android:layout_toLeftOf="@id/btSend"
+            android:background="@drawable/et_border"
             android:hint="写评论"
             android:paddingLeft="15dp"
-            android:background="@drawable/et_border"
-            android:layout_width="match_parent"
-            android:layout_height="35dp" />
+            android:textSize="14sp" />
     </RelativeLayout>
 </RelativeLayout>

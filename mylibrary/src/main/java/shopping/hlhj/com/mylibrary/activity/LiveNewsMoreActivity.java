@@ -63,10 +63,6 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
         });
     }
 
-    @Override
-    public void loadSuccess(DetailBean.DetailDatas detailDatas) {
-
-    }
 
     @Override
     public void loadLiveMoreSuccess(List<MoreBean.MoreDatas> moreDatas) {
@@ -75,9 +71,10 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
     }
 
     @Override
-    public void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans) {
+    public void loadCommentSuccess(DetailBean commentBeans) {
 
     }
+
 
     @Override
     public void loadFailed(String msg) {

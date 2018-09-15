@@ -47,6 +47,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     private String string;
     private int page = 1;
     private DBHelper dbHelper;
+    private List<String> strings = new ArrayList<>();
 
     @Override
     protected int getContentResId() {
@@ -81,18 +82,20 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     protected void initData() {
         dbHelper = new DBHelper(this);
         dbHelper.getWritableDatabase();
-        List<String> strings = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        strings.clear();
+        for (int i = 0; i < 1; i++) {
             strings.add("关键字");
         }
         List<String> stringList = dbHelper.findAll();
         if (stringList == null || stringList.size() == 0) {
             llSearchHistroy.setVisibility(View.GONE);
         }
-        SearchAdapter hotAdapter = new SearchAdapter(this, strings, false);
+        setPresenter(new SearchPresenter(SearchActivity.this));
+        getPresenter().loadSearchData(SearchActivity.this, string, page);
+        getPresenter().loadSearchHot(this);
         SearchAdapter historyAdapter = new SearchAdapter(this, stringList, true);
         gridView_histroy.setAdapter(historyAdapter);
-        gridView_hot.setAdapter(hotAdapter);
+
     }
 
     @Override
@@ -112,8 +115,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                     fmSearchNomal.setVisibility(View.VISIBLE);
                     llSearch.setVisibility(View.GONE);
                 } else {
-                    //网络请求
-                    setPresenter(new SearchPresenter(SearchActivity.this));
                     getPresenter().loadSearchData(SearchActivity.this, string, page);
                     //TODO 重复添加
                     dbHelper.add(string);
@@ -152,5 +153,15 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     public void loadFailed(String msg) {
         fmSearchNomal.setVisibility(View.VISIBLE);
         llSearch.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void loadHotData(String[] data) {
+//        strings.clear();
+//        for (String s : data){
+//            strings.add(s);
+//        }
+//        SearchAdapter hotAdapter = new SearchAdapter(this, strings, false);
+//        gridView_hot.setAdapter(hotAdapter);
     }
 }

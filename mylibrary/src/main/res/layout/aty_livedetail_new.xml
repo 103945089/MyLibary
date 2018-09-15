@@ -9,17 +9,21 @@
         android:id="@+id/videoPlayer"
         android:layout_width="match_parent"
         android:layout_height="195dp" />
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/live_spring"
+        android:layout_below="@+id/videoPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/ll_live_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/videoPlayer"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="4sp"
+            android:layout_height="2sp"
             android:background="@drawable/fengexian" />
 
         <TextView
@@ -27,8 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"
+            android:ellipsize="end"
             android:padding="8dp"
-            android:text="直播标题"
+            android:text=""
             android:textColor="@color/text_black"
             android:textSize="14sp" />
 
@@ -45,7 +50,7 @@
                 android:maxLength="50"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="直播的内容.简介：..........................."
+                android:text=""
                 android:textColor="@color/text_grey"
                 android:textSize="12sp" />
 
@@ -56,12 +61,17 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:paddingRight="8dp"
+                android:visibility="gone"
                 android:text="查看更多"
                 android:textColor="@color/red"
                 android:textSize="10sp" />
 
         </RelativeLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@drawable/fengexian" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +83,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_zan"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
@@ -83,19 +93,21 @@
                     android:id="@+id/img_zan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_home_praise_normal" />
 
                 <TextView
+                    android:id="@+id/tv_live_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="赞"
+                    android:text=""
                     android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_look"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
@@ -105,6 +117,7 @@
                     android:id="@+id/img_look"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_views" />
 
                 <TextView
@@ -112,13 +125,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:text="123"
                     android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_collect"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
@@ -133,7 +148,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_shared"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
@@ -150,8 +165,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="2sp"
+            android:layout_marginTop="2dp"
             android:background="@drawable/fengexian" />
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_below="@+id/ll_live_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomBar" />
+
+    </com.liaoinstan.springview.widget.SpringView>
 
     <RelativeLayout
         android:id="@+id/bottomBar"
@@ -174,7 +199,7 @@
             android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/btSend"
+            android:id="@+id/img_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -187,17 +212,10 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/btSend"
+            android:layout_toLeftOf="@id/img_send"
             android:background="@drawable/et_border"
             android:hint="写评论"
             android:paddingLeft="15dp"
             android:textSize="14sp" />
     </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomBar" />
-
 </RelativeLayout>

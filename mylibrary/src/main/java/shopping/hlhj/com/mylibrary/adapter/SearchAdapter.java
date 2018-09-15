@@ -26,11 +26,9 @@ public class SearchAdapter extends BaseAdapter {
     private boolean isHistory;
 
     private DBHelper dbHelper;
-//    public SearchAdapter(Context context, List<Search.SearchData.SearchBean> searchBeanList) {
-//        this.context = context;
-//        this.searchBeanList = searchBeanList;
-//    }
-
+    public SearchAdapter(Context context) {
+        this.context = context;
+    }
 
     public SearchAdapter(Context context, List<String> searchBeanList, boolean isHistory) {
         this.context = context;

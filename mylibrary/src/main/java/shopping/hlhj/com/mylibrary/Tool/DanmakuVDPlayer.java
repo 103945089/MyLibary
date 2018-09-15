@@ -157,7 +157,9 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction()==MotionEvent.ACTION_DOWN){
+                    Log.e("fhp","是否为空---------------1-");
                     if (onEditClickListener!=null){
+                        Log.e("fhp","是否为空----------------");
                         onEditClickListener.sendDanMu(editText.getText().toString());
                         addDanmaku(editText.getText().toString(),true);
                         editText.setText("");
@@ -167,12 +169,6 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
                     }
                 }
                 return true;
-            }
-        });
-        btnFull.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {

@@ -24,6 +24,8 @@ public class Constant {
 
     //搜索
     public static String SEARCH_URL = POST_URL + "/Api/search_article";
+    //热门搜索
+    public static String SEARCH_HOT = POST_URL + "/Api/hotsearch";
 
     //专题详情
     public static String ARTICLE_DETAIL = POST_URL + "/Api/topics_detail";
@@ -36,6 +38,10 @@ public class Constant {
     //发送弹幕
     public static String senDDanmu=POST_URL+"/Api/public_vote";
 
+    //评论列表
+    public static String COMMENT_LIST = POST_URL + "/Api/comment_list";
 
+    //直播发布评论
+    public static String SEND_COMMENT = "/Api/comment";
 
 }

@@ -1,5 +1,6 @@
 package shopping.hlhj.com.mylibrary.presenter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.youth.banner.BannerConfig;
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.http.GET;
@@ -36,46 +38,46 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
     }
 
     /**
-     * 加载直播详情界面数据
+     * 加载评论数据
      *
      * @param context
      * @param id
-     * @param uid
+     * @param page
      */
-    public void loadLiveNesData(Context context, int id, int uid) {
-        OkGo.<String>get(Constant.DETAIL_URL)
-                .tag(context)
-                .params("id", id)
-                .params("uid", uid)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        String body = response.body();
-                        JSONObject jsonObject = JSON.parseObject(body);
-                        int code = jsonObject.getInteger("code");
-                        if (code == 200) {
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("comment");
-                            DetailBean.DetailDatas detailDatas = new Gson().fromJson(data.toString()
-                                    , new TypeToken<DetailBean.DetailDatas>() {
-                                    }.getType());
-                            List<DetailBean.DetailDatas.CommentBean> commentBeanList = new Gson().fromJson(jsonArray.toString()
-                                    , new TypeToken<List<DetailBean.DetailDatas.CommentBean>>() {
-                                    }.getType());
-                            if (null != detailDatas) {
-                                getView().loadSuccess(detailDatas);
-                            } else {
-                                getView().loadFailed(jsonObject.getString("message"));
-                            }
-                            if (null != commentBeanList && commentBeanList.size() > 0) {
-                                getView().loadCommentSuccess(commentBeanList);
-                            } else {
-                                getView().loadFailed(jsonObject.getString("message"));
-                            }
-                        }
-                    }
-                });
+    public void loadLiveCommentData(Context context, int id, int page) {
+       OkGo.<String>get(Constant.COMMENT_LIST)
+               .tag(context)
+               .params("live_id",id)
+               .params("page",page)
+               .execute(new StringCallback() {
+                   @Override
+                   public void onSuccess(Response<String> response) {
+                       Log.e("fhp","--3--"+response.body());
+                       DetailBean detailBean = JSON.parseObject(response.body(), DetailBean.class);
+                       Log.e("fhp","--4--"+detailBean.toString());
+                       if (detailBean.getCode() == 1){
 
+                           if (detailBean.getCommentBeans() != null && detailBean.getCommentBeans().size() > 0){
+                               Log.e("fhp","--1--");
+                               getView().loadCommentSuccess(detailBean);
+                               Log.e("fhp","---2-");
+                           }else {
+                               Log.e("fhp","--222--");
+                               getView().loadFailed("1");
+                           }
+                       }else {
+                           getView().loadFailed("1");
+                       }
+                   }
+
+                   @Override
+                   public void onError(Response<String> response) {
+                       response.getException().printStackTrace();
+                       Log.e("fhp","错了---------------------"+response.getException());
+                       super.onError(response);
+
+                   }
+               });
     }
     /**
      * 获取弹幕
@@ -167,11 +169,9 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
     }
 
     public interface LiveNewsView extends BaseView {
-        void loadSuccess(DetailBean.DetailDatas detailDatas);
-
         void loadLiveMoreSuccess(List<MoreBean.MoreDatas> moreDatas);
 
-        void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans);
+        void loadCommentSuccess(DetailBean commentBeans);
 
         void loadFailed(String msg);
 

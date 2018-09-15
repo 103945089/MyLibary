@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -32,9 +34,9 @@ import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener {
 
     private DanmakuVDPlayer vdPlayer;
-    private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look;
+    private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look,tv_live_num;
     private LinearLayout ll_zan, ll_look, ll_collect, ll_shared;
-    private ImageView img_zan, img_look, img_collect;
+    private ImageView img_zan, img_look, img_collect,btSend;
     private EditText etContent;
     private RecyclerView recyclerview;
     private int liveId;
@@ -43,6 +45,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private boolean collectflag = true;
     private CommentAdapter commentAdapter;
     private OrientationUtils orientationUtils;
+    private int page = 1;
 
     @Override
     protected int getContentResId() {
@@ -60,6 +63,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         tv_live_titel = findViewById(R.id.tv_live_titel);
         tv_live_content = findViewById(R.id.tv_live_content);
         tv_live_contentmore = findViewById(R.id.tv_live_contentmore);
+        tv_live_num = findViewById(R.id.tv_live_num);
         tv_look = findViewById(R.id.tv_look);
         ll_zan = findViewById(R.id.ll_zan);
         ll_look = findViewById(R.id.ll_look);
@@ -70,9 +74,10 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         img_collect = findViewById(R.id.img_collect);
         etContent = findViewById(R.id.etContent);
         recyclerview = findViewById(R.id.recyclerview);
-//        springView = findViewById(R.id.springview);
-        orientationUtils = new OrientationUtils(this, vdPlayer);
+        springView = findViewById(R.id.live_spring);
+        btSend = findViewById(R.id.img_send);
 
+        orientationUtils = new OrientationUtils(this, vdPlayer);
         vdPlayer.onEditClickListener = this;
     }
 
@@ -84,11 +89,27 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         setPresenter(new LiveNewsPresenter(LiveNewsActivity.this));
         getPresenter().getDanmuData(liveId);
         getPresenter().loadLiveDetail(this, liveId);
-
+        getPresenter().loadLiveCommentData(this,liveId,page);
+        springView.setHeader(new DefaultHeader(this));
+        springView.setFooter(new DefaultFooter(this));
     }
 
     @Override
     protected void setOnClick() {
+        springView.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                springView.onFinishFreshAndLoad();
+
+            }
+
+            @Override
+            public void onLoadmore() {
+                page ++;
+                springView.onFinishFreshAndLoad();
+            }
+        });
         ll_zan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,17 +141,18 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
             }
         });
+        btSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         GSYVideoManager.releaseAllVideos();
         super.onPause();
-
-    }
-
-    @Override
-    public void loadSuccess(DetailBean.DetailDatas detailDatas) {
 
     }
 
@@ -142,9 +164,10 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean) {
-        Log.d("----------------------",liveDetailBean.live_source.toString());
-        tv_live_titel.setText(liveDetailBean.live_title);
-        tv_live_content.setText(liveDetailBean.live_desc);
+        tv_live_titel.setText(liveDetailBean.live_desc);
+        tv_live_content.setText(liveDetailBean.live_title);
+        tv_live_num.setText(liveDetailBean.laud_num + "");
+        tv_look.setText(liveDetailBean.is_laud + "");
         initGsy(liveDetailBean);
     }
     /**
@@ -186,8 +209,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                 orientationUtils.setEnable(!lock);
             }
         }).build(vdPlayer);
-
-        vdPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+        vdPlayer.btnFull.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 orientationUtils.resolveByClick();
@@ -198,6 +220,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                 vdPlayer.startWindowFullscreen(LiveNewsActivity.this, false, true);
             }
         });
+        vdPlayer.getStartButton().performClick();
     }
 
     @Override
@@ -205,11 +228,17 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     }
 
-
     @Override
-    public void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans) {
-        commentAdapter = new CommentAdapter(this, commentBeans);
-        recyclerview.setAdapter(commentAdapter);
+    public void loadCommentSuccess(DetailBean commentBeans) {
+        try {
+            commentAdapter = new CommentAdapter(this, commentBeans.getCommentBeans());
+            Log.d("--------------",commentBeans.getCommentBeans().size() + "");
+            recyclerview.setAdapter(commentAdapter);
+        }catch (Exception e){
+            Log.e("fhp","错了"+e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -224,6 +253,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void sendDanMu(String str) {
+        vdPlayer.addDanmaku(str,true);
         getPresenter().sendDanmu(TMSharedPUtil.getTMToken(this), liveId, str);
     }
 

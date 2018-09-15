@@ -50,10 +50,32 @@ public class SearchPresenter extends BasePresenter<SearchPresenter.MyGridView> {
                 });
     }
 
+    public void loadSearchHot(Context context){
+        OkGo.<String>get(Constant.SEARCH_HOT)
+                .tag(context)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        if (jsonObject.getInteger("code") == 200){
+//                            JSONObject data = jsonObject.getJSONObject("data");
+//                            String[] datas = new Gson().fromJson(data.toString(), new TypeToken<String[]>() {
+//                            }.getType());
+//                            if (data != null){
+//                                getView().loadHotData(datas);
+//                            }
+                        }
+                    }
+                });
+    }
+
 
     public interface MyGridView extends BaseView{
         void loadSuccess(List<Search.SearchData.SearchBean> searchBeanList);
 
         void loadFailed(String msg);
+
+        void loadHotData(String[] data);
     }
 }

@@ -98,14 +98,6 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm"));
         tv_author.setText(detailDatas.release);
         initGsy(detailDatas);
-        List<DetailBean.DetailDatas.CommentBean> commentBeans = detailDatas.getCommentBeans();
-        if (null == commentBeans || commentBeans.size() == 0) {
-            listView.setVisibility(View.GONE);
-            tv_comment_normal.setVisibility(View.VISIBLE);
-        } else {
-            listView.setVisibility(View.VISIBLE);
-            tv_comment_normal.setVisibility(View.GONE);
-        }
     }
 
     private void initGsy(DetailBean.DetailDatas detailDatas) {

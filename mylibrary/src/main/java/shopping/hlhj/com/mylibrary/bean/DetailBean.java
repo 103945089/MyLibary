@@ -7,6 +7,7 @@ public class DetailBean implements Serializable {
     public int code;
     public String message;
     public DetailDatas datas;
+    public List<CommentBean> commentBeans;
 
     @Override
     public String toString() {
@@ -14,7 +15,16 @@ public class DetailBean implements Serializable {
                 "code=" + code +
                 ", message='" + message + '\'' +
                 ", datas=" + datas +
+                ", commentBeans=" + commentBeans +
                 '}';
+    }
+
+    public List<CommentBean> getCommentBeans() {
+        return commentBeans;
+    }
+
+    public void setCommentBeans(List<CommentBean> commentBeans) {
+        this.commentBeans = commentBeans;
     }
 
     public int getCode() {
@@ -67,7 +77,6 @@ public class DetailBean implements Serializable {
         public int live_status;
         public int vote_status;
         public int comment_status;
-        public List<CommentBean> commentBeans;
 
         @Override
         public String toString() {
@@ -301,101 +310,104 @@ public class DetailBean implements Serializable {
             this.like = like;
         }
 
-        public List<CommentBean> getCommentBeans() {
-            return commentBeans;
+    }
+
+    public class CommentBean {
+        public int id;
+        public int laud_num;
+        public int user_id;
+        public int create_at;
+        public int live_id;
+        public int is_laud;
+        public String content;
+        public String head_pic;
+        public String member_name;
+
+        @Override
+        public String toString() {
+            return "CommentBean{" +
+                    "id=" + id +
+                    ", laud_num=" + laud_num +
+                    ", user_id=" + user_id +
+                    ", create_at=" + create_at +
+                    ", live_id=" + live_id +
+                    ", is_laud=" + is_laud +
+                    ", content='" + content + '\'' +
+                    ", head_pic='" + head_pic + '\'' +
+                    ", member_name='" + member_name + '\'' +
+                    '}';
         }
 
-        public void setCommentBeans(List<CommentBean> commentBeans) {
-            this.commentBeans = commentBeans;
+        public int getId() {
+            return id;
         }
 
-        public class CommentBean {
-            public int id;
-            public int nid;
-            public int uid;
-            public String avatar;
-            public String username;
-            public String content;
-            public String reply;
-            public int create_time;
+        public void setId(int id) {
+            this.id = id;
+        }
 
-            @Override
-            public String toString() {
-                return "CommentBean{" +
-                        "id=" + id +
-                        ", nid=" + nid +
-                        ", uid=" + uid +
-                        ", avatar='" + avatar + '\'' +
-                        ", username='" + username + '\'' +
-                        ", content='" + content + '\'' +
-                        ", reply='" + reply + '\'' +
-                        ", create_time=" + create_time +
-                        '}';
-            }
+        public int getLaud_num() {
+            return laud_num;
+        }
 
-            public int getId() {
-                return id;
-            }
+        public void setLaud_num(int laud_num) {
+            this.laud_num = laud_num;
+        }
 
-            public void setId(int id) {
-                this.id = id;
-            }
+        public int getUser_id() {
+            return user_id;
+        }
 
-            public int getNid() {
-                return nid;
-            }
+        public void setUser_id(int user_id) {
+            this.user_id = user_id;
+        }
 
-            public void setNid(int nid) {
-                this.nid = nid;
-            }
+        public int getCreate_at() {
+            return create_at;
+        }
 
-            public int getUid() {
-                return uid;
-            }
+        public void setCreate_at(int create_at) {
+            this.create_at = create_at;
+        }
 
-            public void setUid(int uid) {
-                this.uid = uid;
-            }
+        public int getLive_id() {
+            return live_id;
+        }
 
-            public String getAvatar() {
-                return avatar;
-            }
+        public void setLive_id(int live_id) {
+            this.live_id = live_id;
+        }
 
-            public void setAvatar(String avatar) {
-                this.avatar = avatar;
-            }
+        public int getIs_laud() {
+            return is_laud;
+        }
 
-            public String getUsername() {
-                return username;
-            }
+        public void setIs_laud(int is_laud) {
+            this.is_laud = is_laud;
+        }
 
-            public void setUsername(String username) {
-                this.username = username;
-            }
+        public String getContent() {
+            return content;
+        }
 
-            public String getContent() {
-                return content;
-            }
+        public void setContent(String content) {
+            this.content = content;
+        }
 
-            public void setContent(String content) {
-                this.content = content;
-            }
+        public String getHead_pic() {
+            return head_pic;
+        }
 
-            public String getReply() {
-                return reply;
-            }
+        public void setHead_pic(String head_pic) {
+            this.head_pic = head_pic;
+        }
 
-            public void setReply(String reply) {
-                this.reply = reply;
-            }
+        public String getMember_name() {
+            return member_name;
+        }
 
-            public int getCreate_time() {
-                return create_time;
-            }
-
-            public void setCreate_time(int create_time) {
-                this.create_time = create_time;
-            }
+        public void setMember_name(String member_name) {
+            this.member_name = member_name;
         }
     }
 }

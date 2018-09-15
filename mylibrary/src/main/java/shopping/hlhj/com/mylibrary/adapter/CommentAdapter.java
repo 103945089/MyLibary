@@ -3,6 +3,7 @@ package shopping.hlhj.com.mylibrary.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,9 +23,10 @@ import shopping.hlhj.com.mylibrary.bean.DetailBean;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder>{
 
     private Context context;
-    private List<DetailBean.DetailDatas.CommentBean> commentBeans;
+    private List<DetailBean.CommentBean> commentBeans;
     private boolean flag = true;
-    public CommentAdapter(Context context, List<DetailBean.DetailDatas.CommentBean> commentBeans) {
+    public CommentAdapter(Context context, List<DetailBean.CommentBean> commentBeans) {
+        Log.d("--------------",commentBeans.size() + "");
         this.context = context;
         this.commentBeans = commentBeans;
     }
@@ -42,7 +44,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         RequestOptions mRequestOptions = RequestOptions.circleCropTransform().diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true);
 
-        Glide.with(context).load(commentBeans.get(position).avatar).apply(mRequestOptions).into(holder.img_user);
+//        Glide.with(context).load(commentBeans.get(position).avatar).apply(mRequestOptions).into(holder.img_user);
         holder.img_zan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,9 +57,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 }
             }
         });
-        holder.tv_username.setText(commentBeans.get(position).username);
+        holder.tv_username.setText(commentBeans.get(position).member_name);
         holder.tv_comment_content.setText(commentBeans.get(position).content);
-        String s = JavaUtils.StampstoTime(String.valueOf(commentBeans.get(position).getCreate_time()), "yyyy-MM-dd HH:mm:ss");
+        holder.tv_num.setText(commentBeans.get(position).laud_num + "");
+        String s = JavaUtils.StampstoTime(String.valueOf(commentBeans.get(position).create_at), "yyyy-MM-dd HH:mm:ss");
         try {
             String format = JavaUtils.format(s);
             holder.tv_time.setText(format);

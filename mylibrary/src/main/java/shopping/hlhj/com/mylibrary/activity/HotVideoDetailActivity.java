@@ -116,6 +116,17 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
             }
         }).build(vdPlayer);
 
+        vdPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orientationUtils.resolveByClick();
+                if (orientationUtils.getIsLand()>0){
+                    orientationUtils.backToProtVideo();
+                }
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                vdPlayer.startWindowFullscreen(HotVideoDetailActivity.this, false, true);
+            }
+        });
         List<DetailBean.DetailDatas.CommentBean> commentBeans = detailDatas.getCommentBeans();
         if (null == commentBeans || commentBeans.size() == 0){
             listView.setVisibility(View.GONE);

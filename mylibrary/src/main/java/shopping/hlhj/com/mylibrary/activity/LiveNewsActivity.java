@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liaoinstan.springview.widget.SpringView;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
@@ -123,6 +124,13 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        GSYVideoManager.releaseAllVideos();
+        super.onPause();
+
     }
 
     @Override

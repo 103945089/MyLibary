@@ -1,19 +1,16 @@
 package shopping.hlhj.com.mylibrary.activity;
 
+import android.util.Log;
 import android.widget.ListView;
-
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
-
 import java.util.List;
-
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.LiveMoreAdapter;
-import shopping.hlhj.com.mylibrary.adapter.MoreAdapter;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
-import shopping.hlhj.com.mylibrary.bean.TopBanner;
+import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
 public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView {
@@ -40,7 +37,7 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
     @Override
     protected void initData() {
         setPresenter(new LiveNewsPresenter(this));
-        getPresenter().loadLiveMoreData(this);
+        getPresenter().loadLiveMoreData(this,page);
         springView.setHeader(new DefaultHeader(this));
         springView.setFooter(new DefaultFooter(this));
     }
@@ -51,14 +48,14 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
             @Override
             public void onRefresh() {
                 page = 1;
-                getPresenter().loadLiveMoreData(LiveNewsMoreActivity.this);
+                getPresenter().loadLiveMoreData(LiveNewsMoreActivity.this,page);
                 springView.onFinishFreshAndLoad();
             }
 
             @Override
             public void onLoadmore() {
                 page ++;
-                getPresenter().loadLiveMoreData(LiveNewsMoreActivity.this);
+                getPresenter().loadLiveMoreData(LiveNewsMoreActivity.this,page);
                 springView.onFinishFreshAndLoad();
             }
         });
@@ -70,8 +67,9 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
     }
 
     @Override
-    public void loadLiveMoreSuccess(List<TopBanner.Datas.LiveBean> liveBeans) {
-        liveMoreAdapter = new LiveMoreAdapter(this,liveBeans);
+    public void loadLiveMoreSuccess(List<MoreBean.MoreDatas> moreDatas) {
+        Log.d("2222222222222222",moreDatas.size() + "");
+        liveMoreAdapter = new LiveMoreAdapter(this,moreDatas);
         listView.setAdapter(liveMoreAdapter);
     }
 

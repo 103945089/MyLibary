@@ -1,41 +1,40 @@
 package shopping.hlhj.com.mylibrary.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
-import java.text.ParseException;
 import java.util.List;
-
 import shopping.hlhj.com.mylibrary.R;
-import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
-import shopping.hlhj.com.mylibrary.bean.TopBanner;
+import shopping.hlhj.com.mylibrary.activity.LiveNewsActivity;
+import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.data.Constant;
 
 public class LiveMoreAdapter extends BaseAdapter{
 
     private Context context;
-    private List<TopBanner.Datas.LiveBean> liveBeans;
+    private List<MoreBean.MoreDatas> moreDatas;
 
-    public LiveMoreAdapter(Context context, List<TopBanner.Datas.LiveBean> liveBeans) {
+    public LiveMoreAdapter(Context context, List<MoreBean.MoreDatas> moreDatas) {
+       Log.d("--------------",moreDatas.size() + "") ;
         this.context = context;
-        this.liveBeans = liveBeans;
+        this.moreDatas = moreDatas;
     }
 
     @Override
     public int getCount() {
-        return liveBeans.size() == 0 ? null : liveBeans.size();
+        return moreDatas.size() == 0 ? null : moreDatas.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return liveBeans.get(position);
+        return moreDatas.get(position);
     }
 
     @Override
@@ -44,33 +43,41 @@ public class LiveMoreAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LiveMoreViewHolder holder = null;
         if (convertView == null){
             holder = new LiveMoreViewHolder();
-            convertView = View.inflate(context, R.layout.adapter_more,null);
-            holder.imgHotMore = convertView.findViewById(R.id.img_hotmore);
-            holder.tvHotMoreTitle = convertView.findViewById(R.id.tv_hotmore_title);
-            holder.tvHotMoreTime = convertView.findViewById(R.id.tv_hotmore_time);
-            holder.linearLayout = convertView.findViewById(R.id.ll_hotmore); convertView.setTag(holder);
+            convertView = View.inflate(context, R.layout.adapter_livemore,null);
+            holder.imgLiveMore = convertView.findViewById(R.id.img_livemore);
+            holder.imgMoreCollected = convertView.findViewById(R.id.img_more_collected);
+            holder.imgMoreShared = convertView.findViewById(R.id.img_more_shared);
+            holder.tvLiveMoreTitle = convertView.findViewById(R.id.tv_livemore_title);
+            holder.tvLooknum = convertView.findViewById(R.id.tv_looknum);
+            holder.tvMoreLanud = convertView.findViewById(R.id.tv_more_lanud);
+            holder.tvMoreComment = convertView.findViewById(R.id.tv_more_comment);
+            holder.llLivemoreLanud = convertView.findViewById(R.id.ll_livemore_lanud);
+            holder.llLivemoreComment = convertView.findViewById(R.id.ll_livemore_comment);
+            holder.linearLayout = convertView.findViewById(R.id.ll_livemore);
+            convertView.setTag(holder);
         }else {
             holder = (LiveMoreViewHolder) convertView.getTag();
         }
-        Glide.with(context).load(Constant.IMG_URL + liveBeans.get(position).getLive_thumb()).into(holder.imgHotMore);
-        holder.tvHotMoreTitle.setText(liveBeans.get(position).live_title);
-        String s = JavaUtils.StampstoTime(String.valueOf(liveBeans.get(position).create_at), "yyyy-MM-dd HH:mm:ss");
-        try {
-            String format = JavaUtils.format(s);
-            holder.tvHotMoreTime.setText(format);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Glide.with(context).load(Constant.IMG_URL + moreDatas.get(position).live_thumb).into(holder.imgLiveMore);
+        holder.tvLiveMoreTitle.setText(moreDatas.get(position).live_title);
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, LiveNewsActivity.class);
+                intent.putExtra("id",moreDatas.get(position).id);
+                context.startActivity(intent);
+            }
+        });
         return convertView;
     }
 
     class LiveMoreViewHolder {
-        ImageView imgHotMore;
-        TextView tvHotMoreTitle,tvHotMoreTime;
-        LinearLayout linearLayout;
+        ImageView imgLiveMore,imgMoreCollected,imgMoreShared;
+        TextView tvLiveMoreTitle,tvLooknum,tvMoreLanud,tvMoreComment;
+        LinearLayout linearLayout,llLivemoreLanud,llLivemoreComment;
     }
 }

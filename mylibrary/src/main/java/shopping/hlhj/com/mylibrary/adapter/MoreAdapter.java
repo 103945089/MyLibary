@@ -62,7 +62,7 @@ public class MoreAdapter extends BaseAdapter{
         if (isSpecial == true){
             Glide.with(context).load(hotMoreDatas.get(position).channel_thumb).into(holder.imgHotMore);
             holder.tvHotMoreTitle.setText(hotMoreDatas.get(position).name);
-        }else {
+        }else if (isSpecial == false){
             Glide.with(context).load(hotMoreDatas.get(position).cover).into(holder.imgHotMore);
             holder.tvHotMoreTitle.setText(hotMoreDatas.get(position).title);
         }

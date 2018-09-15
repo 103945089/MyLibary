@@ -18,6 +18,7 @@ import retrofit2.http.GET;
 import shopping.hlhj.com.mylibrary.BasePresenter;
 import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.Search;
 import shopping.hlhj.com.mylibrary.bean.TopBanner;
 import shopping.hlhj.com.mylibrary.data.Constant;
@@ -77,24 +78,22 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
      *
      * @param context
      */
-    public void loadLiveMoreData(Context context) {
-        OkGo.<String>get(Constant.BANNER_URL)
+    public void loadLiveMoreData(Context context,int page) {
+        OkGo.<String>get(Constant.LIVE_MORE)
                 .tag(context)
+                .params("page",page)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         String body = response.body();
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
-                        if (code == 200) {
-//                            JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("carousel");
-                            JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONArray("live");
-//                            List<TopBanner.Datas.BannerBean> bannerBeanList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<TopBanner.Datas.BannerBean>>() {
-//                            }.getType());
-                            List<TopBanner.Datas.LiveBean> liveBeanList = new Gson().fromJson(jsonArray1.toString(), new TypeToken<List<TopBanner.Datas.LiveBean>>() {
-                            }.getType());
-                            if (liveBeanList != null && liveBeanList.size() > 0 ) {
-                                getView().loadLiveMoreSuccess(liveBeanList);
+                        if (code == 1) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            List<MoreBean.MoreDatas> moreDatas = new Gson().fromJson(jsonArray.toString()
+                                    , new TypeToken<List<MoreBean.MoreDatas>>() {}.getType());
+                            if (moreDatas != null && moreDatas.size() > 0 ) {
+                                getView().loadLiveMoreSuccess(moreDatas);
                             }else {
                                 getView().loadFailed(jsonObject.getString("message"));
                             }
@@ -106,7 +105,7 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
     public interface LiveNewsView extends BaseView {
         void loadSuccess(DetailBean.DetailDatas detailDatas);
 
-        void loadLiveMoreSuccess(List<TopBanner.Datas.LiveBean> liveBeans);
+        void loadLiveMoreSuccess(List<MoreBean.MoreDatas> moreDatas);
 
         void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans);
 

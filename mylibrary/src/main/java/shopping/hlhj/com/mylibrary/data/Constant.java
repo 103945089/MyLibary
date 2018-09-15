@@ -8,6 +8,8 @@ public class Constant {
 
     //轮播&直播
     public static String BANNER_URL = POST_URL + "/Api/live_top";
+    //直播更多
+    public static String LIVE_MORE = POST_URL + "/Api/live";
     //专题&热门
     public static String HOT_URL = POST_URL + "/Api/hot_topics";
     //热门更多

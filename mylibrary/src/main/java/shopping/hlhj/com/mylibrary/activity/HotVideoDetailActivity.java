@@ -7,6 +7,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.GSYSampleADVideoPlayer;
 
 import java.util.List;
@@ -27,7 +31,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     private ImageView img_btn;
     private int id;
     private String etString;
-
+    private OrientationUtils orientationUtils;
     @Override
     protected int getContentResId() {
         return R.layout.activity_hotvideodetail;
@@ -40,7 +44,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 
     @Override
     protected void initView() {
-//        vdPlayer = findViewById(R.id.hot_gsyvideo);
+        vdPlayer = findViewById(R.id.hot_gsyvideo);
         etContent = findViewById(R.id.et_Content);
         listView = findViewById(R.id.list_comment);
         tv_title = findViewById(R.id.tv_title);
@@ -48,6 +52,9 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         tv_author = findViewById(R.id.tv_author);
         tv_comment_normal = findViewById(R.id.tv_comment_normal);
         img_btn = findViewById(R.id.btSend);
+
+        orientationUtils=new OrientationUtils(this,vdPlayer);
+
     }
 
     @Override
@@ -75,6 +82,40 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         tv_title.setText(detailDatas.title);
         tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time),"yyyy-MM-dd HH:mm"));
         tv_author.setText(detailDatas.release);
+        GSYVideoOptionBuilder builder = new GSYVideoOptionBuilder();
+
+        builder
+//                .setThumbImageView(imageView)
+                .setIsTouchWiget(true)
+                .setRotateViewAuto(false)
+                .setLockLand(false)
+                .setUrl(detailDatas.video_url)
+                .setAutoFullWithSize(true)
+                .setShowFullAnimation(false)
+                .setNeedLockFull(true)
+                .setCacheWithPlay(false)
+                .setVideoTitle("")
+                .setVideoAllCallBack(new GSYSampleCallBack(){
+                    @Override
+                    public void onPrepared(String url, Object... objects) {
+                        super.onPrepared(url, objects);
+                        orientationUtils.setEnable(true);
+                    }
+
+                    @Override
+                    public void onQuitFullscreen(String url, Object... objects) {
+                        super.onQuitFullscreen(url, objects);
+                        if (orientationUtils!=null){
+                            orientationUtils.backToProtVideo();
+                        }
+                    }
+                }).setLockClickListener(new LockClickListener() {
+            @Override
+            public void onClick(View view, boolean lock) {
+                orientationUtils.setEnable(!lock);
+            }
+        }).build(vdPlayer);
+
         List<DetailBean.DetailDatas.CommentBean> commentBeans = detailDatas.getCommentBeans();
         if (null == commentBeans || commentBeans.size() == 0){
             listView.setVisibility(View.GONE);

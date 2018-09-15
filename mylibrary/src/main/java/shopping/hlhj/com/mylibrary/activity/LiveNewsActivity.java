@@ -10,6 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liaoinstan.springview.widget.SpringView;
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import java.util.List;
 
@@ -22,7 +27,7 @@ import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
-public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView {
+public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener {
 
     private DanmakuVDPlayer vdPlayer;
     private TextView tv_live_titel,tv_live_content,tv_live_contentmore,tv_look;
@@ -35,6 +40,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private boolean dianzanflag = true;
     private boolean collectflag = true;
     private CommentAdapter commentAdapter;
+    private OrientationUtils orientationUtils;
 
     @Override
     protected int getContentResId() {
@@ -63,6 +69,9 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         etContent = findViewById(R.id.etContent);
         recyclerview = findViewById(R.id.recyclerview);
 //        springView = findViewById(R.id.springview);
+        orientationUtils=new OrientationUtils(this,vdPlayer);
+
+        vdPlayer.onEditClickListener=this;
     }
 
     @Override
@@ -121,6 +130,60 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         tv_look.setText(detailDatas.like + "");
         tv_live_titel.setText(detailDatas.title);
         tv_live_content.setText(detailDatas.content);
+
+        initGsy(detailDatas);
+    }
+
+    /**
+     * 使能Gsy播放器
+     * @param detailDatas
+     */
+    private void initGsy(DetailBean.DetailDatas detailDatas) {
+        GSYVideoOptionBuilder builder = new GSYVideoOptionBuilder();
+
+        builder
+//                .setThumbImageView(imageView)
+                .setIsTouchWiget(true)
+                .setRotateViewAuto(false)
+                .setLockLand(false)
+                .setUrl(detailDatas.video_url)
+                .setAutoFullWithSize(true)
+                .setShowFullAnimation(false)
+                .setNeedLockFull(true)
+                .setCacheWithPlay(false)
+                .setVideoTitle("")
+                .setVideoAllCallBack(new GSYSampleCallBack(){
+                    @Override
+                    public void onPrepared(String url, Object... objects) {
+                        super.onPrepared(url, objects);
+                        orientationUtils.setEnable(true);
+                    }
+
+                    @Override
+                    public void onQuitFullscreen(String url, Object... objects) {
+                        super.onQuitFullscreen(url, objects);
+                        if (orientationUtils!=null){
+                            orientationUtils.backToProtVideo();
+                        }
+                    }
+                }).setLockClickListener(new LockClickListener() {
+            @Override
+            public void onClick(View view, boolean lock) {
+                orientationUtils.setEnable(!lock);
+            }
+        }).build(vdPlayer);
+
+        vdPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orientationUtils.resolveByClick();
+                if (orientationUtils.getIsLand()>0){
+                    orientationUtils.backToProtVideo();
+                }
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                vdPlayer.startWindowFullscreen(LiveNewsActivity.this, false, true);
+            }
+        });
     }
 
     @Override
@@ -138,5 +201,15 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     @Override
     public void loadFailed(String msg) {
 
+    }
+
+    @Override
+    public void onEditClick() {
+
+    }
+
+    @Override
+    public void sendDanMu(String str) {
+        getPresenter().sendDanmu(TMSharedPUtil.getTMToken(this),liveId,str);
     }
 }

@@ -30,4 +30,10 @@ public class Constant {
 
     //弹幕
     public static String getDanmu=POST_URL+"/Api/vote_list";
+
+    //发送弹幕
+    public static String senDDanmu=POST_URL+"/Api/public_vote";
+
+
+
 }

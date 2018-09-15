@@ -18,6 +18,7 @@ import java.util.List;
 import retrofit2.http.GET;
 import shopping.hlhj.com.mylibrary.BasePresenter;
 import shopping.hlhj.com.mylibrary.BaseView;
+import shopping.hlhj.com.mylibrary.bean.BaseBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
@@ -95,6 +96,28 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                 });
     }
     /**
+     * 发送弹幕
+     */
+    public void sendDanmu(String token,int lid,String content){
+        OkGo.<String>get(Constant.senDDanmu)
+                .params("token",token)
+                .params("lid",lid)
+                .params("content",content)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        int code = jsonObject.getInteger("code");
+                        if (code == 1) {
+                            Gson gson = new Gson();
+                            BaseBean baseBean = gson.fromJson(body, BaseBean.class);
+
+                        }
+                    }
+                });
+    }
+    /**
      * 直播加载更多
      *
      * @param context
@@ -133,6 +156,7 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
         void loadFailed(String msg);
 
         void loadDanmu(DanMuBean danMuBean);
+
 
     }
 }

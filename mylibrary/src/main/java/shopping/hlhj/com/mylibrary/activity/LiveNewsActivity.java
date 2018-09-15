@@ -17,6 +17,7 @@ import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
+import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
@@ -69,9 +70,15 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(manager);
-
         setPresenter(new LiveNewsPresenter(LiveNewsActivity.this));
         getPresenter().loadLiveNesData(this, liveId,0);
+        getPresenter().getDanmuData(liveId);
+
+    }
+
+    @Override
+    public void loadDanmu(DanMuBean danMuBean) {
+        vdPlayer.addDanmu(danMuBean);
     }
 
     @Override

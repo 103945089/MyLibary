@@ -27,4 +27,7 @@ public class Constant {
     public static String ARTICLE_DETAIL = POST_URL + "/Api/topics_detail";
     //专题更多
     public static String ARTICLE_MORE = POST_URL + "/Api/topics_list";
+
+    //弹幕
+    public static String getDanmu=POST_URL+"/Api/vote_list";
 }

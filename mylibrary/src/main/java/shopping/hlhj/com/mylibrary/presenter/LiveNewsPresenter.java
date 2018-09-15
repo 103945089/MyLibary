@@ -1,6 +1,7 @@
 package shopping.hlhj.com.mylibrary.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -17,6 +18,7 @@ import java.util.List;
 import retrofit2.http.GET;
 import shopping.hlhj.com.mylibrary.BasePresenter;
 import shopping.hlhj.com.mylibrary.BaseView;
+import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.Search;
@@ -72,7 +74,26 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                 });
 
     }
-
+    /**
+     * 获取弹幕
+     */
+    public void getDanmuData(int live_id){
+        OkGo.<String>get(Constant.getDanmu)
+                .params("live_id",live_id)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        int code = jsonObject.getInteger("code");
+                        if (code == 1) {
+                            Gson gson = new Gson();
+                            DanMuBean danMuBean = gson.fromJson(body, DanMuBean.class);
+                            getView().loadDanmu(danMuBean);
+                        }
+                    }
+                });
+    }
     /**
      * 直播加载更多
      *
@@ -110,6 +131,8 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
         void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans);
 
         void loadFailed(String msg);
+
+        void loadDanmu(DanMuBean danMuBean);
 
     }
 }

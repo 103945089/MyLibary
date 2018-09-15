@@ -25,15 +25,16 @@ import shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
 public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener {
 
     private DanmakuVDPlayer vdPlayer;
-    private TextView tv_live_titel,tv_live_content,tv_live_contentmore,tv_look;
-    private LinearLayout ll_zan,ll_look,ll_collect,ll_shared;
-    private ImageView img_zan,img_look,img_collect;
+    private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look;
+    private LinearLayout ll_zan, ll_look, ll_collect, ll_shared;
+    private ImageView img_zan, img_look, img_collect;
     private EditText etContent;
     private RecyclerView recyclerview;
     private int liveId;
@@ -70,9 +71,9 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         etContent = findViewById(R.id.etContent);
         recyclerview = findViewById(R.id.recyclerview);
 //        springView = findViewById(R.id.springview);
-        orientationUtils=new OrientationUtils(this,vdPlayer);
+        orientationUtils = new OrientationUtils(this, vdPlayer);
 
-        vdPlayer.onEditClickListener=this;
+        vdPlayer.onEditClickListener = this;
     }
 
     @Override
@@ -81,14 +82,9 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(manager);
         setPresenter(new LiveNewsPresenter(LiveNewsActivity.this));
-        getPresenter().loadLiveNesData(this, liveId,0);
         getPresenter().getDanmuData(liveId);
+        getPresenter().loadLiveDetail(this, liveId);
 
-    }
-
-    @Override
-    public void loadDanmu(DanMuBean danMuBean) {
-        vdPlayer.addDanmu(danMuBean);
     }
 
     @Override
@@ -96,7 +92,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         ll_zan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dianzanflag){
+                if (dianzanflag) {
                     img_zan.setImageResource(R.drawable.ic_home_praise_select);
                     dianzanflag = false;
                 } else {
@@ -109,7 +105,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         ll_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (collectflag){
+                if (collectflag) {
                     img_collect.setImageResource(R.drawable.ic_collection);
                     collectflag = false;
                 } else {
@@ -135,18 +131,28 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadSuccess(DetailBean.DetailDatas detailDatas) {
-        tv_look.setText(detailDatas.like + "");
-        tv_live_titel.setText(detailDatas.title);
-        tv_live_content.setText(detailDatas.content);
 
-        initGsy(detailDatas);
     }
 
+
+    @Override
+    public void loadDanmu(DanMuBean danMuBean) {
+        vdPlayer.addDanmu(danMuBean);
+    }
+
+    @Override
+    public void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean) {
+        Log.d("----------------------",liveDetailBean.live_source.toString());
+        tv_live_titel.setText(liveDetailBean.live_title);
+        tv_live_content.setText(liveDetailBean.live_desc);
+        initGsy(liveDetailBean);
+    }
     /**
      * 使能Gsy播放器
-     * @param detailDatas
+     *
+     * @param liveDetail
      */
-    private void initGsy(DetailBean.DetailDatas detailDatas) {
+    private void initGsy(LiveDetailBean.LiveDetail liveDetail) {
         GSYVideoOptionBuilder builder = new GSYVideoOptionBuilder();
 
         builder
@@ -154,13 +160,13 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
                 .setLockLand(false)
-                .setUrl(detailDatas.video_url)
+                .setUrl(liveDetail.live_source)
                 .setAutoFullWithSize(true)
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
                 .setCacheWithPlay(false)
                 .setVideoTitle("")
-                .setVideoAllCallBack(new GSYSampleCallBack(){
+                .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
@@ -170,7 +176,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
-                        if (orientationUtils!=null){
+                        if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
                     }
@@ -185,7 +191,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             @Override
             public void onClick(View view) {
                 orientationUtils.resolveByClick();
-                if (orientationUtils.getIsLand()>0){
+                if (orientationUtils.getIsLand() > 0) {
                     orientationUtils.backToProtVideo();
                 }
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
@@ -202,7 +208,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadCommentSuccess(List<DetailBean.DetailDatas.CommentBean> commentBeans) {
-        commentAdapter = new CommentAdapter(this,commentBeans);
+        commentAdapter = new CommentAdapter(this, commentBeans);
         recyclerview.setAdapter(commentAdapter);
     }
 
@@ -218,6 +224,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void sendDanMu(String str) {
-        getPresenter().sendDanmu(TMSharedPUtil.getTMToken(this),liveId,str);
+        getPresenter().sendDanmu(TMSharedPUtil.getTMToken(this), liveId, str);
     }
+
 }

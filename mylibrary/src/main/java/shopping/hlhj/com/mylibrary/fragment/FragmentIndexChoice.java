@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -61,7 +63,7 @@ import shopping.hlhj.com.mylibrary.R;
 
 public class FragmentIndexChoice extends Fragment {
     Banner mBanner;
-    TextView tvShipingMore,tvTime,tvRemenMore,tvZhuantiMore,tvTuijianTitle,tvTuijianAuthor;
+    TextView tvLiveNewsTitle,tvShipingMore,tvTime,tvRemenMore,tvZhuantiMore,tvTuijianTitle,tvTuijianAuthor;
     ImageView imgXinwen;
     RecyclerView ryZhuanti,ryNews;
     GridView grideViewOther, grideHot,gridLive;
@@ -92,6 +94,7 @@ public class FragmentIndexChoice extends Fragment {
 
     private void initView() {
         mBanner = view.findViewById(R.id.convenientBanner);
+        tvLiveNewsTitle = view.findViewById(R.id.tv_xinwen);
         tvShipingMore = view.findViewById(R.id.tv_shiping_more);
         imgXinwen = view.findViewById(R.id.img_xinwen);
         tvTime = view.findViewById(R.id.tv_time);
@@ -312,11 +315,22 @@ public class FragmentIndexChoice extends Fragment {
     }
 
 
-    public void getLiveImg(List<TopBanner.Datas.LiveBean> liveBeanList){
+    public void getLiveImg(final List<TopBanner.Datas.LiveBean> liveBeanList){
         liveId = liveBeanList.get(0).id;
+        tvLiveNewsTitle.setText(liveBeanList.get(0).live_title);
         Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(0).getLive_thumb()).into(imgXinwen);
         liveNewsAdapter = new LiveNewsAdapter(context,liveBeanList);
+        gridLive.setNumColumns(liveBeanList.size());
         gridLive.setAdapter(liveNewsAdapter);
+        gridLive.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(position).getLive_thumb()).into(imgXinwen);
+                tvTime.setText(JavaUtils.StampstoTime(String.valueOf(liveBeanList.get(position).create_at),"yyyy-MM-dd HH:mm:ss"));
+                tvLiveNewsTitle.setText(liveBeanList.get(position).live_title);
+                liveId = liveBeanList.get(position).id;
+            }
+        });
     }
 
     public static class GlideImageLoader extends ImageLoader {

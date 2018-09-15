@@ -22,7 +22,6 @@ public class LiveMoreAdapter extends BaseAdapter{
     private List<MoreBean.MoreDatas> moreDatas;
 
     public LiveMoreAdapter(Context context, List<MoreBean.MoreDatas> moreDatas) {
-       Log.d("--------------",moreDatas.size() + "") ;
         this.context = context;
         this.moreDatas = moreDatas;
     }
@@ -49,6 +48,7 @@ public class LiveMoreAdapter extends BaseAdapter{
             holder = new LiveMoreViewHolder();
             convertView = View.inflate(context, R.layout.adapter_livemore,null);
             holder.imgLiveMore = convertView.findViewById(R.id.img_livemore);
+            holder.imgMoreLanud = convertView.findViewById(R.id.img_more_lanud);
             holder.imgMoreCollected = convertView.findViewById(R.id.img_more_collected);
             holder.imgMoreShared = convertView.findViewById(R.id.img_more_shared);
             holder.tvLiveMoreTitle = convertView.findViewById(R.id.tv_livemore_title);
@@ -64,6 +64,15 @@ public class LiveMoreAdapter extends BaseAdapter{
         }
         Glide.with(context).load(Constant.IMG_URL + moreDatas.get(position).live_thumb).into(holder.imgLiveMore);
         holder.tvLiveMoreTitle.setText(moreDatas.get(position).live_title);
+        holder.tvLooknum.setText(moreDatas.get(position).read_num + "");
+        holder.tvMoreLanud.setText(moreDatas.get(position).laud_num + "");
+        holder.tvMoreComment.setText(moreDatas.get(position).comment_num + "");
+        if (moreDatas.get(position).is_laud == 1){
+            holder.imgMoreLanud.setImageResource(R.drawable.ic_home_praise_select);
+        }
+        if (moreDatas.get(position).is_collection == 1){
+            holder.imgMoreCollected.setImageResource(R.drawable.ic_collection);
+        }
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +85,7 @@ public class LiveMoreAdapter extends BaseAdapter{
     }
 
     class LiveMoreViewHolder {
-        ImageView imgLiveMore,imgMoreCollected,imgMoreShared;
+        ImageView imgLiveMore,imgMoreLanud,imgMoreCollected,imgMoreShared;
         TextView tvLiveMoreTitle,tvLooknum,tvMoreLanud,tvMoreComment;
         LinearLayout linearLayout,llLivemoreLanud,llLivemoreComment;
     }

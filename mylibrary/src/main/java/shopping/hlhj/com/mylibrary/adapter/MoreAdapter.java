@@ -15,6 +15,8 @@ import java.text.ParseException;
 import java.util.List;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
+import shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
 import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 
@@ -62,9 +64,25 @@ public class MoreAdapter extends BaseAdapter{
         if (isSpecial == true){
             Glide.with(context).load(hotMoreDatas.get(position).channel_thumb).into(holder.imgHotMore);
             holder.tvHotMoreTitle.setText(hotMoreDatas.get(position).name);
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,ArticleDetailActivity.class);
+                    intent.putExtra("id",hotMoreDatas.get(position).id);
+                    context.startActivity(intent);
+                }
+            });
         }else if (isSpecial == false){
             Glide.with(context).load(hotMoreDatas.get(position).cover).into(holder.imgHotMore);
             holder.tvHotMoreTitle.setText(hotMoreDatas.get(position).title);
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,HotVideoDetailActivity.class);
+                    intent.putExtra("id",hotMoreDatas.get(position).id);
+                    context.startActivity(intent);
+                }
+            });
         }
         String s = JavaUtils.StampstoTime(String.valueOf(hotMoreDatas.get(position).create_time), "yyyy-MM-dd HH:mm:ss");
         try {
@@ -73,14 +91,6 @@ public class MoreAdapter extends BaseAdapter{
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,HotVideoDetailActivity.class);
-                intent.putExtra("id",hotMoreDatas.get(position).id);
-                context.startActivity(intent);
-            }
-        });
         return convertView;
     }
 

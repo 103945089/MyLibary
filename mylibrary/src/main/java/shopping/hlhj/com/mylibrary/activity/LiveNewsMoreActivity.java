@@ -9,7 +9,9 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.LiveMoreAdapter;
+import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
@@ -68,7 +70,6 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
 
     @Override
     public void loadLiveMoreSuccess(List<MoreBean.MoreDatas> moreDatas) {
-        Log.d("2222222222222222",moreDatas.size() + "");
         liveMoreAdapter = new LiveMoreAdapter(this,moreDatas);
         listView.setAdapter(liveMoreAdapter);
     }
@@ -82,4 +83,16 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
     public void loadFailed(String msg) {
 
     }
+
+    @Override
+    public void loadDanmu(DanMuBean danMuBean) {
+
+    }
+
+    @Override
+    public void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean) {
+
+    }
+
+
 }

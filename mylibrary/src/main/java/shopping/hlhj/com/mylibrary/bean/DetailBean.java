@@ -59,6 +59,14 @@ public class DetailBean implements Serializable {
         public int is_collection;
         public int status;
         public int like;
+        public String live_title;
+        public String live_desc;
+        public String live_source;
+        public int live_type;
+        public int online;
+        public int live_status;
+        public int vote_status;
+        public int comment_status;
         public List<CommentBean> commentBeans;
 
         @Override
@@ -81,8 +89,80 @@ public class DetailBean implements Serializable {
                     ", is_collection=" + is_collection +
                     ", status=" + status +
                     ", like=" + like +
+                    ", live_title='" + live_title + '\'' +
+                    ", live_desc='" + live_desc + '\'' +
+                    ", live_source='" + live_source + '\'' +
+                    ", live_type=" + live_type +
+                    ", online=" + online +
+                    ", live_status=" + live_status +
+                    ", vote_status=" + vote_status +
+                    ", comment_status=" + comment_status +
                     ", commentBeans=" + commentBeans +
                     '}';
+        }
+
+        public String getLive_title() {
+            return live_title;
+        }
+
+        public void setLive_title(String live_title) {
+            this.live_title = live_title;
+        }
+
+        public String getLive_desc() {
+            return live_desc;
+        }
+
+        public void setLive_desc(String live_desc) {
+            this.live_desc = live_desc;
+        }
+
+        public String getLive_source() {
+            return live_source;
+        }
+
+        public void setLive_source(String live_source) {
+            this.live_source = live_source;
+        }
+
+        public int getLive_type() {
+            return live_type;
+        }
+
+        public void setLive_type(int live_type) {
+            this.live_type = live_type;
+        }
+
+        public int getOnline() {
+            return online;
+        }
+
+        public void setOnline(int online) {
+            this.online = online;
+        }
+
+        public int getLive_status() {
+            return live_status;
+        }
+
+        public void setLive_status(int live_status) {
+            this.live_status = live_status;
+        }
+
+        public int getVote_status() {
+            return vote_status;
+        }
+
+        public void setVote_status(int vote_status) {
+            this.vote_status = vote_status;
+        }
+
+        public int getComment_status() {
+            return comment_status;
+        }
+
+        public void setComment_status(int comment_status) {
+            this.comment_status = comment_status;
         }
 
         public int getNav_id() {

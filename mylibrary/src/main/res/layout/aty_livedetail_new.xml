@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#f5f5f5"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
+
     <shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer
         android:id="@+id/videoPlayer"
         android:layout_width="match_parent"
         android:layout_height="195dp" />
+
     <LinearLayout
-        android:layout_below="@+id/videoPlayer"
         android:id="@+id/ll_live_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/videoPlayer"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="4sp"
-            android:background="@drawable/fengexian"/>
+            android:background="@drawable/fengexian" />
+
         <TextView
             android:id="@+id/tv_live_titel"
             android:layout_width="wrap_content"
@@ -25,85 +30,90 @@
             android:padding="8dp"
             android:text="直播标题"
             android:textColor="@color/text_black"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="center">
+
             <TextView
                 android:id="@+id/tv_live_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="直播的内容.简介：..........................."
                 android:ellipsize="end"
                 android:maxLength="50"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
+                android:text="直播的内容.简介：..........................."
                 android:textColor="@color/text_grey"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
+
             <TextView
                 android:id="@+id/tv_live_contentmore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="查看更多"
-                android:paddingRight="8dp"
-                android:textColor="@color/red"
-                android:textSize="10sp"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"/>
+                android:paddingRight="8dp"
+                android:text="查看更多"
+                android:textColor="@color/red"
+                android:textSize="10sp" />
 
         </RelativeLayout>
-
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
             <LinearLayout
                 android:id="@+id/ll_zan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center">
+
                 <ImageView
                     android:id="@+id/img_zan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_home_praise_normal"/>
+                    android:src="@drawable/ic_home_praise_normal" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:text="赞"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_look"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:gravity="center">
+
                 <ImageView
                     android:id="@+id/img_look"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_views"/>
+                    android:src="@drawable/ic_views" />
+
                 <TextView
                     android:id="@+id/tv_look"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:text="123"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -111,13 +121,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center">
+
                 <ImageView
                     android:id="@+id/img_collect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_sc_normal"/>
+                    android:src="@drawable/ic_sc_normal" />
             </LinearLayout>
 
             <LinearLayout
@@ -125,65 +136,68 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center">
+
                 <ImageView
                     android:id="@+id/img_shared"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_home_share"/>
+                    android:src="@drawable/ic_home_share" />
             </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="2sp"
-            android:background="@drawable/fengexian"/>
+            android:background="@drawable/fengexian" />
     </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/bottomBar"
-        android:paddingTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="#fff"
         android:paddingBottom="5dp"
-        android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingRight="10dp"
+        android:paddingTop="5dp">
+
         <ImageView
             android:id="@+id/btShare"
-            android:src="@drawable/ic_zb_fenxiagn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/ic_zb_fenxiagn"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/btSend"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_zb_fasong"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_zb_fasong" />
+
         <EditText
             android:id="@+id/etContent"
-            android:layout_toLeftOf="@id/btSend"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
             android:layout_marginRight="10dp"
-            android:textSize="14sp"
+            android:layout_toLeftOf="@id/btSend"
+            android:background="@drawable/et_border"
             android:hint="写评论"
             android:paddingLeft="15dp"
-            android:background="@drawable/et_border"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_width="match_parent"
-            android:layout_height="35dp" />
+            android:textSize="14sp" />
     </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_above="@+id/bottomBar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomBar" />
 
 </RelativeLayout>

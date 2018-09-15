@@ -23,28 +23,39 @@
             android:layout_marginBottom="20dp"
             android:ellipsize="end"
             android:lines="1"
+            android:layout_margin="5dp"
             android:padding="5dp"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_zb_zhengzaizhibo"
+            android:padding="5dp"/>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/tv_livemore_title"
+            android:layout_margin="5dp"
+            android:padding="5dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="40dp">
+            android:layout_marginLeft="10dp">
 
             <ImageView
                 android:layout_width="wrap_content"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_views" />
+                android:src="@drawable/ic_home_views" />
 
             <TextView
                 android:id="@+id/tv_looknum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </LinearLayout>

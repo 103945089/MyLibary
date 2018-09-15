@@ -2,6 +2,7 @@ package shopping.hlhj.com.mylibrary.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -21,6 +22,7 @@ import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.bean.BaseBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.Search;
 import shopping.hlhj.com.mylibrary.bean.TopBanner;
@@ -112,7 +114,6 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                         if (code == 1) {
                             Gson gson = new Gson();
                             BaseBean baseBean = gson.fromJson(body, BaseBean.class);
-
                         }
                     }
                 });
@@ -146,6 +147,25 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                 });
     }
 
+    //直播详情
+    public void loadLiveDetail(Context context,int id){
+        OkGo.<String>get(Constant.LIVE_DETAIL)
+                .tag(context)
+                .params("live_id",id)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        if (jsonObject.getInteger("code") == 1){
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            LiveDetailBean.LiveDetail liveDetailBean = new Gson().fromJson(data.toString(), new TypeToken<LiveDetailBean.LiveDetail>(){}.getType());
+                            getView().loadLiveDetail(liveDetailBean);
+                        }
+                    }
+                });
+    }
+
     public interface LiveNewsView extends BaseView {
         void loadSuccess(DetailBean.DetailDatas detailDatas);
 
@@ -157,6 +177,7 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
 
         void loadDanmu(DanMuBean danMuBean);
 
+        void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean);
 
     }
 }

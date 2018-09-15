@@ -7,11 +7,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.GSYSampleADVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.util.List;
 
@@ -24,14 +26,15 @@ import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
 
 public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView {
 
-    private GSYSampleADVideoPlayer vdPlayer;
+    private StandardGSYVideoPlayer vdPlayer;
     private EditText etContent;
     private ListView listView;
-    private TextView tv_title, tv_time, tv_author,tv_comment_normal;
+    private TextView tv_title, tv_time, tv_author, tv_comment_normal;
     private ImageView img_btn;
     private int id;
     private String etString;
     private OrientationUtils orientationUtils;
+
     @Override
     protected int getContentResId() {
         return R.layout.activity_hotvideodetail;
@@ -53,14 +56,26 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         tv_comment_normal = findViewById(R.id.tv_comment_normal);
         img_btn = findViewById(R.id.btSend);
 
-        orientationUtils=new OrientationUtils(this,vdPlayer);
+        orientationUtils = new OrientationUtils(this, vdPlayer);
 
     }
 
     @Override
-    protected void initData(){
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        GSYVideoManager.releaseAllVideos();
+        super.onPause();
+
+    }
+
+    @Override
+    protected void initData() {
         setPresenter(new HotVideoPresenter(this));
-        getPresenter().loadVideoData(this,id,0);
+        getPresenter().loadVideoData(this, id, 0);
     }
 
     @Override
@@ -69,7 +84,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
             @Override
             public void onClick(View v) {
                 etString = etContent.getText().toString();
-                if (null != etString && !"".equals(etString)){
+                if (null != etString && !"".equals(etString)) {
 
                 }
             }
@@ -80,8 +95,20 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     @Override
     public void loadDataSuccess(DetailBean.DetailDatas detailDatas) {
         tv_title.setText(detailDatas.title);
-        tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time),"yyyy-MM-dd HH:mm"));
+        tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm"));
         tv_author.setText(detailDatas.release);
+        initGsy(detailDatas);
+        List<DetailBean.DetailDatas.CommentBean> commentBeans = detailDatas.getCommentBeans();
+        if (null == commentBeans || commentBeans.size() == 0) {
+            listView.setVisibility(View.GONE);
+            tv_comment_normal.setVisibility(View.VISIBLE);
+        } else {
+            listView.setVisibility(View.VISIBLE);
+            tv_comment_normal.setVisibility(View.GONE);
+        }
+    }
+
+    private void initGsy(DetailBean.DetailDatas detailDatas) {
         GSYVideoOptionBuilder builder = new GSYVideoOptionBuilder();
 
         builder
@@ -95,7 +122,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                 .setNeedLockFull(true)
                 .setCacheWithPlay(false)
                 .setVideoTitle("")
-                .setVideoAllCallBack(new GSYSampleCallBack(){
+                .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
@@ -105,7 +132,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
-                        if (orientationUtils!=null){
+                        if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
                     }
@@ -115,6 +142,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                 orientationUtils.setEnable(!lock);
             }
         }).build(vdPlayer);
+        vdPlayer.getStartButton().performClick();
 
         vdPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,14 +155,13 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                 vdPlayer.startWindowFullscreen(HotVideoDetailActivity.this, false, true);
             }
         });
-        List<DetailBean.DetailDatas.CommentBean> commentBeans = detailDatas.getCommentBeans();
-        if (null == commentBeans || commentBeans.size() == 0){
-            listView.setVisibility(View.GONE);
-            tv_comment_normal.setVisibility(View.VISIBLE);
-        }else {
-            listView.setVisibility(View.VISIBLE);
-            tv_comment_normal.setVisibility(View.GONE);
-        }
+
+        vdPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

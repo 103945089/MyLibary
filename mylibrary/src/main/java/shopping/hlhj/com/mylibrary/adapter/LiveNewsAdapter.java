@@ -57,14 +57,6 @@ public class LiveNewsAdapter extends BaseAdapter {
             holder = (LiveNewsViewHolder) convertView.getTag();
         }
         Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(position).getLive_thumb()).into(holder.imgView);
-        holder.imgView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, LiveNewsActivity.class);
-                intent.putExtra("id",liveBeanList.get(position).id);
-                context.startActivity(intent);
-            }
-        });
         return convertView;
     }
 

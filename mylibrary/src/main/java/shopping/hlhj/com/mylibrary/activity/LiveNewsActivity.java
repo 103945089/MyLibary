@@ -140,6 +140,10 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         getPresenter().loadLiveCommentData(this, liveId, page);
         springView.setHeader(new DefaultHeader(recyclerview.getContext()));
         springView.setFooter(new DefaultFooter(recyclerview.getContext()));
+
+        //todo 添加浏览记录接口 每次进页面掉一次， 不需要回调
+//        collectPresenter.addHis(TMSharedPUtil.getTMUser(this).getMember_code(),);
+
     }
 
     @Override

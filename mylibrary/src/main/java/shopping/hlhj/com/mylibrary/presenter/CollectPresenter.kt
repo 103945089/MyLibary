@@ -101,6 +101,31 @@ class CollectPresenter(baseView:CollectView) :BasePresenter<CollectPresenter.Col
                     }
                 })
     }
+
+    /**
+     * 添加历史浏览记录
+     */
+    fun addHis(member_code:String,title:String,intro:String
+               ,app_id:String,article_id:String,extend:String,tag:String,type:String,pic:String,token: String){
+
+        OkGo.post<String>(Constant.ADD_HIS)
+                .params("member_code",member_code)
+                .params("title",title)
+                .params("intro",intro)
+                .params("app_id",app_id)
+                .params("article_id",article_id)
+                .params("extend",extend)
+                .params("tag",tag)//传空字符串
+                .params("type",type)//类型 1 文章 2视频
+                .params("pic",pic)//缩略图
+                .params("token",token)
+                .execute(object :StringCallback(){
+                    override fun onSuccess(response: Response<String>?) {
+
+                    }
+                })
+
+    }
     interface CollectView :BaseView{
         fun hasCollected(collBean: CollBean)
         fun notCollected()

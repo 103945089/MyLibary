@@ -53,4 +53,6 @@ public class Constant {
     //取消收藏
     public static String CANCEL_COLL=POST_URL+"/member/Memberstar/deleteStar";
 
+    //添加历史浏览记录
+    public static String ADD_HIS=POST_URL+"/member/Memberfootprint/addFootprint/";
 }

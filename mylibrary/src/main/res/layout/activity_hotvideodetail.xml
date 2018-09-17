@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/ll_videodetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -55,25 +56,34 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/fengexian"/>
-
-        <ListView
-            android:id="@+id/list_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_comment_normal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_marginTop="120dp"
-            android:text="暂无评论~快来抢沙发~" />
-
-
+            android:background="@drawable/fengexian" />
     </LinearLayout>
+
+
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview_hot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomBar"
+        android:layout_below="@+id/ll_videodetail">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ry_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
+
+    </com.liaoinstan.springview.widget.SpringView>
+
+    <TextView
+        android:id="@+id/tv_comment_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_videodetail"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:text="暂无评论~快来抢沙发~"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/bottomBar"

@@ -59,14 +59,13 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                             JSONArray data = jsonObject.getJSONArray("data");
                             List<CommentBean.CommentData> commentBeans = new Gson().fromJson(data.toString(), new TypeToken<List<CommentBean.CommentData>>() {
                             }.getType());
-                            Log.e("zy", "--4--" + commentBeans.toString());
                             if (commentBeans != null && commentBeans.size() > 0) {
                                 getView().loadCommentSuccess(commentBeans);
                             } else {
                                 getView().loadFailed("1");
                             }
                         } else {
-                            getView().loadFailed("1");
+                            getView().loadFailed("2");
                         }
                     }
 

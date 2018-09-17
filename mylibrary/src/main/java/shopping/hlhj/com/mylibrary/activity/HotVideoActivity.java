@@ -9,6 +9,7 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.MoreAdapter;
+import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
@@ -78,5 +79,15 @@ public class HotVideoActivity extends BaseActivity<HotVideoPresenter> implements
     public void loadHotMoreSuccess(List<MoreBean.MoreDatas> moreDatas) {
         moreAdapter = new MoreAdapter(this,moreDatas,false);
         listView.setAdapter(moreAdapter);
+    }
+
+    @Override
+    public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
+
+    }
+
+    @Override
+    public void loadSendCommentSuccess(String msg) {
+
     }
 }

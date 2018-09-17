@@ -1,6 +1,7 @@
 package shopping.hlhj.com.mylibrary.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BasePresenter;
 import shopping.hlhj.com.mylibrary.BaseView;
+import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.data.Constant;
@@ -25,6 +27,7 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
         super(baseview);
     }
 
+    //加载详情数据
     public void loadVideoData(Context context, int id, int uid) {
         OkGo.<String>get(Constant.DETAIL_URL)
                 .tag(context)
@@ -77,11 +80,76 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                 });
     }
 
+    /**
+     * 加载评论数据
+     *
+     * @param context
+     * @param id
+     * @param page
+     */
+    public void loadHotCommentData(Context context, int id, int page) {
+        OkGo.<String>get(Constant.COMMENT_LIST)
+                .tag(context)
+                .params("live_id", id)
+                .params("page", page)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        JSONObject jsonObject = JSON.parseObject(response.body());
+                        int code = jsonObject.getInteger("code");
+                        if (code == 1) {
+                            JSONArray data = jsonObject.getJSONArray("data");
+                            List<CommentBean.CommentData> commentBeans = new Gson().fromJson(data.toString(), new TypeToken<List<CommentBean.CommentData>>() {
+                            }.getType());
+                            if (commentBeans != null && commentBeans.size() > 0) {
+                                getView().loadCommentSuccess(commentBeans);
+                            } else {
+                                getView().loadFailed("1");
+                            }
+                        } else {
+                            getView().loadFailed("1");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        response.getException().printStackTrace();
+                        Log.e("zy", "错了---------------------" + response.getException());
+                        super.onError(response);
+
+                    }
+                });
+    }
+
+    //发布评论
+    public void sendComment(Context context,int live_id,String content,String token){
+        OkGo.<String>get(Constant.SEND_COMMENT)
+                .tag(context)
+                .params("live_id",live_id)
+                .params("content",content)
+                .params("token",token)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        int code = jsonObject.getInteger("code");
+                        if (code == 1){
+                            getView().loadSendCommentSuccess(jsonObject.getString("msg"));
+                        }
+                    }
+                });
+    }
+
     public interface HotVideoView extends BaseView {
         void loadDataSuccess(DetailBean.DetailDatas detailDatas);
 
         void loadFailed(String msg);
 
         void loadHotMoreSuccess(List<MoreBean.MoreDatas> MoreDatas);
+
+        void loadCommentSuccess(List<CommentBean.CommentData> commentData);
+
+        void loadSendCommentSuccess(String msg);
     }
 }

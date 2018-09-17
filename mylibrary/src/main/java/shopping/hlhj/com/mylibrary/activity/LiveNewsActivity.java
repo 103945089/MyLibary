@@ -1,5 +1,6 @@
 package shopping.hlhj.com.mylibrary.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -38,7 +39,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener {
 
     private DanmakuVDPlayer vdPlayer;
-    private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look, tv_live_num;
+    private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look, tv_live_num, tv_livecomment_normal;
     private LinearLayout ll_zan, ll_look, ll_collect, ll_shared;
     private ImageView img_zan, img_look, img_collect, btSend;
     private EditText etContent;
@@ -68,6 +69,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         tv_live_titel = findViewById(R.id.tv_live_titel);
         tv_live_content = findViewById(R.id.tv_live_content);
         tv_live_contentmore = findViewById(R.id.tv_live_contentmore);
+        tv_livecomment_normal = findViewById(R.id.tv_livecomment_normal);
         tv_live_num = findViewById(R.id.tv_live_num);
         tv_look = findViewById(R.id.tv_look);
         ll_zan = findViewById(R.id.ll_zan);
@@ -95,8 +97,8 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         getPresenter().getDanmuData(liveId);
         getPresenter().loadLiveDetail(this, liveId);
         getPresenter().loadLiveCommentData(this, liveId, page);
-        springView.setHeader(new DefaultHeader(this));
-        springView.setFooter(new DefaultFooter(this));
+        springView.setHeader(new DefaultHeader(recyclerview.getContext()));
+        springView.setFooter(new DefaultFooter(recyclerview.getContext()));
     }
 
     @Override
@@ -105,14 +107,14 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             @Override
             public void onRefresh() {
                 page = 1;
-                getPresenter().loadLiveCommentData(LiveNewsActivity.this,liveId,page);
+                getPresenter().loadLiveCommentData(LiveNewsActivity.this, liveId, page);
                 springView.onFinishFreshAndLoad();
             }
 
             @Override
             public void onLoadmore() {
                 page++;
-                getPresenter().loadLiveCommentData(LiveNewsActivity.this,liveId,page);
+                getPresenter().loadLiveCommentData(LiveNewsActivity.this, liveId, page);
                 springView.onFinishFreshAndLoad();
             }
         });
@@ -154,16 +156,17 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             public void onClick(View v) {
                 String tmToken = TMSharedPUtil.getTMToken(getApplicationContext());
                 String string = etContent.getText().toString();
-                if (null == tmToken || "".equals(tmToken) || TextUtils.isEmpty(tmToken)){
-                    Toast.makeText(LiveNewsActivity.this,"请登录",Toast.LENGTH_SHORT).show();
+                if (null == tmToken || "".equals(tmToken) || TextUtils.isEmpty(tmToken)) {
+                    Toast.makeText(LiveNewsActivity.this, "请登录", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LiveNewsActivity.this, ConfirmLoginActivity.class));
                     return;
                 }
-                if (null == string || "".equals(string) || TextUtils.isEmpty(string)){
-                    Toast.makeText(LiveNewsActivity.this,"请输入评论内容",Toast.LENGTH_SHORT).show();
+                if (null == string || "".equals(string) || TextUtils.isEmpty(string)) {
+                    Toast.makeText(LiveNewsActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (string != null || !"".equals(string)){
-                    getPresenter().sendComment(LiveNewsActivity.this,liveId,string,tmToken);
+                if (null != string && !"".equals(string) && tmToken != null && !tmToken.equals("")) {
+                    getPresenter().sendComment(LiveNewsActivity.this, liveId, string, tmToken);
                 }
             }
         });
@@ -194,8 +197,8 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadSendCommentSuccess(String msg) {
-        Toast.makeText(this,msg.toString(), LENGTH_SHORT);
-        getPresenter().loadLiveCommentData(this,liveId,page);
+        Toast.makeText(this, msg.toString(), LENGTH_SHORT);
+        getPresenter().loadLiveCommentData(this, liveId, page);
     }
 
     /**
@@ -265,14 +268,17 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
-        commentAdapter = new CommentAdapter(this,commentData);
+        tv_livecomment_normal.setVisibility(View.GONE);
+        commentAdapter = new CommentAdapter(this, commentData);
         recyclerview.setAdapter(commentAdapter);
     }
 
 
     @Override
     public void loadFailed(String msg) {
-
+        if (msg.equals("1")){
+            tv_livecomment_normal.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

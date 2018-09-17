@@ -80,6 +80,27 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                 });
     }
 
+    //发布评论
+    public void sendComment(Context context,int live_id,String content,String token){
+        OkGo.<String>get(Constant.SEND_COMMENT)
+                .tag(context)
+                .params("live_id",live_id)
+                .params("content",content)
+                .params("token",token)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        int code = jsonObject.getInteger("code");
+                        if (code == 1){
+                            getView().loadSendCommentSuccess(jsonObject.getString("msg"));
+                        }
+                    }
+                });
+    }
+
+
     /**
      * 获取弹幕
      */
@@ -183,6 +204,8 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
         void loadDanmu(DanMuBean danMuBean);
 
         void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean);
+
+        void loadSendCommentSuccess(String msg);
 
     }
 }

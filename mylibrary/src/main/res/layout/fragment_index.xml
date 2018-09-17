@@ -6,9 +6,9 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rl_fragment_index"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/login_red">
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/main_tab"

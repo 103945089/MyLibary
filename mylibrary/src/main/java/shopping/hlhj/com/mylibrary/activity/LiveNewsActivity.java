@@ -2,12 +2,14 @@ package shopping.hlhj.com.mylibrary.activity;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
@@ -27,10 +29,11 @@ import shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
-import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener {
 
@@ -47,6 +50,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private CommentAdapter commentAdapter;
     private OrientationUtils orientationUtils;
     private int page = 1;
+    private int lanud_num;
 
     @Override
     protected int getContentResId() {
@@ -101,13 +105,14 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             @Override
             public void onRefresh() {
                 page = 1;
+                getPresenter().loadLiveCommentData(LiveNewsActivity.this,liveId,page);
                 springView.onFinishFreshAndLoad();
-
             }
 
             @Override
             public void onLoadmore() {
                 page++;
+                getPresenter().loadLiveCommentData(LiveNewsActivity.this,liveId,page);
                 springView.onFinishFreshAndLoad();
             }
         });
@@ -116,9 +121,11 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             public void onClick(View v) {
                 if (dianzanflag) {
                     img_zan.setImageResource(R.drawable.ic_home_praise_select);
+                    tv_live_num.setText(lanud_num + 1 + "");
                     dianzanflag = false;
                 } else {
                     img_zan.setImageResource(R.drawable.ic_home_praise_normal);
+                    tv_live_num.setText(lanud_num + "");
                     dianzanflag = true;
                 }
 
@@ -145,7 +152,19 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         btSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String tmToken = TMSharedPUtil.getTMToken(getApplicationContext());
+                String string = etContent.getText().toString();
+                if (null == tmToken || "".equals(tmToken) || TextUtils.isEmpty(tmToken)){
+                    Toast.makeText(LiveNewsActivity.this,"请登录",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (null == string || "".equals(string) || TextUtils.isEmpty(string)){
+                    Toast.makeText(LiveNewsActivity.this,"请输入评论内容",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (string != null || !"".equals(string)){
+                    getPresenter().sendComment(LiveNewsActivity.this,liveId,string,tmToken);
+                }
             }
         });
     }
@@ -167,9 +186,16 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     public void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean) {
         tv_live_titel.setText(liveDetailBean.live_desc);
         tv_live_content.setText(liveDetailBean.live_title);
+        lanud_num = liveDetailBean.laud_num;
         tv_live_num.setText(liveDetailBean.laud_num + "");
         tv_look.setText(liveDetailBean.is_laud + "");
         initGsy(liveDetailBean);
+    }
+
+    @Override
+    public void loadSendCommentSuccess(String msg) {
+        Toast.makeText(this,msg.toString(), LENGTH_SHORT);
+        getPresenter().loadLiveCommentData(this,liveId,page);
     }
 
     /**
@@ -223,6 +249,13 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             }
         });
         vdPlayer.getStartButton().performClick();
+
+        vdPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -232,7 +265,6 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
-        Log.d("--------------", commentData.size() + "");
         commentAdapter = new CommentAdapter(this,commentData);
         recyclerview.setAdapter(commentAdapter);
     }

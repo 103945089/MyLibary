@@ -41,7 +41,7 @@ public class Constant {
     //评论列表
     public static String COMMENT_LIST = POST_URL + "/Api/comment_list";
 
-    //直播发布评论
+    //发布评论
     public static String SEND_COMMENT = "/Api/comment";
 
 }

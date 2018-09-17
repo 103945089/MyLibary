@@ -91,5 +91,10 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
 
     }
 
+    @Override
+    public void loadSendCommentSuccess(String msg) {
+
+    }
+
 
 }

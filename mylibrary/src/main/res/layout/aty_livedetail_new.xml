@@ -9,173 +9,174 @@
         android:id="@+id/videoPlayer"
         android:layout_width="match_parent"
         android:layout_height="195dp" />
+
     <com.liaoinstan.springview.widget.SpringView
         android:id="@+id/live_spring"
-        android:layout_below="@+id/videoPlayer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/ll_live_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="2sp"
-            android:background="@drawable/fengexian" />
-
-        <TextView
-            android:id="@+id/tv_live_titel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:ellipsize="end"
-            android:padding="8dp"
-            android:text=""
-            android:textColor="@color/text_black"
-            android:textSize="14sp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center">
-
-            <TextView
-                android:id="@+id/tv_live_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLength="50"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text=""
-                android:textColor="@color/text_grey"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_live_contentmore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:paddingRight="8dp"
-                android:visibility="gone"
-                android:text="查看更多"
-                android:textColor="@color/red"
-                android:textSize="10sp" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@drawable/fengexian" />
+        android:layout_above="@+id/bottomBar"
+        android:layout_below="@+id/videoPlayer">
 
         <LinearLayout
+            android:id="@+id/ll_live_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_zan"
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2sp"
+                android:background="@drawable/fengexian" />
+
+            <TextView
+                android:id="@+id/tv_live_titel"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center">
+                android:ellipsize="end"
+                android:lines="1"
+                android:padding="8dp"
+                android:text=""
+                android:textColor="@color/text_black"
+                android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/img_zan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_home_praise_normal" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center">
 
                 <TextView
-                    android:id="@+id/tv_live_num"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_live_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:maxLength="50"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
                     android:text=""
+                    android:textColor="@color/text_grey"
                     android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_look"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/img_look"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_views" />
 
                 <TextView
-                    android:id="@+id/tv_look"
+                    android:id="@+id/tv_live_contentmore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="8dp"
+                    android:text="查看更多"
+                    android:textColor="@color/red"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@drawable/fengexian" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
+
+                <LinearLayout
+                    android:id="@+id/ll_zan"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="123"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-            <LinearLayout
-                android:id="@+id/ll_collect"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center">
+                    <ImageView
+                        android:id="@+id/img_zan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_home_praise_normal" />
 
-                <ImageView
-                    android:id="@+id/img_collect"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/tv_live_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text=""
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_look"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_sc_normal" />
-            </LinearLayout>
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-            <LinearLayout
-                android:id="@+id/ll_shared"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center">
+                    <ImageView
+                        android:id="@+id/img_look"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_views" />
 
-                <ImageView
-                    android:id="@+id/img_shared"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/tv_look"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="123"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_collect"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_home_share" />
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_collect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_sc_normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_shared"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_shared"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_home_share" />
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_fenxian"
+                android:layout_width="match_parent"
+                android:layout_height="2sp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/fengexian" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_live_content" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_fenxian"
-            android:layout_width="match_parent"
-            android:layout_height="2sp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/fengexian" />
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_below="@+id/tv_fenxian"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomBar" />
 
     </com.liaoinstan.springview.widget.SpringView>
 

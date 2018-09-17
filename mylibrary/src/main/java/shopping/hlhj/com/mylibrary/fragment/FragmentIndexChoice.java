@@ -35,6 +35,7 @@ import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
 import org.apache.cordova.LOG;
@@ -184,6 +185,12 @@ public class FragmentIndexChoice extends Fragment {
                 Intent intent = new Intent(context,HotVideoDetailActivity.class);
                 intent.putExtra("id",tuijianId);
                 startActivity(intent);
+            }
+        });
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+
             }
         });
     }

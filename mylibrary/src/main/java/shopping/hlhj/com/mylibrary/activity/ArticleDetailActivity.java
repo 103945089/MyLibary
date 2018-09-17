@@ -34,11 +34,7 @@ import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implements ArticlePresenter.ArticleDetailView, CollectPresenter.CollectView {
 
     private int id;
-    private ImageView btBack,btSend,btColl,btGoShare;
-    private EditText etContent;
-    private TextView numCurrent,tvTittleTextView,tv_Time,tv_auther,tv_1,btMore,tv_article_detail_jianjie,tv_article_detail_conetent;
-    private WebView webView;
-    private RecyclerView comment_list;
+    private TextView tv_article_detail_jianjie,tv_article_detail_conetent;
     private GridView gridArticle;
     private ImageView imgArticle;
     private ArticleAdapter articleAdapter;
@@ -56,19 +52,6 @@ public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implem
 
     @Override
     protected void initView() {
-//        btBack = findViewById(R.id.btBack);
-//        btSend = findViewById(R.id.btSend);
-//        btColl = findViewById(R.id.btColl);
-//        btGoShare = findViewById(R.id.btGoShare);
-//        etContent = findViewById(R.id.etContent);
-//        numCurrent = findViewById(R.id.numCurrent);
-//        tvTittleTextView = findViewById(R.id.tvTittleTextView);
-//        tv_Time = findViewById(R.id.tv_Time);
-//        tv_auther = findViewById(R.id.tv_auther);
-//        tv_1 = findViewById(R.id.tv_1);
-//        btMore = findViewById(R.id.btMore);
-//        webView = findViewById(R.id.webView);
-//        comment_list = findViewById(R.id.comment_list);
         tv_article_detail_jianjie = findViewById(R.id.tv_article_detail_jianjie);
         tv_article_detail_conetent = findViewById(R.id.tv_article_detail_conetent);
         gridArticle = findViewById(R.id.grid_article);

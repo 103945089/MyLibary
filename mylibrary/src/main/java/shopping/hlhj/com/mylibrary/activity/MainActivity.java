@@ -10,11 +10,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.tenma.ventures.bean.TMUser;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.bean.UserBean;
 import shopping.hlhj.com.mylibrary.fragment.FragmentBoom;
 import shopping.hlhj.com.mylibrary.fragment.FragmentIndex;
 import shopping.hlhj.com.mylibrary.fragment.FragmentLive;
@@ -41,7 +45,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void beforeinit() {
-
+        TMUser tmUser = new TMUser();
+        tmUser.setToken("BBF236B7F379AEEEC451DC58ED60AB8B");
+        tmUser.setMember_code("1D0916EF9A29336083BFB0017C90EAEA");
+        tmUser.setMember_id(63);
+        TMSharedPUtil.saveTMUser(this,tmUser);
     }
 
     @Override

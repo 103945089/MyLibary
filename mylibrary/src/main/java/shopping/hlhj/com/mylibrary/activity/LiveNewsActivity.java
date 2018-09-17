@@ -23,6 +23,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
+import org.apache.cordova.LOG;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -38,6 +39,7 @@ import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.ParamsBean;
+import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
@@ -51,7 +53,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private ImageView img_zan, img_look, img_collect, btSend;
     private EditText etContent;
     private RecyclerView recyclerview;
-    private int liveId=0;
+    private int liveId = 0;
     private SpringView springView;
     private boolean dianzanflag = true;
     private boolean collectflag = true;
@@ -59,7 +61,8 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private OrientationUtils orientationUtils;
     private int page = 1;
     private int lanud_num;
-    private int cid=0;//收藏Id
+    private int cid = 0;//收藏Id
+    private String title;
     private CollectPresenter collectPresenter;
     private String extendStr;//拓展字段，收藏使用
     @Override
@@ -141,6 +144,9 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         springView.setHeader(new DefaultHeader(recyclerview.getContext()));
         springView.setFooter(new DefaultFooter(recyclerview.getContext()));
 
+        collectPresenter.isColl(TMSharedPUtil.getTMUser(this).getMember_code()
+                , String.valueOf(TMSharedPUtil.getTMUser(this).getMember_id()), String.valueOf(liveId),TMSharedPUtil.getTMToken(this));
+
         //todo 添加浏览记录接口 每次进页面掉一次， 不需要回调
 //        collectPresenter.addHis(TMSharedPUtil.getTMUser(this).getMember_code(),);
 
@@ -182,9 +188,18 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             @Override
             public void onClick(View v) {
                 if (collectflag) {
+
+                    collectPresenter.addColl(TMSharedPUtil.getTMUser(LiveNewsActivity.this).getMember_code()+"",title,title, Constant.APP_ID,
+                            liveId+"",
+                            extendStr,
+                            "",
+                            2+"",
+                            "aaa",
+                            TMSharedPUtil.getTMToken(LiveNewsActivity.this));
                     img_collect.setImageResource(R.drawable.ic_collection);
                     collectflag = false;
                 } else {
+                    collectPresenter.cancelColl(cid,TMSharedPUtil.getTMToken(LiveNewsActivity.this));
                     img_collect.setImageResource(R.drawable.ic_sc_normal);
                     collectflag = true;
                 }
@@ -212,6 +227,8 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                 }
                 if (null != string && !"".equals(string) && tmToken != null && !tmToken.equals("")) {
                     getPresenter().sendComment(LiveNewsActivity.this, liveId, string, tmToken);
+                    getPresenter().loadLiveCommentData(LiveNewsActivity.this, liveId, page);
+                    springView.onFinishFreshAndLoad();
                 }
             }
         });
@@ -232,18 +249,21 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean) {
-        tv_live_titel.setText(liveDetailBean.live_desc);
-        tv_live_content.setText(liveDetailBean.live_title);
+        tv_live_titel.setText(liveDetailBean.live_title);
+        tv_live_content.setText(liveDetailBean.live_desc);
         lanud_num = liveDetailBean.laud_num;
         tv_live_num.setText(liveDetailBean.laud_num + "");
         tv_look.setText(liveDetailBean.is_laud + "");
+        title = liveDetailBean.live_title;
         initGsy(liveDetailBean);
     }
 
     @Override
     public void loadSendCommentSuccess(String msg) {
-        Toast.makeText(this, msg.toString(), LENGTH_SHORT);
-        getPresenter().loadLiveCommentData(this, liveId, page);
+        if (msg.equals("200")){
+            etContent.setText("");
+        }
+        commentAdapter.upData(this);
     }
 
     /**
@@ -321,7 +341,9 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadFailed(String msg) {
-        if (msg.equals("1")){
+        Toast.makeText(LiveNewsActivity.this, msg.toString(), LENGTH_SHORT);
+        LOG.d("-----------------------",msg.toString());
+        if (msg.equals("1")) {
             tv_livecomment_normal.setVisibility(View.VISIBLE);
         }
     }
@@ -342,43 +364,57 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
      * @param collBean 收藏javabean 其中包含收藏条目ID,保存收藏ID,用来访问取消收藏接口的入参使用
      */
     @Override
-    public void hasCollected(@NotNull CollBean collBean) {
+    public void hasCollected(CollBean collBean) {
         //Todo  已收藏，让按钮变成已收藏样式
-
-        cid=collBean.getData().getStar_id();
+        img_collect.setImageResource(R.drawable.ic_collection);
+        collectflag = false;
+        cid = collBean.getData().getStar_id();
     }
 
     @Override
     public void notCollected() {
         //Todo  未收藏，让按钮变成未收藏样式
+        Log.e("fhp","22222");
+        img_collect.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
     }
 
     @Override
-    public void addCollect(@NotNull CollBean collBean) {
-        //todo 添加收藏成功，保存收藏条目ID,准备取消收藏当入参使用
-        cid=collBean.getData().getStar_id();
+    public void addCollect(CollBean collBean) {
+        // 添加收藏成功，保存收藏条目ID,准备取消收藏当入参使用
+        cid = collBean.getData().getStar_id();
         //todo 下面将图标变成已收藏
-
+        img_collect.setImageResource(R.drawable.ic_collection);
+        collectflag = false;
     }
 
     @Override
-    public void addCollectError(@NotNull Exception e) {
+    public void addCollectError(Exception e) {
         //todo 收藏接口访问失败回调
+        Toast.makeText(this,e.toString(),Toast.LENGTH_SHORT).show();
+        img_collect.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
     }
 
     @Override
     public void addCollectError() {
         //todo 收藏接口访问失败回调
+        Toast.makeText(this,"收藏失败",Toast.LENGTH_SHORT).show();
+        img_collect.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
     }
 
     @Override
     public void cancelCollect() {
         //todo 取消收藏成功 将图标变为未收藏
+        img_collect.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+        Toast.makeText(this,"取消收藏成功",Toast.LENGTH_SHORT);
     }
 
     @Override
     public void cancelCollectErro() {
         //todo 取消收藏失败
-
+        Toast.makeText(this,"取消收藏失败",Toast.LENGTH_SHORT);
     }
 }

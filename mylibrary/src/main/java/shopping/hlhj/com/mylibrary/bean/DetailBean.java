@@ -1,5 +1,7 @@
 package shopping.hlhj.com.mylibrary.bean;
 
+import org.w3c.dom.Comment;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -67,6 +69,7 @@ public class DetailBean implements Serializable {
         public int live_status;
         public int vote_status;
         public int comment_status;
+        public List<TextDetailComment> comment;
 
         @Override
         public String toString() {
@@ -96,7 +99,16 @@ public class DetailBean implements Serializable {
                     ", live_status=" + live_status +
                     ", vote_status=" + vote_status +
                     ", comment_status=" + comment_status +
+                    ", comment=" + comment +
                     '}';
+        }
+
+        public List<TextDetailComment> getComment() {
+            return comment;
+        }
+
+        public void setComment(List<TextDetailComment> comment) {
+            this.comment = comment;
         }
 
         public String getLive_title() {
@@ -299,6 +311,104 @@ public class DetailBean implements Serializable {
             this.like = like;
         }
 
+        public class TextDetailComment {
+            public int id;
+            public int laud_num;
+            public int nid;
+            public int uid;
+            public int create_time;
+            public String avatar;
+            public String username;
+            public String content;
+            public String reply;
+
+            @Override
+            public String toString() {
+                return "TextDetailComment{" +
+                        "id=" + id +
+                        ", laud_num=" + laud_num +
+                        ", nid=" + nid +
+                        ", uid=" + uid +
+                        ", create_time=" + create_time +
+                        ", avatar='" + avatar + '\'' +
+                        ", username='" + username + '\'' +
+                        ", content='" + content + '\'' +
+                        ", reply='" + reply + '\'' +
+                        '}';
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public int getLaud_num() {
+                return laud_num;
+            }
+
+            public void setLaud_num(int laud_num) {
+                this.laud_num = laud_num;
+            }
+
+            public int getNid() {
+                return nid;
+            }
+
+            public void setNid(int nid) {
+                this.nid = nid;
+            }
+
+            public int getUid() {
+                return uid;
+            }
+
+            public void setUid(int uid) {
+                this.uid = uid;
+            }
+
+            public int getCreate_time() {
+                return create_time;
+            }
+
+            public void setCreate_time(int create_time) {
+                this.create_time = create_time;
+            }
+
+            public String getAvatar() {
+                return avatar;
+            }
+
+            public void setAvatar(String avatar) {
+                this.avatar = avatar;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public void setUsername(String username) {
+                this.username = username;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
+            }
+
+            public String getReply() {
+                return reply;
+            }
+
+            public void setReply(String reply) {
+                this.reply = reply;
+            }
+        }
     }
 
 }

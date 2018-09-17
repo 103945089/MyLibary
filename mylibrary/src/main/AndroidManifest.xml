@@ -21,6 +21,7 @@
         <activity android:name=".activity.SpecialMoreActivity" />
         <activity android:name=".activity.LiveNewsMoreActivity" />
         <activity android:name=".activity.ConfirmLoginActivity" />
+        <activity android:name=".activity.TextDetailsActivity" />
     </application>
 
 </manifest>

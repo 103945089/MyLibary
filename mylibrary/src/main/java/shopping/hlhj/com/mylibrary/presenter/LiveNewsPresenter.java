@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -80,7 +81,7 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
     }
 
     //发布评论
-    public void sendComment(Context context,int live_id,String content,String token){
+    public void sendComment(final Context context, int live_id, String content, String token){
         OkGo.<String>get(Constant.SEND_COMMENT)
                 .tag(context)
                 .params("live_id",live_id)
@@ -93,8 +94,17 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
                         if (code == 1){
-                            getView().loadSendCommentSuccess(jsonObject.getString("msg"));
+                            getView().loadSendCommentSuccess("200");
+                        }else {
+                            getView().loadFailed("评论失败");
                         }
+                        getView().loadFailed(jsonObject.getString("msg"));
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        Toast.makeText(context,"评论失败",Toast.LENGTH_SHORT).show();
+                        super.onError(response);
                     }
                 });
     }

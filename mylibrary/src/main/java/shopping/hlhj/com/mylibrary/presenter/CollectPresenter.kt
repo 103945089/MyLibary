@@ -60,7 +60,7 @@ class CollectPresenter(baseView:CollectView) :BasePresenter<CollectPresenter.Col
                 .params("tag",tag)//传空字符串
                 .params("type",type)//类型 1 文章 2视频
                 .params("pic",pic)//缩略图
-                .params("token",token)
+                .headers("token",token)
                 .execute(object :StringCallback(){
                     override fun onSuccess(response: Response<String>?) {
                         val body = response!!.body()
@@ -118,7 +118,7 @@ class CollectPresenter(baseView:CollectView) :BasePresenter<CollectPresenter.Col
                 .params("tag",tag)//传空字符串
                 .params("type",type)//类型 1 文章 2视频
                 .params("pic",pic)//缩略图
-                .params("token",token)
+                .headers("token",token)
                 .execute(object :StringCallback(){
                     override fun onSuccess(response: Response<String>?) {
 

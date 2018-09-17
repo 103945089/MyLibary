@@ -24,4 +24,5 @@ public abstract class BasePresenter<T extends BaseView>  {
             weakReference = null;
         }
     }
+
 }

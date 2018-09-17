@@ -45,14 +45,17 @@ public class Constant {
     public static String SEND_COMMENT = POST_URL+"/Api/comment";
 
     //是否收藏
-    public static String IS_COLL=POST_URL+"/member/Memberstar/checkIsStar/";
+    public static String IS_COLL=IMG_URL+"/member/Memberstar/checkIsStar/";
 
     //添加收藏
-    public static String ADD_COLL=POST_URL+"/member/Memberstar/addStar/";
+    public static String ADD_COLL=IMG_URL+"/member/Memberstar/addStar/";
 
     //取消收藏
-    public static String CANCEL_COLL=POST_URL+"/member/Memberstar/deleteStar";
+    public static String CANCEL_COLL=IMG_URL+"/member/Memberstar/deleteStar";
 
     //添加历史浏览记录
-    public static String ADD_HIS=POST_URL+"/member/Memberfootprint/addFootprint/";
+    public static String ADD_HIS=IMG_URL+"/member/Memberfootprint/addFootprint/";
+
+    //APPID
+    public static String APP_ID="hlhj.new.kankan";
 }

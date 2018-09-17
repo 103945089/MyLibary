@@ -37,6 +37,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 
     private StandardGSYVideoPlayer vdPlayer;
     private EditText etContent;
+    private LinearLayout ll_videodetail;
     private RecyclerView recyclerView;
     private TextView tv_title, tv_time, tv_author, tv_comment_normal;
     private ImageView img_btn;
@@ -59,6 +60,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 
     @Override
     protected void initView() {
+        ll_videodetail = findViewById(R.id.ll_videodetail);
         vdPlayer = findViewById(R.id.hot_gsyvideo);
         etContent = findViewById(R.id.et_Content);
         recyclerView = findViewById(R.id.ry_comment);
@@ -89,7 +91,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
-
+        ll_videodetail.setVisibility(View.GONE);
         setPresenter(new HotVideoPresenter(this));
         getPresenter().loadVideoData(this, id, 0);
         getPresenter().loadHotCommentData(this, id, page);
@@ -139,8 +141,15 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         tv_title.setText(detailDatas.title);
         tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm"));
         tv_author.setText(detailDatas.release);
-        initGsy(detailDatas);
-
+        if (null == detailDatas.video_url || "".equals(detailDatas.video_url)){
+            Intent intent = new Intent(HotVideoDetailActivity.this,TextDetailsActivity.class);
+            intent.putExtra("id",id);
+            startActivity(intent);
+            finish();
+        }else {
+            ll_videodetail.setVisibility(View.VISIBLE);
+            initGsy(detailDatas);
+        }
     }
 
     private void initGsy(DetailBean.DetailDatas detailDatas) {

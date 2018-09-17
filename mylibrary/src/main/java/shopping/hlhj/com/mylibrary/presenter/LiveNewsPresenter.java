@@ -22,6 +22,7 @@ import retrofit2.http.GET;
 import shopping.hlhj.com.mylibrary.BasePresenter;
 import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.bean.BaseBean;
+import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
@@ -45,46 +46,46 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
      * @param page
      */
     public void loadLiveCommentData(Context context, int id, int page) {
-       OkGo.<String>get(Constant.COMMENT_LIST)
-               .tag(context)
-               .params("live_id",id)
-               .params("page",page)
-               .execute(new StringCallback() {
-                   @Override
-                   public void onSuccess(Response<String> response) {
-                       Log.e("fhp","--3--"+response.body());
-                       DetailBean detailBean = JSON.parseObject(response.body(), DetailBean.class);
-                       Log.e("fhp","--4--"+detailBean.toString());
-                       if (detailBean.getCode() == 1){
+        OkGo.<String>get(Constant.COMMENT_LIST)
+                .tag(context)
+                .params("live_id", id)
+                .params("page", page)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        JSONObject jsonObject = JSON.parseObject(response.body());
+                        int code = jsonObject.getInteger("code");
+                        if (code == 1) {
+                            JSONArray data = jsonObject.getJSONArray("data");
+                            List<CommentBean.CommentData> commentBeans = new Gson().fromJson(data.toString(), new TypeToken<List<CommentBean.CommentData>>() {
+                            }.getType());
+                            Log.e("zy", "--4--" + commentBeans.toString());
+                            if (commentBeans != null && commentBeans.size() > 0) {
+                                getView().loadCommentSuccess(commentBeans);
+                            } else {
+                                getView().loadFailed("1");
+                            }
+                        } else {
+                            getView().loadFailed("1");
+                        }
+                    }
 
-                           if (detailBean.getCommentBeans() != null && detailBean.getCommentBeans().size() > 0){
-                               Log.e("fhp","--1--");
-                               getView().loadCommentSuccess(detailBean);
-                               Log.e("fhp","---2-");
-                           }else {
-                               Log.e("fhp","--222--");
-                               getView().loadFailed("1");
-                           }
-                       }else {
-                           getView().loadFailed("1");
-                       }
-                   }
+                    @Override
+                    public void onError(Response<String> response) {
+                        response.getException().printStackTrace();
+                        Log.e("zy", "错了---------------------" + response.getException());
+                        super.onError(response);
 
-                   @Override
-                   public void onError(Response<String> response) {
-                       response.getException().printStackTrace();
-                       Log.e("fhp","错了---------------------"+response.getException());
-                       super.onError(response);
-
-                   }
-               });
+                    }
+                });
     }
+
     /**
      * 获取弹幕
      */
-    public void getDanmuData(int live_id){
+    public void getDanmuData(int live_id) {
         OkGo.<String>get(Constant.getDanmu)
-                .params("live_id",live_id)
+                .params("live_id", live_id)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -99,14 +100,15 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                     }
                 });
     }
+
     /**
      * 发送弹幕
      */
-    public void sendDanmu(String token,int lid,String content){
+    public void sendDanmu(String token, int lid, String content) {
         OkGo.<String>get(Constant.senDDanmu)
-                .params("token",token)
-                .params("lid",lid)
-                .params("content",content)
+                .params("token", token)
+                .params("lid", lid)
+                .params("content", content)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -120,15 +122,16 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                     }
                 });
     }
+
     /**
      * 直播加载更多
      *
      * @param context
      */
-    public void loadLiveMoreData(Context context,int page) {
+    public void loadLiveMoreData(Context context, int page) {
         OkGo.<String>get(Constant.LIVE_MORE)
                 .tag(context)
-                .params("page",page)
+                .params("page", page)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -138,10 +141,11 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                         if (code == 1) {
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
                             List<MoreBean.MoreDatas> moreDatas = new Gson().fromJson(jsonArray.toString()
-                                    , new TypeToken<List<MoreBean.MoreDatas>>() {}.getType());
-                            if (moreDatas != null && moreDatas.size() > 0 ) {
+                                    , new TypeToken<List<MoreBean.MoreDatas>>() {
+                                    }.getType());
+                            if (moreDatas != null && moreDatas.size() > 0) {
                                 getView().loadLiveMoreSuccess(moreDatas);
-                            }else {
+                            } else {
                                 getView().loadFailed(jsonObject.getString("message"));
                             }
                         }
@@ -150,18 +154,19 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
     }
 
     //直播详情
-    public void loadLiveDetail(Context context,int id){
+    public void loadLiveDetail(Context context, int id) {
         OkGo.<String>get(Constant.LIVE_DETAIL)
                 .tag(context)
-                .params("live_id",id)
+                .params("live_id", id)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         String body = response.body();
                         JSONObject jsonObject = JSON.parseObject(body);
-                        if (jsonObject.getInteger("code") == 1){
+                        if (jsonObject.getInteger("code") == 1) {
                             JSONObject data = jsonObject.getJSONObject("data");
-                            LiveDetailBean.LiveDetail liveDetailBean = new Gson().fromJson(data.toString(), new TypeToken<LiveDetailBean.LiveDetail>(){}.getType());
+                            LiveDetailBean.LiveDetail liveDetailBean = new Gson().fromJson(data.toString(), new TypeToken<LiveDetailBean.LiveDetail>() {
+                            }.getType());
                             getView().loadLiveDetail(liveDetailBean);
                         }
                     }
@@ -171,7 +176,7 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
     public interface LiveNewsView extends BaseView {
         void loadLiveMoreSuccess(List<MoreBean.MoreDatas> moreDatas);
 
-        void loadCommentSuccess(DetailBean commentBeans);
+        void loadCommentSuccess(List<CommentBean.CommentData> commentData);
 
         void loadFailed(String msg);
 

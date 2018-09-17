@@ -25,6 +25,7 @@ import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
+import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
@@ -34,9 +35,9 @@ import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener {
 
     private DanmakuVDPlayer vdPlayer;
-    private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look,tv_live_num;
+    private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look, tv_live_num;
     private LinearLayout ll_zan, ll_look, ll_collect, ll_shared;
-    private ImageView img_zan, img_look, img_collect,btSend;
+    private ImageView img_zan, img_look, img_collect, btSend;
     private EditText etContent;
     private RecyclerView recyclerview;
     private int liveId;
@@ -89,7 +90,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         setPresenter(new LiveNewsPresenter(LiveNewsActivity.this));
         getPresenter().getDanmuData(liveId);
         getPresenter().loadLiveDetail(this, liveId);
-        getPresenter().loadLiveCommentData(this,liveId,page);
+        getPresenter().loadLiveCommentData(this, liveId, page);
         springView.setHeader(new DefaultHeader(this));
         springView.setFooter(new DefaultFooter(this));
     }
@@ -106,7 +107,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
             @Override
             public void onLoadmore() {
-                page ++;
+                page++;
                 springView.onFinishFreshAndLoad();
             }
         });
@@ -170,6 +171,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         tv_look.setText(liveDetailBean.is_laud + "");
         initGsy(liveDetailBean);
     }
+
     /**
      * 使能Gsy播放器
      *
@@ -229,17 +231,12 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     }
 
     @Override
-    public void loadCommentSuccess(DetailBean commentBeans) {
-        try {
-            commentAdapter = new CommentAdapter(this, commentBeans.getCommentBeans());
-            Log.d("--------------",commentBeans.getCommentBeans().size() + "");
-            recyclerview.setAdapter(commentAdapter);
-        }catch (Exception e){
-            Log.e("fhp","错了"+e.getMessage());
-            e.printStackTrace();
-        }
-
+    public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
+        Log.d("--------------", commentData.size() + "");
+        commentAdapter = new CommentAdapter(this,commentData);
+        recyclerview.setAdapter(commentAdapter);
     }
+
 
     @Override
     public void loadFailed(String msg) {
@@ -253,7 +250,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void sendDanMu(String str) {
-        vdPlayer.addDanmaku(str,true);
+        vdPlayer.addDanmaku(str, true);
         getPresenter().sendDanmu(TMSharedPUtil.getTMToken(this), liveId, str);
     }
 

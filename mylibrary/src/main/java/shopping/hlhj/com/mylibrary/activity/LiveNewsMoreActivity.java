@@ -9,8 +9,8 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.LiveMoreAdapter;
+import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
-import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
@@ -71,7 +71,7 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
     }
 
     @Override
-    public void loadCommentSuccess(DetailBean commentBeans) {
+    public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
 
     }
 

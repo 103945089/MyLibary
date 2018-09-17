@@ -18,14 +18,15 @@ import java.util.List;
 
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
+import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder>{
 
     private Context context;
-    private List<DetailBean.CommentBean> commentBeans;
+    private List<CommentBean.CommentData> commentBeans;
     private boolean flag = true;
-    public CommentAdapter(Context context, List<DetailBean.CommentBean> commentBeans) {
+    public CommentAdapter(Context context, List<CommentBean.CommentData> commentBeans) {
         Log.d("--------------",commentBeans.size() + "");
         this.context = context;
         this.commentBeans = commentBeans;

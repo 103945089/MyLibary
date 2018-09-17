@@ -42,6 +42,15 @@ public class Constant {
     public static String COMMENT_LIST = POST_URL + "/Api/comment_list";
 
     //发布评论
-    public static String SEND_COMMENT = "/Api/comment";
+    public static String SEND_COMMENT = POST_URL+"/Api/comment";
+
+    //是否收藏
+    public static String IS_COLL=POST_URL+"/member/Memberstar/checkIsStar/";
+
+    //添加收藏
+    public static String ADD_COLL=POST_URL+"/member/Memberstar/addStar/";
+
+    //取消收藏
+    public static String CANCEL_COLL=POST_URL+"/member/Memberstar/deleteStar";
 
 }

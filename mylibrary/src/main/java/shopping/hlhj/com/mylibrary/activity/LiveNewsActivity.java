@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
@@ -22,21 +23,27 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
+import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
+import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.bean.ParamsBean;
+import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener {
+public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener, CollectPresenter.CollectView {
 
     private DanmakuVDPlayer vdPlayer;
     private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look, tv_live_num, tv_livecomment_normal;
@@ -44,7 +51,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private ImageView img_zan, img_look, img_collect, btSend;
     private EditText etContent;
     private RecyclerView recyclerview;
-    private int liveId;
+    private int liveId=0;
     private SpringView springView;
     private boolean dianzanflag = true;
     private boolean collectflag = true;
@@ -52,7 +59,9 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private OrientationUtils orientationUtils;
     private int page = 1;
     private int lanud_num;
-
+    private int cid=0;//收藏Id
+    private CollectPresenter collectPresenter;
+    private String extendStr;//拓展字段，收藏使用
     @Override
     protected int getContentResId() {
         return R.layout.aty_livedetail_new;
@@ -61,6 +70,13 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     @Override
     protected void beforeinit() {
         liveId = getIntent().getExtras().getInt("id");
+        if (liveId==0){
+            //todo 不是从自己页面跳过来的， 要在这里接收收藏列表传来的参数
+            Gson g = new Gson();
+            liveId= g.fromJson(getIntent().getStringExtra("paramStr"), ParamsBean.class).getID();
+        }else {
+
+        }
     }
 
     @Override
@@ -86,6 +102,29 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
         orientationUtils = new OrientationUtils(this, vdPlayer);
         vdPlayer.onEditClickListener = this;
+
+
+        //todo ExtenStr的配置
+        ParamsBean paramsBean = new ParamsBean();
+        paramsBean.setID(liveId);
+        ExtendBean extendBean = new ExtendBean();
+        ExtendBean.AndroidInfoBean androidInfoBean = new ExtendBean.AndroidInfoBean();
+        ExtendBean.IosInfoBean iosInfoBean = new ExtendBean.IosInfoBean();
+        androidInfoBean.setNativeX(true);
+        androidInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        androidInfoBean.setSrc("shopping.hlhj.com.mylibrary.activity.LiveNewsActivity");
+        androidInfoBean.setWwwFolder("");
+
+        iosInfoBean.setNativeX(true);
+        iosInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        iosInfoBean.setSrc("");
+        androidInfoBean.setWwwFolder("");
+
+        extendBean.setAndroidInfo(androidInfoBean);
+        extendBean.setIosInfo(iosInfoBean);
+
+        extendStr=new Gson().toJson(extendBean);
+
     }
 
     @Override
@@ -93,6 +132,8 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(manager);
+        collectPresenter=new CollectPresenter(this);
+
         setPresenter(new LiveNewsPresenter(LiveNewsActivity.this));
         getPresenter().getDanmuData(liveId);
         getPresenter().loadLiveDetail(this, liveId);
@@ -292,4 +333,48 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         getPresenter().sendDanmu(TMSharedPUtil.getTMToken(this), liveId, str);
     }
 
+    /**
+     * 是否收藏回调
+     * @param collBean 收藏javabean 其中包含收藏条目ID,保存收藏ID,用来访问取消收藏接口的入参使用
+     */
+    @Override
+    public void hasCollected(@NotNull CollBean collBean) {
+        //Todo  已收藏，让按钮变成已收藏样式
+
+        cid=collBean.getData().getStar_id();
+    }
+
+    @Override
+    public void notCollected() {
+        //Todo  未收藏，让按钮变成未收藏样式
+    }
+
+    @Override
+    public void addCollect(@NotNull CollBean collBean) {
+        //todo 添加收藏成功，保存收藏条目ID,准备取消收藏当入参使用
+        cid=collBean.getData().getStar_id();
+        //todo 下面将图标变成已收藏
+
+    }
+
+    @Override
+    public void addCollectError(@NotNull Exception e) {
+        //todo 收藏接口访问失败回调
+    }
+
+    @Override
+    public void addCollectError() {
+        //todo 收藏接口访问失败回调
+    }
+
+    @Override
+    public void cancelCollect() {
+        //todo 取消收藏成功 将图标变为未收藏
+    }
+
+    @Override
+    public void cancelCollectErro() {
+        //todo 取消收藏失败
+
+    }
 }

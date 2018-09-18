@@ -14,6 +14,7 @@ import com.lzy.okgo.model.Response;
 
 import java.util.List;
 
+import io.reactivex.annotations.Nullable;
 import shopping.hlhj.com.mylibrary.BasePresenter;
 import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
@@ -81,30 +82,32 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
     }
 
     /**
-     * 加载评论数据
+     * 加载热门和文章的评论数据
      *
      * @param context
      * @param id
      * @param page
      */
     public void loadHotCommentData(Context context, int id, int page) {
-        OkGo.<String>get(Constant.COMMENT_LIST)
+        OkGo.<String>get(Constant.OTHER_COMMENT_LIST)
                 .tag(context)
-                .params("live_id", id)
+                .params("id", id)
                 .params("page", page)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         JSONObject jsonObject = JSON.parseObject(response.body());
                         int code = jsonObject.getInteger("code");
-                        if (code == 1) {
+                        if (code == 200) {
                             JSONArray data = jsonObject.getJSONArray("data");
                             List<CommentBean.CommentData> commentBeans = new Gson().fromJson(data.toString(), new TypeToken<List<CommentBean.CommentData>>() {
                             }.getType());
+                            if (null == commentBeans || "".equals(commentBeans)){
+                                getView().loadFailed("暂无更多评论");
+                                return;
+                            }
                             if (commentBeans != null && commentBeans.size() > 0) {
                                 getView().loadCommentSuccess(commentBeans);
-                            } else {
-                                getView().loadFailed("1");
                             }
                         } else {
                             getView().loadFailed("1");
@@ -121,23 +124,25 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                 });
     }
 
-    //发布评论
-    public void sendComment(Context context,int live_id,String content,String token){
-        OkGo.<String>get(Constant.SEND_COMMENT)
+    //热门和文章的发布评论
+    public void sendComment(Context context,int id,int uid,String avatar,String username,String content){
+        OkGo.<String>post(Constant.OTHER_SEND_COMMENT)
                 .tag(context)
-                .params("live_id",live_id)
+                .params("nid",id)
+                .params("uid",uid)
+                .params("avatar",avatar)
+                .params("username",username)
                 .params("content",content)
-                .params("token",token)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         String body = response.body();
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
-                        if (code == 1){
-                            getView().loadSendCommentSuccess("200");
+                        if (code == 200){
+                            getView().loadSendCommentSuccess(jsonObject.getString("message"));
                         }else {
-                            getView().loadFailed(jsonObject.getString("msg"));
+                            getView().loadFailed(jsonObject.getString("message"));
                         }
                     }
                 });
@@ -150,7 +155,7 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
 
         void loadHotMoreSuccess(List<MoreBean.MoreDatas> MoreDatas);
 
-        void loadCommentSuccess(List<CommentBean.CommentData> commentData);
+        void loadCommentSuccess(@Nullable List<CommentBean.CommentData> commentData);
 
         void loadSendCommentSuccess(String msg);
     }

@@ -45,26 +45,86 @@ public class CommentBean implements Serializable {
         public int id;
         public int laud_num;
         public int user_id;
+        public int nid;     //热门和文章的评论
+        public int uid;     //热门和文章的评论
         public int create_at;
+        public int create_time; //热门和文章的评论
         public int live_id;
         public int is_laud;
+        public String avatar;       //热门和文章的评论
+        public String username;     //热门和文章的评论
+        public String reply;        //热门和文章的评论
         public String content;
         public String head_pic;
         public String member_name;
 
         @Override
         public String toString() {
-            return "CommentBean{" +
+            return "CommentData{" +
                     "id=" + id +
                     ", laud_num=" + laud_num +
                     ", user_id=" + user_id +
+                    ", nid=" + nid +
+                    ", uid=" + uid +
                     ", create_at=" + create_at +
+                    ", create_time=" + create_time +
                     ", live_id=" + live_id +
                     ", is_laud=" + is_laud +
+                    ", avatar='" + avatar + '\'' +
+                    ", username='" + username + '\'' +
+                    ", reply='" + reply + '\'' +
                     ", content='" + content + '\'' +
                     ", head_pic='" + head_pic + '\'' +
                     ", member_name='" + member_name + '\'' +
                     '}';
+        }
+
+        public int getNid() {
+            return nid;
+        }
+
+        public void setNid(int nid) {
+            this.nid = nid;
+        }
+
+        public int getUid() {
+            return uid;
+        }
+
+        public void setUid(int uid) {
+            this.uid = uid;
+        }
+
+        public int getCreate_time() {
+            return create_time;
+        }
+
+        public void setCreate_time(int create_time) {
+            this.create_time = create_time;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getReply() {
+            return reply;
+        }
+
+        public void setReply(String reply) {
+            this.reply = reply;
         }
 
         public int getId() {

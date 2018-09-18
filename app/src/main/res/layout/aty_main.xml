@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/radGrp_select"
+        android:background="#666666"
+        android:visibility="gone" />
+
+    <RadioGroup
+        android:visibility="gone"
+        android:id="@+id/radGrp_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="3dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingTop="5dp"
+        android:weightSum="3">
+
+        <RadioButton
+            android:id="@+id/radBtn_index"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="2dp"
+            android:drawableTop="@drawable/tab1"
+            android:gravity="center"
+            android:text="精选"
+            android:textColor="@color/tab_text_selecte"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radBtn_live"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="2dp"
+            android:drawableTop="@drawable/tab2"
+            android:gravity="center"
+            android:text="直播"
+            android:textColor="@color/tab_text_selecte"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radBtn_boom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="2dp"
+            android:drawableTop="@drawable/tab3"
+            android:gravity="center"
+            android:text="爆料"
+            android:textColor="@color/tab_text_selecte"
+            android:textSize="12sp" />
+
+    </RadioGroup>
+
+    <FrameLayout
+        android:layout_above="@+id/line"
+        android:id="@+id/flayout_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+
+    </FrameLayout>
+</RelativeLayout>

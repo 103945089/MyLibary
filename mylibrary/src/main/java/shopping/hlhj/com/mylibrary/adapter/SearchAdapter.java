@@ -26,9 +26,6 @@ public class SearchAdapter extends BaseAdapter {
     private boolean isHistory;
 
     private DBHelper dbHelper;
-    public SearchAdapter(Context context) {
-        this.context = context;
-    }
 
     public SearchAdapter(Context context, List<String> searchBeanList, boolean isHistory) {
         this.context = context;
@@ -69,7 +66,7 @@ public class SearchAdapter extends BaseAdapter {
         holder.textView.setText(searchBeanList.get(position));
 
         if (isHistory == true) {
-            holder.imgDel.setVisibility(View.VISIBLE);
+            holder.imgDel.setVisibility(View.GONE);
             holder.imgDel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

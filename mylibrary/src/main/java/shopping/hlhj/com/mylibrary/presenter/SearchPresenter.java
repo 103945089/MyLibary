@@ -59,12 +59,12 @@ public class SearchPresenter extends BasePresenter<SearchPresenter.MyGridView> {
                         String body = response.body();
                         JSONObject jsonObject = JSON.parseObject(body);
                         if (jsonObject.getInteger("code") == 200){
-//                            JSONObject data = jsonObject.getJSONObject("data");
-//                            String[] datas = new Gson().fromJson(data.toString(), new TypeToken<String[]>() {
-//                            }.getType());
-//                            if (data != null){
-//                                getView().loadHotData(datas);
-//                            }
+                            JSONArray data = jsonObject.getJSONArray("data");
+                            String[] datas = new Gson().fromJson(data.toString(), new TypeToken<String[]>() {
+                            }.getType());
+                            if (data != null){
+                                getView().loadHotData(datas);
+                            }
                         }
                     }
                 });

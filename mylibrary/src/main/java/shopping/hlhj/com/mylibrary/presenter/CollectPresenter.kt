@@ -14,7 +14,7 @@ import shopping.hlhj.com.mylibrary.data.Constant
  * Created by Never Fear   on 2018\9\17 0017.
 Never More....
  */
-class CollectPresenter(baseView:CollectView) :BasePresenter<CollectPresenter.CollectView>(baseView) {
+class CollectPresenter(baseView:CollectView?) :BasePresenter<CollectPresenter.CollectView>(baseView) {
     /**
      * 是否已收藏
      */
@@ -106,7 +106,7 @@ class CollectPresenter(baseView:CollectView) :BasePresenter<CollectPresenter.Col
      * 添加历史浏览记录
      */
     fun addHis(member_code:String,title:String,intro:String
-               ,app_id:String,article_id:String,extend:String,tag:String,type:String,pic:String,token: String){
+               ,app_id:String,article_id:String,extend:String,tag:String,type:String,pic:String?,token: String){
 
         OkGo.post<String>(Constant.ADD_HIS)
                 .params("member_code",member_code)

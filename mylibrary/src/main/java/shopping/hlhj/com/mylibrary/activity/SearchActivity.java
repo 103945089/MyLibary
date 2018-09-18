@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liaoinstan.springview.widget.SpringView;
 
@@ -35,7 +37,7 @@ import shopping.hlhj.com.mylibrary.presenter.SearchPresenter;
 public class SearchActivity extends BaseActivity<SearchPresenter> implements SearchPresenter.MyGridView {
 
     private EditText etSearch;
-    private ImageView imgBtnBack;
+    private ImageView imgBtnBack, img_delAll;
     private TextView tvSearch;
     private LinearLayout llSearch, llSearchHot, llSearchHistroy;
     private RelativeLayout rlSearchHistroy;
@@ -75,23 +77,18 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         gridView_histroy = findViewById(R.id.grideview_histroy);
         gridView_hot = findViewById(R.id.grideview_hot);
         spView = findViewById(R.id.spView);
-
+        img_delAll = findViewById(R.id.img_delAll);
     }
 
     @Override
     protected void initData() {
         dbHelper = new DBHelper(this);
         dbHelper.getWritableDatabase();
-        strings.clear();
-        for (int i = 0; i < 1; i++) {
-            strings.add("关键字");
-        }
         List<String> stringList = dbHelper.findAll();
         if (stringList == null || stringList.size() == 0) {
             llSearchHistroy.setVisibility(View.GONE);
         }
         setPresenter(new SearchPresenter(SearchActivity.this));
-        getPresenter().loadSearchData(SearchActivity.this, string, page);
         getPresenter().loadSearchHot(this);
         SearchAdapter historyAdapter = new SearchAdapter(this, stringList, true);
         gridView_histroy.setAdapter(historyAdapter);
@@ -114,7 +111,13 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                 if (null == string || "" == string || TextUtils.isEmpty(string)) {
                     fmSearchNomal.setVisibility(View.VISIBLE);
                     llSearch.setVisibility(View.GONE);
+                    llSearchHistroy.setVisibility(View.VISIBLE);
+                    llSearchHot.setVisibility(View.VISIBLE);
                 } else {
+                    llSearch.setVisibility(View.VISIBLE);
+                    fmSearchNomal.setVisibility(View.GONE);
+                    llSearchHistroy.setVisibility(View.GONE);
+                    llSearchHot.setVisibility(View.GONE);
                     getPresenter().loadSearchData(SearchActivity.this, string, page);
                     //TODO 重复添加
                     dbHelper.add(string);
@@ -134,34 +137,56 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                 page++;
             }
         });
+        img_delAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.delAll();
+                gridView_histroy.setVisibility(View.GONE);
+            }
+        });
+        gridView_hot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String s = strings.get(position).toString();
+                etSearch.setText(s.toString());
+                getPresenter().loadSearchData(SearchActivity.this, s, page);
+            }
+        });
     }
 
     @Override
-    public void loadSuccess(List<Search.SearchData.SearchBean> searchBeanList) {
-        if (searchBeanList != null && searchBeanList.size() > 0) {
-            resultAdapter = new SearchResultAdapter(this, searchBeanList);
-            gdSearch.setAdapter(resultAdapter);
-            gdSearch.setVisibility(View.VISIBLE);
-            fmSearchNomal.setVisibility(View.GONE);
-            llSearchHistroy.setVisibility(View.GONE);
-            llSearchHot.setVisibility(View.GONE);
-            return;
-        }
+    public void loadSuccess(final List<Search.SearchData.SearchBean> searchBeanList) {
+        resultAdapter = new SearchResultAdapter(this, searchBeanList);
+        gdSearch.setAdapter(resultAdapter);
+        gdSearch.setVisibility(View.VISIBLE);
+        fmSearchNomal.setVisibility(View.GONE);
+        llSearchHistroy.setVisibility(View.GONE);
+        llSearchHot.setVisibility(View.GONE);
+        gdSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(SearchActivity.this,HotVideoDetailActivity.class);
+                intent.putExtra("id",searchBeanList.get(position).id);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void loadFailed(String msg) {
+        Toast.makeText(SearchActivity.this, "无搜索结果", Toast.LENGTH_SHORT).show();
         fmSearchNomal.setVisibility(View.VISIBLE);
         llSearch.setVisibility(View.GONE);
     }
 
     @Override
     public void loadHotData(String[] data) {
-//        strings.clear();
-//        for (String s : data){
-//            strings.add(s);
-//        }
-//        SearchAdapter hotAdapter = new SearchAdapter(this, strings, false);
-//        gridView_hot.setAdapter(hotAdapter);
+        strings.clear();
+        for (String s : data) {
+            strings.add(s);
+        }
+        SearchAdapter hotAdapter = new SearchAdapter(this, strings, false);
+        gridView_hot.setAdapter(hotAdapter);
+
     }
 }

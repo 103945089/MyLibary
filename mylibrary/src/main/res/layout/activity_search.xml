@@ -79,7 +79,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="搜索历史"
+                        android:layout_centerVertical="true"
                         android:textSize="14sp"/>
+
+                    <ImageView
+                        android:id="@+id/img_delAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_del"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="10dp"
+                        android:padding="5dp"/>
 
                 </RelativeLayout>
 
@@ -122,9 +133,8 @@
 
             <GridView
                 android:id="@+id/gride_search"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </com.liaoinstan.springview.widget.SpringView>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
     android:layout_gravity="center">
 
     <ImageView
@@ -11,6 +12,7 @@
         android:src="@drawable/ssdk_country_back_arrow" />
 
     <LinearLayout
+        android:id="@+id/ll_textdetail_item"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,13 +72,12 @@
             android:text="5分钟前"
             android:textColor="@color/text_grey"
             android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/fengexian" />
-
     </LinearLayout>
 
+    <TextView
+        android:layout_below="@+id/ll_textdetail_item"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/fengexian" />
 
 </RelativeLayout>

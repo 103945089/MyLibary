@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -23,15 +25,21 @@ import com.shuyu.gsyvideoplayer.video.GSYSampleADVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
+import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.data.Constant;
+import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
 
 public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView {
@@ -48,6 +56,8 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     private String etString;
     private OrientationUtils orientationUtils;
     private CommentAdapter commentAdapter;
+
+    private List<CommentBean.CommentData> commentDataList = new ArrayList<>();
 
     @Override
     protected int getContentResId() {
@@ -93,6 +103,8 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
         ll_videodetail.setVisibility(View.GONE);
+        springView.setHeader(new DefaultHeader(recyclerView.getContext()));
+        springView.setFooter(new DefaultFooter(recyclerView.getContext()));
         setPresenter(new HotVideoPresenter(this));
         getPresenter().loadVideoData(this, id, 0);
         getPresenter().loadHotCommentData(this, id, page);
@@ -130,8 +142,13 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                     return;
                 }
                 if (null != etString && !"".equals(etString) && tmToken != null && !tmToken.equals("")) {
-                    getPresenter().sendComment(HotVideoDetailActivity.this, id, etString, tmToken);
-                    getPresenter().loadHotCommentData(HotVideoDetailActivity.this,id,page);
+                    getPresenter().sendComment(HotVideoDetailActivity.this
+                            , id
+                            , TMSharedPUtil.getTMUser(HotVideoDetailActivity.this).getMember_id()
+                            , TMSharedPUtil.getTMUser(HotVideoDetailActivity.this).getHead_pic()
+                            , TMSharedPUtil.getTMUser(HotVideoDetailActivity.this).getMember_name()
+                            , etString);
+                    getPresenter().loadHotCommentData(HotVideoDetailActivity.this, id, page);
                 }
             }
         });
@@ -143,15 +160,31 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         tv_title.setText(detailDatas.title);
         tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm"));
         tv_author.setText(detailDatas.release);
-        if (null == detailDatas.video_url || "".equals(detailDatas.video_url)){
-            Intent intent = new Intent(HotVideoDetailActivity.this,TextDetailsActivity.class);
-            intent.putExtra("id",id);
+        if (null == detailDatas.video_url || "".equals(detailDatas.video_url)) {
+            addHistroy(1);
+            Intent intent = new Intent(HotVideoDetailActivity.this, TextDetailsActivity.class);
+            intent.putExtra("id", id);
             startActivity(intent);
             finish();
-        }else {
+        } else {
+            addHistroy(2);
             ll_videodetail.setVisibility(View.VISIBLE);
             initGsy(detailDatas);
         }
+    }
+
+    //todo 添加浏览记录接口 每次进页面掉一次， 不需要回调
+    public void addHistroy(int type) {
+//        collectPresenter.addHis(TMSharedPUtil.getTMUser(this).getMember_code() + ""
+//                , title
+//                , title
+//                , Constant.APP_ID
+//                , id + ""
+//                , extendStr
+//                , ""
+//                , 2 + ""
+//                , TMSharedPUtil.getTMUser(this).getHead_pic()
+//                , TMSharedPUtil.getTMToken(this));
     }
 
     private void initGsy(DetailBean.DetailDatas detailDatas) {
@@ -212,9 +245,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 
     @Override
     public void loadFailed(String msg) {
-        if (msg.equals("1")) {
-            tv_comment_normal.setVisibility(View.VISIBLE);
-        }
+
     }
 
     @Override
@@ -225,18 +256,20 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     @Override
     public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
         tv_comment_normal.setVisibility(View.GONE);
-        Log.d("------------------",commentData.size() + "");
-        commentAdapter = new CommentAdapter(HotVideoDetailActivity.this, commentData);
+        if (page == 1) {
+            commentDataList.clear();
+            commentDataList.addAll(commentData);
+        } else {
+            commentDataList.addAll(commentData);
+        }
+        commentAdapter = new CommentAdapter(HotVideoDetailActivity.this, commentDataList, false);
         recyclerView.setAdapter(commentAdapter);
     }
 
     @Override
     public void loadSendCommentSuccess(String msg) {
-        if (msg.equals("200")){
-            etContent.setText("");
-            Toast.makeText(HotVideoDetailActivity.this,"评论成功",Toast.LENGTH_SHORT).show();
-        }
-        commentAdapter.upData(this);
+        etContent.setText("");
+        Toast.makeText(HotVideoDetailActivity.this, msg.toString(), Toast.LENGTH_SHORT).show();
     }
 
 }

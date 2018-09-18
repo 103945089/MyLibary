@@ -1,10 +1,13 @@
 package shopping.hlhj.com.mylibrary.data;
 
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
+import com.tenma.ventures.config.TMServerConfig;
+
 public class Constant {
-//    public static String POST_URL = "http://47.97.160.30/hlhj_newslive/";
-//    public static String POST_URL = "http://review.360tianma.com/hlhj_webcast";
     public static String POST_URL = "http://tm.trf9.cn/hlhj_webcast";
     public static String IMG_URL = "http://tm.trf9.cn";
+//    public static String POST_URL = TMServerConfig.BASE_URL+"/hlhj_webcast";
+//    public static String IMG_URL = TMServerConfig.BASE_URL;
 
     //轮播&直播
     public static String BANNER_URL = POST_URL + "/Api/live_top";
@@ -38,11 +41,17 @@ public class Constant {
     //发送弹幕
     public static String senDDanmu=POST_URL+"/Api/public_vote";
 
-    //评论列表
+    //直播的评论列表
     public static String COMMENT_LIST = POST_URL + "/Api/comment_list";
 
-    //发布评论
+    //直播的发布评论
     public static String SEND_COMMENT = POST_URL+"/Api/comment";
+
+    //热门和文章的评论列表
+    public static String OTHER_COMMENT_LIST = POST_URL + "/Api/all_comment";
+
+    //热门和文章的发布评论
+    public static String OTHER_SEND_COMMENT = POST_URL + "/Api/add_comment";
 
     //是否收藏
     public static String IS_COLL=IMG_URL+"/member/Memberstar/checkIsStar/";

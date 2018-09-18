@@ -47,7 +47,13 @@ public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implem
 
     @Override
     protected void beforeinit() {
+
         id = getIntent().getExtras().getInt("id");
+        if (id==0){
+            Gson g = new Gson();
+            id = g.fromJson(getIntent().getStringExtra("paramStr"), ParamsBean.class).getID();
+        }
+
     }
 
     @Override
@@ -65,7 +71,7 @@ public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implem
         ExtendBean.IosInfoBean iosInfoBean = new ExtendBean.IosInfoBean();
         androidInfoBean.setNativeX(true);
         androidInfoBean.setParamStr(new Gson().toJson(paramsBean));
-        androidInfoBean.setSrc("shopping.hlhj.com.mylibrary.activity.LiveNewsActivity");
+        androidInfoBean.setSrc("shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity");
         androidInfoBean.setWwwFolder("");
 
         iosInfoBean.setNativeX(true);

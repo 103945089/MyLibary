@@ -34,10 +34,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     private Context context;
     private List<CommentBean.CommentData> commentBeans;
-    private boolean flag = true;
-    public CommentAdapter(Context context, List<CommentBean.CommentData> commentBeans) {
+    private boolean isLiveNews;
+    public CommentAdapter(Context context, List<CommentBean.CommentData> commentBeans,boolean isLiveNews) {
         this.context = context;
         this.commentBeans = commentBeans;
+        this.isLiveNews = isLiveNews;
     }
 
     public void upData(Context context){
@@ -57,17 +58,23 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         RequestOptions mRequestOptions = RequestOptions.circleCropTransform().diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true);
 
-        Glide.with(context).load(commentBeans.get(position).head_pic).apply(mRequestOptions).into(holder.img_user);
+        if (isLiveNews == true){
+            Glide.with(context).load(commentBeans.get(position).head_pic).apply(mRequestOptions).into(holder.img_user);
+            holder.tv_username.setText(commentBeans.get(position).member_name);
+        }else {
+            Glide.with(context).load(commentBeans.get(position).avatar).apply(mRequestOptions).into(holder.img_user);
+            holder.tv_username.setText(commentBeans.get(position).username);
+        }
         holder.tv_num.setText(commentBeans.get(position).laud_num + "");
         holder.ll_comment_lanud.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (flag){//取消点赞
+                if (commentBeans.get(position).is_laud==1){//取消点赞
                     OkGo.<String>post(Constant.ITS_GOOD)
                             .params("id",commentBeans.get(position).id)
                             .params("token",TMSharedPUtil.getTMToken(context))
                             .headers("token",TMSharedPUtil.getTMToken(context))
-                            .params("status",3)
+                            .params("type",3)
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(Response<String> response) {
@@ -75,9 +82,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                     JSONObject jsonObject = JSON.parseObject(body);
                                     int code = jsonObject.getInteger("code");
                                     if (code == 200){
-                                        holder.img_zan.setImageResource(R.drawable.ic_home_praise_select);
-                                        flag = false;
-                                        holder.tv_num.setText(commentBeans.get(position).laud_num + 1 + "");
+                                        commentBeans.get(position).is_laud=0;
+                                        commentBeans.get(position).setLaud_num(commentBeans.get(position).laud_num - 1);
+                                        notifyDataSetChanged();
                                     }
                                 }
 
@@ -92,7 +99,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             .params("id",commentBeans.get(position).id)
                             .params("token",TMSharedPUtil.getTMToken(context))
                             .headers("token",TMSharedPUtil.getTMToken(context))
-                            .params("status",3)
+                            .params("type",3)
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(Response<String> response) {
@@ -100,9 +107,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                     JSONObject jsonObject = JSON.parseObject(body);
                                     int code = jsonObject.getInteger("code");
                                     if (code == 200){
-                                        holder.img_zan.setImageResource(R.drawable.ic_home_praise_normal);
-                                        holder.tv_num.setText(commentBeans.get(position).laud_num + "");
-                                        flag = true;
+                                        commentBeans.get(position).is_laud=1;
+                                        commentBeans.get(position).setLaud_num(commentBeans.get(position).laud_num + 1);
+                                        notifyDataSetChanged();
                                     }
                                 }
 
@@ -118,15 +125,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         int is_laud = commentBeans.get(position).is_laud;
         if (is_laud == 1){
             holder.img_zan.setImageResource(R.drawable.ic_home_praise_select);
-
-            flag = true;
         }else {
             holder.img_zan.setImageResource(R.drawable.ic_home_praise_normal);
-            flag = false;
         }
-        holder.tv_username.setText(commentBeans.get(position).member_name);
-        holder.tv_comment_content.setText(commentBeans.get(position).content);
 
+        holder.tv_comment_content.setText(commentBeans.get(position).content);
         String s = JavaUtils.StampstoTime(String.valueOf(commentBeans.get(position).create_at), "yyyy-MM-dd HH:mm:ss");
         try {
             String format = JavaUtils.format(s);
@@ -138,7 +141,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public int getItemCount() {
-        return commentBeans.size() == 0 ? null : commentBeans.size();
+        return commentBeans.size() == 0 ? 0 : commentBeans.size();
     }
 
     class CommentViewHolder extends RecyclerView.ViewHolder{

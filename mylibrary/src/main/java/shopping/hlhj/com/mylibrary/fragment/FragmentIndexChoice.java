@@ -80,7 +80,7 @@ public class FragmentIndexChoice extends Fragment {
     private RecommendAdapter recommendAdapter;
     private LiveNewsAdapter liveNewsAdapter;
     private int page = 1;
-    private int liveId,tuijianId;
+    private int liveId,tuijianId,bannerId;
 
     @Nullable
     @Override
@@ -187,12 +187,6 @@ public class FragmentIndexChoice extends Fragment {
                 startActivity(intent);
             }
         });
-        mBanner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-
-            }
-        });
     }
 
     @Override
@@ -215,7 +209,7 @@ public class FragmentIndexChoice extends Fragment {
                         if (code == 200) {
                             JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("carousel");
                             JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONArray("live");
-                            List<TopBanner.Datas.BannerBean> bannerBeanList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<TopBanner.Datas.BannerBean>>() {
+                            final List<TopBanner.Datas.BannerBean> bannerBeanList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<TopBanner.Datas.BannerBean>>() {
                             }.getType());
                             List<TopBanner.Datas.LiveBean> liveBeanList = new Gson().fromJson(jsonArray1.toString(), new TypeToken<List<TopBanner.Datas.LiveBean>>() {
                             }.getType());
@@ -230,6 +224,14 @@ public class FragmentIndexChoice extends Fragment {
                                 }
                                 mBanner.setBannerTitles(titles);
                                 mBanner.start();
+                                mBanner.setOnBannerListener(new OnBannerListener() {
+                                    @Override
+                                    public void OnBannerClick(int position) {
+                                        Intent intent = new Intent(context,HotVideoDetailActivity.class);
+                                        intent.putExtra("id",bannerBeanList.get(position).id);
+                                        startActivity(intent);
+                                    }
+                                });
                                 getLiveImg(liveBeanList);
                             }
                         }

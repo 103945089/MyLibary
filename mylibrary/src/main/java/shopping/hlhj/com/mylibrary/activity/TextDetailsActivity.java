@@ -12,34 +12,47 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.gson.Gson;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
-import shopping.hlhj.com.mylibrary.adapter.TextCommentAdapter;
+import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.bean.ParamsBean;
+import shopping.hlhj.com.mylibrary.data.Constant;
+import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
 
-public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView {
+public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView, CollectPresenter.CollectView {
 
     private RelativeLayout loNewHead;
-    private ImageView btBack,btSend,btColl,btGoShare;
+    private ImageView btBack, btSend, btColl, btGoShare;
     private EditText etContent;
-    private TextView tvTittleTextView,tv_Time,tv_auther,btMore;
+    private TextView tvTittleTextView, tv_Time, tv_auther, btMore;
     private RecyclerView comment_list;
     private WebView webView;
-    private int id,page = 1;
-    private TextCommentAdapter commentAdapter;
+    private int id, page = 1;
+    private int cid = 0;//收藏Id
+    private String extendStr;//拓展字段，收藏使用
+    private String title;
+    private boolean collectflag = true;
+    private SpringView springview_textdetail;
+    private CommentAdapter adapter;
+    private CollectPresenter collectPresenter;
+    private List<CommentBean.CommentData> commentDataList = new ArrayList<>();
 
     @Override
     protected int getContentResId() {
@@ -49,6 +62,10 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
     @Override
     protected void beforeinit() {
         id = getIntent().getExtras().getInt("id");
+        if (id==0){
+            Gson g = new Gson();
+            id = g.fromJson(getIntent().getStringExtra("paramStr"), ParamsBean.class).getID();
+        }
     }
 
     @Override
@@ -65,6 +82,7 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
         comment_list = findViewById(R.id.comment_list);
         btMore = findViewById(R.id.btMore);
         webView = findViewById(R.id.webView);
+        springview_textdetail = findViewById(R.id.springview_textdetail);
     }
 
     @Override
@@ -72,18 +90,40 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         comment_list.setLayoutManager(manager);
-
+        springview_textdetail.setHeader(new DefaultHeader(this));
+        springview_textdetail.setFooter(new DefaultFooter(this));
         setPresenter(new HotVideoPresenter(this));
-        getPresenter().loadVideoData(this,id,0);
+        getPresenter().loadVideoData(this, id, 0);
+        getPresenter().loadHotCommentData(this, id, page);
+        collectPresenter = new CollectPresenter(this);
+
+        collectPresenter.isColl(TMSharedPUtil.getTMUser(this).getMember_code()
+                , String.valueOf(TMSharedPUtil.getTMUser(this).getMember_id()), String.valueOf(id), TMSharedPUtil.getTMToken(this));
+        ExtenStr();
     }
 
     @Override
     protected void setOnClick() {
+        springview_textdetail.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                getPresenter().loadHotCommentData(TextDetailsActivity.this,id,page);
+                springview_textdetail.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                page ++;
+                getPresenter().loadHotCommentData(TextDetailsActivity.this,id,page);
+                springview_textdetail.onFinishFreshAndLoad();
+            }
+        });
         btMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                page ++ ;
-                getPresenter().loadHotCommentData(TextDetailsActivity.this,id,page);
+                page++;
+                getPresenter().loadHotCommentData(TextDetailsActivity.this, id, page);
             }
         });
         btBack.setOnClickListener(new View.OnClickListener() {
@@ -107,10 +147,65 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
                     return;
                 }
                 if (null != string && !"".equals(string) && tmToken != null && !tmToken.equals("")) {
-                    getPresenter().sendComment(TextDetailsActivity.this, id, string, tmToken);
+                    getPresenter().sendComment(TextDetailsActivity.this
+                            , id
+                            , TMSharedPUtil.getTMUser(TextDetailsActivity.this).getMember_id()
+                            , TMSharedPUtil.getTMUser(TextDetailsActivity.this).getHead_pic()
+                            , TMSharedPUtil.getTMUser(TextDetailsActivity.this).getMember_name()
+                            , string);
+                    getPresenter().loadHotCommentData(TextDetailsActivity.this, id, page);
                 }
             }
         });
+        btColl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (collectflag) {
+                    Log.e("fhp",(title==null)+"");
+                    collectPresenter.addColl(
+                            TMSharedPUtil.getTMUser(TextDetailsActivity.this).getMember_code() + ""
+                            , title
+                            , title
+                            , Constant.APP_ID
+                            , id + ""
+                            , extendStr
+                            , ""
+                            , 1 + ""
+                            , "aaa",
+                            TMSharedPUtil.getTMToken(TextDetailsActivity.this));
+                    btColl.setImageResource(R.drawable.ic_collection);
+                    collectflag = false;
+                } else {
+                    collectPresenter.cancelColl(cid, TMSharedPUtil.getTMToken(TextDetailsActivity.this));
+                    btColl.setImageResource(R.drawable.ic_sc_normal);
+                    collectflag = true;
+                }
+            }
+        });
+    }
+
+    //todo ExtenStr的配置
+    public void ExtenStr(){
+        ParamsBean paramsBean = new ParamsBean();
+        paramsBean.setID(id);
+        ExtendBean extendBean = new ExtendBean();
+        ExtendBean.AndroidInfoBean androidInfoBean = new ExtendBean.AndroidInfoBean();
+        ExtendBean.IosInfoBean iosInfoBean = new ExtendBean.IosInfoBean();
+        androidInfoBean.setNativeX(true);
+        androidInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        androidInfoBean.setSrc("shopping.hlhj.com.mylibrary.activity.TextDetailsActivity");
+        androidInfoBean.setWwwFolder("");
+
+        iosInfoBean.setNativeX(true);
+        iosInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        iosInfoBean.setSrc("");
+        androidInfoBean.setWwwFolder("");
+
+        extendBean.setAndroidInfo(androidInfoBean);
+        extendBean.setIosInfo(iosInfoBean);
+
+        extendStr = new Gson().toJson(extendBean);
+
     }
 
     @Override
@@ -118,9 +213,8 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
         tvTittleTextView.setText(detailDatas.title);
         tv_Time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm") + "");
         tv_auther.setText(detailDatas.release);
-        webView.loadDataWithBaseURL(null,detailDatas.content,"text/html","uft-8",null);
-        commentAdapter = new TextCommentAdapter(TextDetailsActivity.this,detailDatas.comment);
-        comment_list.setAdapter(commentAdapter);
+        webView.loadDataWithBaseURL(null, detailDatas.content, "text/html", "uft-8", null);
+        title = detailDatas.title;
     }
 
     @Override
@@ -134,12 +228,75 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
     }
 
     @Override
-    public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
-
+    public void loadCommentSuccess(@Nullable List<CommentBean.CommentData> commentData) {
+        if (commentData==null)return;
+        if (page == 1){
+            commentDataList.clear();
+            commentDataList.addAll(commentData);
+        }else {
+            commentDataList.addAll(commentData);
+        }
+        adapter = new CommentAdapter(TextDetailsActivity.this, commentDataList, false);
+        comment_list.setAdapter(adapter);
     }
 
     @Override
     public void loadSendCommentSuccess(String msg) {
-        Toast.makeText(TextDetailsActivity.this,msg.toString(),Toast.LENGTH_SHORT).show();
+        etContent.setText("");
+        Toast.makeText(TextDetailsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void hasCollected(@NotNull CollBean collBean) {
+        //Todo  已收藏，让按钮变成已收藏样式
+        btColl.setImageResource(R.drawable.ic_collection);
+        collectflag = false;
+        cid = collBean.getData().getStar_id();
+    }
+
+    @Override
+    public void notCollected() {
+        //Todo  未收藏，让按钮变成未收藏样式
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+    }
+
+    @Override
+    public void addCollect(@NotNull CollBean collBean) {
+// 添加收藏成功，保存收藏条目ID,准备取消收藏当入参使用
+        cid = collBean.getData().getStar_id();
+        //todo 下面将图标变成已收藏
+        btColl.setImageResource(R.drawable.ic_collection);
+        collectflag = false;
+    }
+
+    @Override
+    public void addCollectError(@NotNull Exception e) {
+        //todo 收藏接口访问失败回调
+        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+    }
+
+    @Override
+    public void addCollectError() {
+        //todo 收藏接口访问失败回调
+        Toast.makeText(this, "收藏失败", Toast.LENGTH_SHORT).show();
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+    }
+
+    @Override
+    public void cancelCollect() {
+        //todo 取消收藏成功 将图标变为未收藏
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+        Toast.makeText(this, "取消收藏成功", Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void cancelCollectErro() {
+        //todo 取消收藏失败
+        Toast.makeText(this, "取消收藏失败", Toast.LENGTH_SHORT);
     }
 }

@@ -1,14 +1,16 @@
-package shopping.hlhj.com.mylibrary.activity;
+package shopping.hlhj.com.mylibrary.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.tenma.ventures.bean.TMUser;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
@@ -16,15 +18,11 @@ import com.tenma.ventures.bean.utils.TMSharedPUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
-import shopping.hlhj.com.mylibrary.bean.UserBean;
-import shopping.hlhj.com.mylibrary.fragment.FragmentBoom;
-import shopping.hlhj.com.mylibrary.fragment.FragmentIndex;
-import shopping.hlhj.com.mylibrary.fragment.FragmentLive;
 
-public class MainActivity extends BaseActivity {
+public class MainFragment extends BaseFragment {
 
+    private View view;
     private RadioGroup radioGroup;
     private RadioButton radioButtonIndex,radioButtonLive,radioButtonBoom;
     private List<Fragment> fragments = new ArrayList<>();
@@ -33,39 +31,47 @@ public class MainActivity extends BaseActivity {
     private FragmentTransaction transaction;
     private int mIndex = 0;
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_main,null);
+        initView();
+        initData();
+        return view;
     }
 
-    @Override
-    protected int getContentResId() {
-        return R.layout.activity_main;
-    }
+    private void initView() {
+        radioGroup = view.findViewById(R.id.radGrp_select);
+        radioButtonIndex = view.findViewById(R.id.radBtn_index);
+        radioButtonBoom = view.findViewById(R.id.radBtn_boom);
+        radioButtonLive = view.findViewById(R.id.radBtn_live);
 
-    @Override
-    protected void beforeinit() {
         TMUser tmUser = new TMUser();
 //        tmUser.setToken("BBF236B7F379AEEEC451DC58ED60AB8B");
         tmUser.setToken("734D698E91313C951560891C3CF1ECD1");
         tmUser.setMember_code("1D0916EF9A29336083BFB0017C90EAEA");
         tmUser.setMember_id(63);
-        TMSharedPUtil.saveTMUser(this,tmUser);
+        TMSharedPUtil.saveTMUser(getContext(),tmUser);
     }
 
-    @Override
-    protected void initView() {
-        radioGroup = findViewById(R.id.radGrp_select);
-        radioButtonIndex = findViewById(R.id.radBtn_index);
-        radioButtonBoom = findViewById(R.id.radBtn_boom);
-        radioButtonLive = findViewById(R.id.radBtn_live);
+    private void initData() {
+        fragments = getFrament();
+        fm = getFragmentManager();
+        transaction = fm.beginTransaction();
+        fragment = fragments.get(0);
+        radioButtonIndex.setChecked(true);
+        //默认布局
+        transaction.replace(R.id.flayout_content,fragment);
+        transaction.commit();
+        setOnClick();
     }
+
 
     private void changeUi(int i) {
         if (mIndex == i){
             return;
         }
-        fm = getSupportFragmentManager();
+        fm = getFragmentManager();
         transaction = fm.beginTransaction();
         //隐藏上一个界面
         transaction.hide(fragments.get(mIndex));
@@ -79,20 +85,6 @@ public class MainActivity extends BaseActivity {
         mIndex = i;
     }
 
-
-    @Override
-    protected void initData() {
-        fragments = getFrament();
-        fm = getSupportFragmentManager();
-        transaction = fm.beginTransaction();
-        fragment = fragments.get(0);
-        radioButtonIndex.setChecked(true);
-        //默认布局
-        transaction.replace(R.id.flayout_content,fragment);
-        transaction.commit();
-    }
-
-    @Override
     protected void setOnClick() {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -117,24 +109,4 @@ public class MainActivity extends BaseActivity {
         return fragments;
     }
 
-//    private long currentTime;
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK){
-//            exit();
-//            return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-//
-//    private void exit() {
-//        if ((System.currentTimeMillis() - currentTime) > 2000){
-//            Toast.makeText(MainActivity.this, "再按一次退出", Toast.LENGTH_SHORT).show();
-//            currentTime = System.currentTimeMillis();
-//        }else {
-//            finish();
-//            ActivityCollector.finishAll();
-//            System.exit(0);
-//        }
-//    }
 }

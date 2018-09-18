@@ -1,217 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/lo1"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/head_lo"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <include layout="@layout/head_lo" />
     </RelativeLayout>
+
     <RelativeLayout
-        android:background="#fff"
         android:id="@+id/loNewHead"
         android:layout_width="match_parent"
-        android:layout_height="44dp">
+        android:layout_height="44dp"
+        android:background="#fff">
+
         <ImageView
             android:id="@+id/btBack"
-            android:src="@drawable/navi_ic_back"
-            android:padding="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@drawable/navi_ic_back" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/loEt"
         android:layout_width="match_parent"
-        android:paddingBottom="5dp"
-        android:paddingTop="8dp"
-        android:background="#fff"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content">
+        android:background="#fff"
+        android:paddingBottom="5dp"
+        android:paddingTop="8dp">
+
         <ImageView
             android:id="@+id/btLike"
-            android:src="@drawable/ic_sp_shoucang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:padding="10dp"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/ic_sp_shoucang"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/btSend"
-            android:layout_toLeftOf="@+id/btColl"
-            android:src="@drawable/ic_comments"
-            android:padding="10dp"
-            android:layout_centerVertical="true"
             android:layout_width="50dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btColl"
+            android:padding="10dp"
+            android:src="@drawable/ic_comments" />
+
         <ImageView
             android:id="@+id/btColl"
-            android:layout_toLeftOf="@+id/btGoShare"
-            android:layout_centerVertical="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_sc_normal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btGoShare"
+            android:padding="10dp"
+            android:src="@drawable/ic_sc_normal" />
+
         <EditText
             android:id="@+id/etContent"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:textSize="13sp"
-            android:textColor="#333"
-            android:textColorHint="#666666"
+            android:layout_toLeftOf="@+id/btSend"
+            android:background="@drawable/comment_border"
             android:hint="输入您的评论"
             android:paddingLeft="10dp"
-            android:background="@drawable/comment_border"
-            android:layout_toLeftOf="@+id/btSend"
-            android:layout_centerVertical="true"
-            android:layout_width="match_parent"
-            android:layout_height="35dp" />
+            android:textColor="#333"
+            android:textColorHint="#666666"
+            android:textSize="13sp" />
+
         <ImageView
             android:id="@+id/btGoShare"
-            android:src="@drawable/tabar_ic_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:padding="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/tabar_ic_share" />
+
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@id/etContent"
             android:layout_alignRight="@id/etContent"
             android:layout_marginRight="10dp"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/numCurrent"
-                android:textSize="10sp"
-                android:visibility="gone"
-                android:textColor="#b41c1c"
-                android:text="0/100"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="0/100"
+                android:textColor="#b41c1c"
+                android:textSize="10sp"
+                android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scrollView"
-        android:focusableInTouchMode="true"
-        android:layout_above="@+id/loEt"
-        android:overScrollMode="never"
-        android:background="#fff"
-        android:layout_below="@id/loNewHead"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview_textdetail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
+        android:layout_above="@+id/loEt"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <RelativeLayout
-                android:id="@+id/loTittle"
-                android:background="#fff"
-                android:layout_below="@id/loNewHead"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/loEt"
+            android:layout_below="@id/loNewHead"
+            android:background="#fff"
+            android:focusableInTouchMode="true"
+            android:overScrollMode="never">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/dv1"
-                    android:background="#FF9800"
-                    android:layout_width="7dp"
-                    android:layout_height="126dp" />
-                <TextView
-                    android:id="@+id/tvTittleTextView"
-                    android:textSize="27sp"
-                    android:textColor="#333333"
-                    android:textStyle="bold"
-                    android:layout_toRightOf="@id/dv1"
-                    android:layout_marginLeft="9dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tv_Time"
-                    android:textSize="10sp"
-                    android:layout_alignBottom="@id/dv1"
-                    android:text="2018-4-10  12:20:30"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tv_auther"
-                    android:textSize="12sp"
-                    android:layout_alignBottom="@id/dv1"
-                    android:layout_marginRight="15dp"
-                    android:layout_alignParentRight="true"
-                    android:textColor="#666666"
-                    android:layout_marginBottom="10dp"
-                    android:text="编/责：        "
-                    android:layout_gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:background="#e0e0e0"
-                    android:layout_alignBottom="@id/dv1"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/loTittle"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-            </RelativeLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/loNewHead"
+                    android:background="#fff">
 
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_Tittle"
-                android:text=""
-                android:textColor="#333333"
+                    <TextView
+                        android:id="@+id/dv1"
+                        android:layout_width="7dp"
+                        android:layout_height="126dp"
+                        android:background="#FF9800" />
 
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvTittleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="9dp"
+                        android:layout_toRightOf="@id/dv1"
+                        android:textColor="#333333"
+                        android:textSize="27sp"
+                        android:textStyle="bold" />
 
-            <WebView
-                android:id="@+id/webView"
-                android:layout_marginTop="20dp"
-                android:textSize="14sp"
-                android:focusable="false"
-                android:clickable="false"
-                android:textColor="#333333"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_Time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/dv1"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="15dp"
+                        android:text="2018-4-10  12:20:30"
+                        android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/tv_1"
-                android:padding="10dp"
-                android:text="评论"
-                android:visibility="gone"
-                android:textColor="#333"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_auther"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/dv1"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="right"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"
+                        android:text="编/责：        "
+                        android:textColor="#666666"
+                        android:textSize="12sp" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/comment_list"
-                android:layout_marginTop="5dp"
-                android:visibility="visible"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/btMore"
-                android:visibility="gone"
-                android:text="查看更多"
-                android:textSize="13sp"
-                android:textColor="#47aae9"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:background="#f4f4f4"
-                android:visibility="gone"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignBottom="@id/dv1"
+                        android:background="#e0e0e0" />
+                </RelativeLayout>
 
+                <TextView
+                    android:id="@+id/tv_Tittle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text=""
+                    android:textColor="#333333"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <WebView
+                    android:id="@+id/webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="评论"
+                    android:textColor="#333"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/btMore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="查看更多"
+                    android:textColor="#47aae9"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#f4f4f4"
+                    android:visibility="visible" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/comment_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.liaoinstan.springview.widget.SpringView>
 </RelativeLayout>

@@ -135,7 +135,9 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
                         if (code == 1){
-                            getView().loadSendCommentSuccess(jsonObject.getString("msg"));
+                            getView().loadSendCommentSuccess("200");
+                        }else {
+                            getView().loadFailed(jsonObject.getString("msg"));
                         }
                     }
                 });

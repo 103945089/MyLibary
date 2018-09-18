@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -130,6 +131,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                 }
                 if (null != etString && !"".equals(etString) && tmToken != null && !tmToken.equals("")) {
                     getPresenter().sendComment(HotVideoDetailActivity.this, id, etString, tmToken);
+                    getPresenter().loadHotCommentData(HotVideoDetailActivity.this,id,page);
                 }
             }
         });
@@ -223,13 +225,18 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     @Override
     public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
         tv_comment_normal.setVisibility(View.GONE);
+        Log.d("------------------",commentData.size() + "");
         commentAdapter = new CommentAdapter(HotVideoDetailActivity.this, commentData);
         recyclerView.setAdapter(commentAdapter);
     }
 
     @Override
     public void loadSendCommentSuccess(String msg) {
-        Toast.makeText(HotVideoDetailActivity.this,msg.toString(),Toast.LENGTH_SHORT).show();
+        if (msg.equals("200")){
+            etContent.setText("");
+            Toast.makeText(HotVideoDetailActivity.this,"评论成功",Toast.LENGTH_SHORT).show();
+        }
+        commentAdapter.upData(this);
     }
 
 }

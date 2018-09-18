@@ -262,6 +262,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     public void loadSendCommentSuccess(String msg) {
         if (msg.equals("200")){
             etContent.setText("");
+            Toast.makeText(LiveNewsActivity.this,"评论成功",Toast.LENGTH_SHORT).show();
         }
         commentAdapter.upData(this);
     }
@@ -342,7 +343,6 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     @Override
     public void loadFailed(String msg) {
         Toast.makeText(LiveNewsActivity.this, msg.toString(), LENGTH_SHORT);
-        LOG.d("-----------------------",msg.toString());
         if (msg.equals("1")) {
             tv_livecomment_normal.setVisibility(View.VISIBLE);
         }

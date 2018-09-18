@@ -12,9 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import java.text.ParseException;
 import java.util.List;
@@ -23,6 +28,7 @@ import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.data.Constant;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder>{
 
@@ -56,20 +62,63 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.ll_comment_lanud.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (flag){
-                    holder.img_zan.setImageResource(R.drawable.ic_home_praise_select);
-                    flag = false;
-                    holder.tv_num.setText(commentBeans.get(position).laud_num + 1 + "");
-                }else {
-                    holder.img_zan.setImageResource(R.drawable.ic_home_praise_normal);
-                    holder.tv_num.setText(commentBeans.get(position).laud_num + "");
-                    flag = true;
+                if (flag){//取消点赞
+                    OkGo.<String>post(Constant.ITS_GOOD)
+                            .params("id",commentBeans.get(position).id)
+                            .params("token",TMSharedPUtil.getTMToken(context))
+                            .headers("token",TMSharedPUtil.getTMToken(context))
+                            .params("status",3)
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+                                    String body = response.body();
+                                    JSONObject jsonObject = JSON.parseObject(body);
+                                    int code = jsonObject.getInteger("code");
+                                    if (code == 200){
+                                        holder.img_zan.setImageResource(R.drawable.ic_home_praise_select);
+                                        flag = false;
+                                        holder.tv_num.setText(commentBeans.get(position).laud_num + 1 + "");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Response<String> response) {
+                                    super.onError(response);
+                                }
+                            });
+
+                }else {//添加点赞
+                    OkGo.<String>post(Constant.ITS_GOOD)
+                            .params("id",commentBeans.get(position).id)
+                            .params("token",TMSharedPUtil.getTMToken(context))
+                            .headers("token",TMSharedPUtil.getTMToken(context))
+                            .params("status",3)
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+                                    String body = response.body();
+                                    JSONObject jsonObject = JSON.parseObject(body);
+                                    int code = jsonObject.getInteger("code");
+                                    if (code == 200){
+                                        holder.img_zan.setImageResource(R.drawable.ic_home_praise_normal);
+                                        holder.tv_num.setText(commentBeans.get(position).laud_num + "");
+                                        flag = true;
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Response<String> response) {
+                                    super.onError(response);
+                                }
+                            });
+
                 }
             }
         });
         int is_laud = commentBeans.get(position).is_laud;
         if (is_laud == 1){
             holder.img_zan.setImageResource(R.drawable.ic_home_praise_select);
+
             flag = true;
         }else {
             holder.img_zan.setImageResource(R.drawable.ic_home_praise_normal);

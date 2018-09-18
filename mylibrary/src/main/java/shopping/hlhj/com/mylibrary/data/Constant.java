@@ -56,6 +56,9 @@ public class Constant {
     //添加历史浏览记录
     public static String ADD_HIS=IMG_URL+"/member/Memberfootprint/addFootprint/";
 
+
+    public static String ITS_GOOD=POST_URL+"/Api/laud";
+
     //APPID
     public static String APP_ID="hlhj.new.kankan";
 }

@@ -46,10 +46,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void beforeinit() {
         TMUser tmUser = new TMUser();
-//        tmUser.setToken("BBF236B7F379AEEEC451DC58ED60AB8B");
-        tmUser.setToken("734D698E91313C951560891C3CF1ECD1");
-        tmUser.setMember_code("1D0916EF9A29336083BFB0017C90EAEA");
-        tmUser.setMember_id(63);
         TMSharedPUtil.saveTMUser(this,tmUser);
     }
 

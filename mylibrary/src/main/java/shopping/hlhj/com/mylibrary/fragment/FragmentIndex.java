@@ -2,6 +2,7 @@ package shopping.hlhj.com.mylibrary.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,7 +46,8 @@ public class FragmentIndex extends Fragment{
         img_search = rootView.findViewById(R.id.img_search);
         rl_fragment_index = rootView.findViewById(R.id.rl_fragment_index);
         if (null != TMSharedPUtil.getTMThemeColor(context)){
-            rl_fragment_index.setBackground(Drawable.createFromPath(TMSharedPUtil.getTMThemeColor(context)));
+            tabLayouts.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
+            rl_fragment_index.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
         }
         tabLayouts.setupWithViewPager(mainviewPager);
         tabLayouts.setTabMode(TabLayout.MODE_FIXED);

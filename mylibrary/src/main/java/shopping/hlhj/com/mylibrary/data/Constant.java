@@ -4,8 +4,8 @@ import com.tenma.ventures.bean.utils.TMSharedPUtil;
 import com.tenma.ventures.config.TMServerConfig;
 
 public class Constant {
-    public static String POST_URL = "http://tm.trf9.cn/hlhj_webcast";
-    public static String IMG_URL = "http://tm.trf9.cn";
+    public static String POST_URL = "http://review.360tianma.com/hlhj_webcast";
+    public static String IMG_URL = "http://review.360tianma.com";
 //    public static String POST_URL = TMServerConfig.BASE_URL+"/hlhj_webcast";
 //    public static String IMG_URL = TMServerConfig.BASE_URL;
 

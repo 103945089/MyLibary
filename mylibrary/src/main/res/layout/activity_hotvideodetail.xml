@@ -93,37 +93,74 @@
         android:layout_alignParentBottom="true"
         android:background="#fff"
         android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp">
+        android:paddingTop="8dp">
 
         <ImageView
-            android:id="@+id/btShare"
+            android:id="@+id/btLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_zb_fenxiagn"
+            android:padding="10dp"
+            android:src="@drawable/ic_sp_shoucang"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/btSend"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btColl"
+            android:padding="10dp"
+            android:src="@drawable/ic_comments" />
+
+        <ImageView
+            android:id="@+id/btColl"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btGoShare"
+            android:padding="10dp"
+            android:src="@drawable/ic_sc_normal" />
+
+        <EditText
+            android:id="@+id/etContent"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@+id/btSend"
+            android:background="@drawable/comment_border"
+            android:hint="输入您的评论"
+            android:paddingLeft="10dp"
+            android:textColor="#333"
+            android:textColorHint="#666666"
+            android:textSize="13sp" />
+
+        <ImageView
+            android:id="@+id/btGoShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_zb_fasong" />
+            android:padding="10dp"
+            android:src="@drawable/tabar_ic_share" />
 
-        <EditText
-            android:id="@+id/et_Content"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/etContent"
+            android:layout_alignRight="@id/etContent"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/btSend"
-            android:background="@drawable/et_border"
-            android:hint="写评论"
-            android:paddingLeft="15dp"
-            android:textSize="14sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/numCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/100"
+                android:textColor="#b41c1c"
+                android:textSize="10sp"
+                android:visibility="gone" />
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

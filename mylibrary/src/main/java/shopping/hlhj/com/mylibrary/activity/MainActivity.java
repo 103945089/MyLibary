@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity {
         transaction.hide(fragments.get(mIndex));
         //判断是否添加界面
         if (!fragments.get(i).isAdded()){
-            transaction.add(R.id.flayout_content,fragments.get(i)).show(fragments.get(i));
+            transaction.add(R.id.rp,fragments.get(i)).show(fragments.get(i));
         }else {
             transaction.show(fragments.get(i));
         }
@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity {
         fragment = fragments.get(0);
         radioButtonIndex.setChecked(true);
         //默认布局
-        transaction.replace(R.id.flayout_content,fragment);
+        transaction.replace(R.id.rp,fragment);
         transaction.commit();
     }
 

@@ -1,6 +1,7 @@
 package shopping.hlhj.com.mylibrary.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liaoinstan.springview.widget.SpringView;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     private int page = 1;
     private DBHelper dbHelper;
     private List<String> strings = new ArrayList<>();
+    private View loBack;
 
     @Override
     protected int getContentResId() {
@@ -78,6 +81,11 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         gridView_hot = findViewById(R.id.grideview_hot);
         spView = findViewById(R.id.spView);
         img_delAll = findViewById(R.id.img_delAll);
+        loBack=findViewById(R.id.loBack);
+        if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){
+            loBack.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(this)));
+        }
+
     }
 
     @Override

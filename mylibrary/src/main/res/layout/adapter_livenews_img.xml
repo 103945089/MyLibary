@@ -5,13 +5,18 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/loSele"
+        android:layout_width="112dp"
+        android:padding="2dp"
+        android:background="@drawable/select_red"
+        android:layout_height="82dp">
+        <ImageView
+            android:id="@+id/img_item"
+            android:layout_width="110dp"
+            android:layout_gravity="center"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"/>
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/img_item"
-        android:layout_width="110dp"
-        android:layout_gravity="center"
-        android:layout_height="80dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginTop="2dp"
-        android:scaleType="centerCrop"/>
 </LinearLayout>

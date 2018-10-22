@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
@@ -37,12 +38,14 @@ import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
 import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.bean.ParamsBean;
 import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
 
-public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView {
+public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView, CollectPresenter.CollectView {
 
     private StandardGSYVideoPlayer vdPlayer;
     private EditText etContent;
@@ -53,10 +56,15 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     private SpringView springView;
     private int id;
     private int page = 1;
+    private ImageView btSend, btColl;
     private String etString;
     private OrientationUtils orientationUtils;
     private CommentAdapter commentAdapter;
-
+    private int cid = 0;//收藏Id
+    private String extendStr;//拓展字段，收藏使用
+    private boolean collectflag = true;
+    private String tittle;
+    private CollectPresenter collectPresenter;
     private List<CommentBean.CommentData> commentDataList = new ArrayList<>();
 
     @Override
@@ -66,14 +74,22 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 
     @Override
     protected void beforeinit() {
+
         id = getIntent().getExtras().getInt("id");
+        if (id==0){
+            Gson g = new Gson();
+            id = g.fromJson(getIntent().getStringExtra("paramStr"), ParamsBean.class).getID();
+        }
     }
 
     @Override
     protected void initView() {
         ll_videodetail = findViewById(R.id.ll_videodetail);
         vdPlayer = findViewById(R.id.hot_gsyvideo);
-        etContent = findViewById(R.id.et_Content);
+
+        btColl = findViewById(R.id.btColl);
+
+        etContent = findViewById(R.id.etContent);
         recyclerView = findViewById(R.id.ry_comment);
         tv_title = findViewById(R.id.tv_title);
         tv_time = findViewById(R.id.tv_time);
@@ -81,10 +97,34 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         tv_comment_normal = findViewById(R.id.tv_comment_normal);
         img_btn = findViewById(R.id.btSend);
         springView = findViewById(R.id.springview_hot);
+
         orientationUtils = new OrientationUtils(this, vdPlayer);
 
+        ExtenStr();
     }
+    //todo ExtenStr的配置
+    public void ExtenStr(){
+        ParamsBean paramsBean = new ParamsBean();
+        paramsBean.setID(id);
+        ExtendBean extendBean = new ExtendBean();
+        ExtendBean.AndroidInfoBean androidInfoBean = new ExtendBean.AndroidInfoBean();
+        ExtendBean.IosInfoBean iosInfoBean = new ExtendBean.IosInfoBean();
+        androidInfoBean.setNativeX(true);
+        androidInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        androidInfoBean.setSrc("shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity");
+        androidInfoBean.setWwwFolder("");
 
+        iosInfoBean.setNativeX(true);
+        iosInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        iosInfoBean.setSrc("");
+        androidInfoBean.setWwwFolder("");
+
+        extendBean.setAndroidInfo(androidInfoBean);
+        extendBean.setIosInfo(iosInfoBean);
+
+        extendStr = new Gson().toJson(extendBean);
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -106,12 +146,43 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
         springView.setHeader(new DefaultHeader(recyclerView.getContext()));
         springView.setFooter(new DefaultFooter(recyclerView.getContext()));
         setPresenter(new HotVideoPresenter(this));
+        collectPresenter = new CollectPresenter(this);
+        collectPresenter.isColl(TMSharedPUtil.getTMUser(this).getMember_code()
+                , String.valueOf(TMSharedPUtil.getTMUser(this).getMember_id()), String.valueOf(id), TMSharedPUtil.getTMToken(this));
+
         getPresenter().loadVideoData(this, id, 0);
         getPresenter().loadHotCommentData(this, id, page);
     }
 
     @Override
     protected void setOnClick() {
+
+        btColl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (collectflag) {
+                    Log.e("fhp",(tittle==null)+"");
+                    collectPresenter.addColl(
+                            TMSharedPUtil.getTMUser(HotVideoDetailActivity.this).getMember_code() + ""
+                            , tittle
+                            , tittle
+                            , Constant.APP_ID
+                            , id + ""
+                            , extendStr
+                            , ""
+                            , 1 + ""
+                            , "aaa",
+                            TMSharedPUtil.getTMToken(HotVideoDetailActivity.this));
+                    btColl.setImageResource(R.drawable.ic_collection);
+                    collectflag = false;
+                } else {
+                    collectPresenter.cancelColl(cid, TMSharedPUtil.getTMToken(HotVideoDetailActivity.this));
+                    btColl.setImageResource(R.drawable.ic_sc_normal);
+                    collectflag = true;
+                }
+            }
+        });
+
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
@@ -158,6 +229,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     @Override
     public void loadDataSuccess(DetailBean.DetailDatas detailDatas) {
         tv_title.setText(detailDatas.title);
+        tittle=detailDatas.title;
         tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm"));
         tv_author.setText(detailDatas.release);
         if (null == detailDatas.video_url || "".equals(detailDatas.video_url)) {
@@ -185,6 +257,60 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 //                , 2 + ""
 //                , TMSharedPUtil.getTMUser(this).getHead_pic()
 //                , TMSharedPUtil.getTMToken(this));
+    }
+
+    @Override
+    public void addCollect(@NotNull CollBean collBean) {
+        // 添加收藏成功，保存收藏条目ID,准备取消收藏当入参使用
+        cid = collBean.getData().getStar_id();
+        //todo 下面将图标变成已收藏
+        btColl.setImageResource(R.drawable.ic_collection);
+        collectflag = false;
+    }
+
+    @Override
+    public void hasCollected(@NotNull CollBean collBean) {
+        btColl.setImageResource(R.drawable.ic_collection);
+        collectflag = false;
+        cid = collBean.getData().getStar_id();
+    }
+
+    @Override
+    public void notCollected() {
+        //Todo  未收藏，让按钮变成未收藏样式
+        Log.e("fhp","未收藏----------");
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+    }
+
+    @Override
+    public void addCollectError(@NotNull Exception e) {
+//todo 收藏接口访问失败回调
+        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+    }
+
+    @Override
+    public void addCollectError() {
+//todo 收藏接口访问失败回调
+        Toast.makeText(this, "收藏失败", Toast.LENGTH_SHORT).show();
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+    }
+
+    @Override
+    public void cancelCollect() {
+        //todo 取消收藏成功 将图标变为未收藏
+        btColl.setImageResource(R.drawable.ic_sc_normal);
+        collectflag = true;
+        Toast.makeText(this, "取消收藏成功", Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void cancelCollectErro() {
+        //todo 取消收藏失败
+        Toast.makeText(this, "取消收藏失败", Toast.LENGTH_SHORT);
     }
 
     private void initGsy(DetailBean.DetailDatas detailDatas) {

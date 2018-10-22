@@ -28,7 +28,7 @@ public class FragmentIndex extends Fragment{
     private ViewPager mainviewPager;
     private ImageView img_search;
     private Context context;
-    private View rootView;
+    private View rootView,loDv;
     private RelativeLayout rl_fragment_index;
     @Nullable
     @Override
@@ -42,11 +42,13 @@ public class FragmentIndex extends Fragment{
 
     private void initView() {
         tabLayouts = rootView.findViewById(R.id.main_tab);
+        loDv=rootView.findViewById(R.id.loDv);
         mainviewPager = rootView.findViewById(R.id.main_viewpager);
         img_search = rootView.findViewById(R.id.img_search);
         rl_fragment_index = rootView.findViewById(R.id.rl_fragment_index);
         if (null != TMSharedPUtil.getTMThemeColor(context)){
             tabLayouts.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
+            loDv.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
             rl_fragment_index.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
         }
         tabLayouts.setupWithViewPager(mainviewPager);

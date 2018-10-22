@@ -109,6 +109,7 @@
     <com.liaoinstan.springview.widget.SpringView
         android:id="@+id/springview_textdetail"
         android:layout_width="match_parent"
+        android:layout_below="@id/loNewHead"
         android:layout_above="@+id/loEt"
         android:layout_height="wrap_content">
 

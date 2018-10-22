@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import shopping.hlhj.com.mylibrary.fragment.FragmentIndex;
 import shopping.hlhj.com.mylibrary.fragment.MainFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);*/
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        MainFragment mainFgm = new MainFragment();
+        FragmentIndex mainFgm = new FragmentIndex();
         fragmentTransaction.add(mainFgm,"");
         fragmentTransaction.show(mainFgm);
         fragmentTransaction.commit();

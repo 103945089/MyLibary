@@ -23,6 +23,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
 //        AutoLayoutConifg.getInstance().useDeviceSize();
 //        CrashHandler.getInstance().init(this);//全局异常捕获
         initOkGo();

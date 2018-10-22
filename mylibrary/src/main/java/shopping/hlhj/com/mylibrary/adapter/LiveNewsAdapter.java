@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -15,6 +16,7 @@ import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.activity.LiveNewsActivity;
 import shopping.hlhj.com.mylibrary.bean.TopBanner;
 import shopping.hlhj.com.mylibrary.data.Constant;
+import shopping.hlhj.com.mylibrary.fragment.FragmentIndexChoice;
 
 public class LiveNewsAdapter extends BaseAdapter {
 
@@ -52,15 +54,22 @@ public class LiveNewsAdapter extends BaseAdapter {
             holder = new LiveNewsViewHolder();
             convertView = View.inflate(context, R.layout.adapter_livenews_img, null);
             holder.imgView = convertView.findViewById(R.id.img_item);
+            holder.loSele=convertView.findViewById(R.id.loSele);
             convertView.setTag(holder);
         } else {
             holder = (LiveNewsViewHolder) convertView.getTag();
         }
         Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(position).getLive_thumb()).into(holder.imgView);
+        if (FragmentIndexChoice.seleHash.get(position)){
+            holder.loSele.setBackground(context.getResources().getDrawable(R.drawable.select_red));
+        }else {
+            holder.loSele.setBackground(null);
+        }
         return convertView;
     }
 
     class LiveNewsViewHolder {
         ImageView imgView;
+        RelativeLayout loSele;
     }
 }

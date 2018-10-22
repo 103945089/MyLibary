@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
+import com.tenma.ventures.config.TMServerConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,8 @@ public class MainFragment extends BaseFragment {
 
 
     private void initView() {
+//        TMServerConfig.BASE_URL="http://mx.360tianma.com/";
+        TMSharedPUtil.saveTMThemeColor(getContext(),"#456654");
         radioGroup = view.findViewById(R.id.radGrp_select);
         radioButtonIndex = view.findViewById(R.id.radBtn_index);
         radioButtonBoom = view.findViewById(R.id.radBtn_boom);
@@ -59,7 +64,7 @@ public class MainFragment extends BaseFragment {
         fragment = fragments.get(0);
         radioButtonIndex.setChecked(true);
         //默认布局
-        transaction.replace(R.id.flayout_content,fragment);
+        transaction.replace(R.id.rp,fragment);
         transaction.commit();
         setOnClick();
     }
@@ -75,7 +80,7 @@ public class MainFragment extends BaseFragment {
         transaction.hide(fragments.get(mIndex));
         //判断是否添加界面
         if (!fragments.get(i).isAdded()){
-            transaction.add(R.id.flayout_content,fragments.get(i)).show(fragments.get(i));
+            transaction.add(R.id.rp,fragments.get(i)).show(fragments.get(i));
         }else {
             transaction.show(fragments.get(i));
         }
@@ -84,7 +89,7 @@ public class MainFragment extends BaseFragment {
     }
 
     protected void setOnClick() {
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+       /* radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.radBtn_index){
@@ -97,7 +102,7 @@ public class MainFragment extends BaseFragment {
                     changeUi(2);
                 }
             }
-        });
+        });*/
     }
 
     public List<Fragment> getFrament() {

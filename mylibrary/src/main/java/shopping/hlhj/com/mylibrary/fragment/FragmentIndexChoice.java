@@ -42,6 +42,7 @@ import org.apache.cordova.LOG;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -73,6 +74,7 @@ public class FragmentIndexChoice extends Fragment {
     ImageView Imgtuijian;
     ScrollView scrollView;
     private List<String> titles;
+    public static HashMap<Integer,Boolean> seleHash=new HashMap<>();
     private View view;
     private Context context;
     private HotVideoAdapter hotVideoAdapter;
@@ -113,6 +115,8 @@ public class FragmentIndexChoice extends Fragment {
         scrollView = view.findViewById(R.id.scroller);
         springView.setHeader(new DefaultHeader(context));
         springView.setFooter(new DefaultFooter(context));
+
+
     }
 
     private void initData() {
@@ -121,6 +125,7 @@ public class FragmentIndexChoice extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(context, 1);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         ryZhuanti.setLayoutManager(manager);
+
         getData();
     }
 
@@ -211,7 +216,8 @@ public class FragmentIndexChoice extends Fragment {
                             JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONArray("live");
                             final List<TopBanner.Datas.BannerBean> bannerBeanList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<TopBanner.Datas.BannerBean>>() {
                             }.getType());
-                            List<TopBanner.Datas.LiveBean> liveBeanList = new Gson().fromJson(jsonArray1.toString(), new TypeToken<List<TopBanner.Datas.LiveBean>>() {
+                            List<TopBanner.Datas.LiveBean> liveBeanList
+                                    = new Gson().fromJson(jsonArray1.toString(), new TypeToken<List<TopBanner.Datas.LiveBean>>() {
                             }.getType());
                             if (bannerBeanList != null && liveBeanList != null && bannerBeanList.size() > 0 && liveBeanList.size() > 0) {
                                 mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
@@ -327,6 +333,13 @@ public class FragmentIndexChoice extends Fragment {
     public void getLiveImg(final List<TopBanner.Datas.LiveBean> liveBeanList){
         liveId = liveBeanList.get(0).id;
         tvLiveNewsTitle.setText(liveBeanList.get(0).live_title);
+        for (int i = 0; i < liveBeanList.size(); i++) {
+            if (i==0){
+                seleHash.put(i,true);
+            }else {
+                seleHash.put(i,false);
+            }
+        }
         Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(0).getLive_thumb()).into(imgXinwen);
         liveNewsAdapter = new LiveNewsAdapter(context,liveBeanList);
         gridLive.setNumColumns(liveBeanList.size());
@@ -334,10 +347,19 @@ public class FragmentIndexChoice extends Fragment {
         gridLive.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                for (int i = 0; i < seleHash.size(); i++) {
+                    if (i==position){
+                        seleHash.put(i,true);
+                    }else {
+                        seleHash.put(i,false);
+                    }
+                }
+
                 Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(position).getLive_thumb()).into(imgXinwen);
                 tvTime.setText(JavaUtils.StampstoTime(String.valueOf(liveBeanList.get(position).create_at),"yyyy-MM-dd HH:mm:ss"));
                 tvLiveNewsTitle.setText(liveBeanList.get(position).live_title);
                 liveId = liveBeanList.get(position).id;
+                liveNewsAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -345,7 +367,12 @@ public class FragmentIndexChoice extends Fragment {
     public static class GlideImageLoader extends ImageLoader {
         @Override
         public void displayImage(Context context, Object banner, ImageView imageView) {
-            Glide.with(context).load(((TopBanner.Datas.BannerBean)banner).getCover()).into(imageView);
+            if (((TopBanner.Datas.BannerBean) banner).getCover().contains("http")){
+
+                Glide.with(context).load(((TopBanner.Datas.BannerBean)banner).getCover()).into(imageView);
+            }else {
+                Glide.with(context).load(Constant.IMG_URL+((TopBanner.Datas.BannerBean)banner).getCover()).into(imageView);
+            }
         }
 
         @Override

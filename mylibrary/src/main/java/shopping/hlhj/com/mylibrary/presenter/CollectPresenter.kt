@@ -18,7 +18,7 @@ class CollectPresenter(baseView:CollectView?) :BasePresenter<CollectPresenter.Co
     /**
      * 是否已收藏
      */
-    fun isColl(member_code:String,app_id:String,article_id:String,token:String){
+    fun isColl(member_code:String?,app_id:String?,article_id:String?,token:String?){
         OkGo.post<String>(Constant.IS_COLL)
                 .params("member_code",member_code)
                 .params("app_id",app_id)

@@ -128,7 +128,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                     llSearchHot.setVisibility(View.GONE);
                     getPresenter().loadSearchData(SearchActivity.this, string, page);
                     //TODO 重复添加
-                    dbHelper.add(string);
+                    List<String> all = dbHelper.findAll();
+                    if (!all.contains(string)){
+                        dbHelper.add(string);
+                    }
                 }
             }
         });

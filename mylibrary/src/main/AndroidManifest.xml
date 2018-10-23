@@ -22,6 +22,7 @@
         <activity android:name=".activity.LiveNewsMoreActivity" />
         <activity android:name=".activity.ConfirmLoginActivity" />
         <activity android:name=".activity.TextDetailsActivity" />
+        <activity android:name=".activity.FhpVideoDetailAty" />
     </application>
 
 </manifest>

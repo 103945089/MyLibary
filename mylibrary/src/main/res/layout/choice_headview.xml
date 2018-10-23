@@ -7,16 +7,34 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     app:ignore="NamespaceTypo">
-
-    <com.youth.banner.Banner
-        android:id="@+id/convenientBanner"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/text_black"
-        app1:indicator_height="8dp"
-        app1:indicator_width="8dp"
-        android:layout_gravity="center"
-        app:is_auto_play="true" />
+        android:layout_height="220dp">
+        <com.youth.banner.Banner
+            android:id="@+id/convenientBanner"
+            app1:indicator_drawable_selected="@drawable/in_selected"
+            app1:indicator_drawable_unselected="@drawable/in_unsele"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="@color/text_black"
+            app1:indicator_height="8dp"
+            app1:indicator_width="8dp"
+            android:layout_gravity="center"
+            app:is_auto_play="true" />
+        <TextView
+            android:id="@+id/bannerTittle"
+            android:text=""
+            android:textSize="16sp"
+            android:textColor="#fff"
+            android:singleLine="true"
+            android:maxEms="12"
+            android:layout_marginBottom="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"

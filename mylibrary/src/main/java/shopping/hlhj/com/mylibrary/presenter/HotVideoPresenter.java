@@ -148,6 +148,7 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                 });
     }
 
+
     public interface HotVideoView extends BaseView {
         void loadDataSuccess(DetailBean.DetailDatas detailDatas);
 

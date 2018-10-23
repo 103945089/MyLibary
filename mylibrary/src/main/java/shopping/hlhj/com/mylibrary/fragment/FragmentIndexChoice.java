@@ -9,9 +9,11 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +75,7 @@ public class FragmentIndexChoice extends Fragment {
     Unbinder unbinder;
     ImageView Imgtuijian;
     ScrollView scrollView;
+    private TextView bannerTittle;
     private List<String> titles;
     public static HashMap<Integer,Boolean> seleHash=new HashMap<>();
     private View view;
@@ -97,6 +100,7 @@ public class FragmentIndexChoice extends Fragment {
 
     private void initView() {
         mBanner = view.findViewById(R.id.convenientBanner);
+        bannerTittle=view.findViewById(R.id.bannerTittle);
         tvLiveNewsTitle = view.findViewById(R.id.tv_xinwen);
         tvShipingMore = view.findViewById(R.id.tv_shiping_more);
         imgXinwen = view.findViewById(R.id.img_xinwen);
@@ -229,6 +233,7 @@ public class FragmentIndexChoice extends Fragment {
                                     titles.add(title);
                                 }
                                 mBanner.setBannerTitles(titles);
+                                mBanner.setBannerStyle(1);
                                 mBanner.start();
                                 mBanner.setOnBannerListener(new OnBannerListener() {
                                     @Override
@@ -239,6 +244,28 @@ public class FragmentIndexChoice extends Fragment {
                                     }
                                 });
                                 getLiveImg(liveBeanList);
+                                mBanner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                    @Override
+                                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                                    }
+
+                                    @Override
+                                    public void onPageSelected(int position) {
+                                        Log.e("fhp","位置"+position);
+                                        if (position<=titles.size()){
+                                                                                    bannerTittle.setText(titles.get(position-1));
+
+                                        }
+                                        if (position==titles.size()+1){
+                                            bannerTittle.setText(titles.get(0));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onPageScrollStateChanged(int state) {
+
+                                    }
+                                });
                             }
                         }
                     }

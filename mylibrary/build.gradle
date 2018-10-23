@@ -45,6 +45,8 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
     //轮播控件
     implementation 'com.youth.banner:banner:1.4.9'
+    /*banner*/
+    compile 'com.github.czy1121:bannerview:1.0.2'
     //网络框架okgo https://github.com/jeasonlzy/okhttp-OkGo
     implementation 'com.lzy.net:okgo:3.0.4'
     //log工具 https://github.com/orhanobut/logger
@@ -52,6 +54,7 @@ dependencies {
     //fastjson https://github.com/alibaba/fastjson
     implementation 'com.alibaba:fastjson:1.2.44'
     implementation files('libs/gson-2.3.jar')
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     //执行GSON
     configurations {
         all*.exclude group: 'com.google.code.gson'

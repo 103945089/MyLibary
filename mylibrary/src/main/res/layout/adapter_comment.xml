@@ -78,6 +78,6 @@
         android:layout_below="@+id/ll_textdetail_item"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/fengexian" />
+        android:background="#c0c0c0" />
 
 </RelativeLayout>

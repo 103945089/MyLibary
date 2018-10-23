@@ -84,6 +84,10 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 
     @Override
     protected void initView() {
+        Intent intent = new Intent(this, FhpVideoDetailAty.class);
+        intent.putExtra("id",id);
+        startActivity(intent);
+        finish();
         ll_videodetail = findViewById(R.id.ll_videodetail);
         vdPlayer = findViewById(R.id.hot_gsyvideo);
 
@@ -139,7 +143,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
 
     @Override
     protected void initData() {
-        LinearLayoutManager manager = new LinearLayoutManager(this);
+        /*LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
         ll_videodetail.setVisibility(View.GONE);
@@ -151,7 +155,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                 , String.valueOf(TMSharedPUtil.getTMUser(this).getMember_id()), String.valueOf(id), TMSharedPUtil.getTMToken(this));
 
         getPresenter().loadVideoData(this, id, 0);
-        getPresenter().loadHotCommentData(this, id, page);
+        getPresenter().loadHotCommentData(this, id, page);*/
     }
 
     @Override
@@ -205,7 +209,6 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
                 String tmToken = TMSharedPUtil.getTMToken(HotVideoDetailActivity.this);
                 if (null == tmToken || "".equals(tmToken) || TextUtils.isEmpty(tmToken)) {
                     Toast.makeText(HotVideoDetailActivity.this, "请登录", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(HotVideoDetailActivity.this, ConfirmLoginActivity.class));
                     return;
                 }
                 if (null == etString || "".equals(etString) || TextUtils.isEmpty(etString)) {

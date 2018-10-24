@@ -5,6 +5,7 @@ import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
 
+import java.util.ArrayList;
 import java.util.List;
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
@@ -35,6 +36,7 @@ public class HotVideoActivity extends BaseActivity<HotVideoPresenter> implements
     protected void initView() {
         listView = findViewById(R.id.list_hotvideo);
         springView = findViewById(R.id.springview_hotvideo);
+
     }
 
     @Override

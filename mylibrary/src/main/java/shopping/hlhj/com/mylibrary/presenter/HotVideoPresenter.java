@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                 .tag(context)
                 .params("id", id)
                 .params("uid", uid)
+                .headers("token", TMSharedPUtil.getTMToken(context))
+                .params("token", TMSharedPUtil.getTMToken(context))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -59,7 +62,7 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
     public void loadMoreVideoData(Context context, int page) {
         OkGo.<String>get(Constant.HOT_MORE)
                 .tag(context)
-                .params("type", 1)
+                .params("type", 8)
                 .params("page", page)
                 .execute(new StringCallback() {
                     @Override
@@ -91,6 +94,8 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
     public void loadHotCommentData(Context context, int id, int page) {
         OkGo.<String>get(Constant.OTHER_COMMENT_LIST)
                 .tag(context)
+                .params("token",TMSharedPUtil.getTMToken(context))
+                .headers("token",TMSharedPUtil.getTMToken(context))
                 .params("id", id)
                 .params("page", page)
                 .execute(new StringCallback() {

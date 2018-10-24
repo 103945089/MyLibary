@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import shopping.hlhj.com.mylibrary.Tool.FullyGridLayoutManager;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity;
 import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
@@ -55,8 +56,10 @@ import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
 import shopping.hlhj.com.mylibrary.activity.LiveNewsActivity;
 import shopping.hlhj.com.mylibrary.activity.LiveNewsMoreActivity;
 import shopping.hlhj.com.mylibrary.activity.SpecialMoreActivity;
+import shopping.hlhj.com.mylibrary.adapter.HotVideoRcyAdp;
 import shopping.hlhj.com.mylibrary.adapter.LiveNewsAdapter;
 import shopping.hlhj.com.mylibrary.adapter.RecommendAdapter;
+import shopping.hlhj.com.mylibrary.adapter.RecommendRcyAdp;
 import shopping.hlhj.com.mylibrary.adapter.SpecialAdapter;
 import shopping.hlhj.com.mylibrary.bean.HotAdSpecial;
 import shopping.hlhj.com.mylibrary.adapter.HotVideoAdapter;
@@ -70,7 +73,8 @@ public class FragmentIndexChoice extends Fragment {
     TextView tvLiveNewsTitle,tvShipingMore,tvTime,tvRemenMore,tvZhuantiMore,tvTuijianTitle,tvTuijianAuthor;
     ImageView imgXinwen;
     RecyclerView ryZhuanti,ryNews;
-    GridView grideViewOther, grideHot,gridLive;
+    GridView  gridLive;
+    RecyclerView grideHot,grideViewOther;
     SpringView springView;
     Unbinder unbinder;
     ImageView Imgtuijian;
@@ -81,12 +85,16 @@ public class FragmentIndexChoice extends Fragment {
     private View view;
     private Context context;
     private HotVideoAdapter hotVideoAdapter;
+    private List<HotAdSpecial.HotAdSpecialData.HotBean> hotDatas=new ArrayList<>();
+    private HotVideoRcyAdp hotVideoRcyAdp;
     private SpecialAdapter specialAdapter;
     private RecommendAdapter recommendAdapter;
     private LiveNewsAdapter liveNewsAdapter;
     private int page = 1;
     private int liveId,tuijianId,bannerId;
+    private RecommendRcyAdp recommendRcyAdp;
 
+    private List<RecommendBean.RecommendData.RecommenDatas> rDatas=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -130,7 +138,18 @@ public class FragmentIndexChoice extends Fragment {
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         ryZhuanti.setLayoutManager(manager);
 
+
+        hotVideoRcyAdp=new HotVideoRcyAdp(hotDatas);
+        grideHot.setLayoutManager(new FullyGridLayoutManager(getContext(),2));
+        grideHot.setAdapter(hotVideoRcyAdp);
+        grideHot.setNestedScrollingEnabled(false);
         getData();
+
+        recommendRcyAdp=new RecommendRcyAdp(rDatas);
+        grideViewOther.setAdapter(recommendRcyAdp);
+        grideViewOther.setLayoutManager(new FullyGridLayoutManager(getContext(),2));
+        grideViewOther.setNestedScrollingEnabled(false);
+
     }
 
     public void getData(){
@@ -299,9 +318,8 @@ public class FragmentIndexChoice extends Fragment {
                                     }.getType());
 
                             if (hotBeans != null && hotBeans.size() > 0 && specialList != null && specialList.size() > 0) {
-                                hotVideoAdapter = new HotVideoAdapter(context, hotBeans);
-                                grideHot.setAdapter(hotVideoAdapter);
-
+                                hotDatas.addAll(hotBeans);
+                                hotVideoRcyAdp.notifyDataSetChanged();
                                 specialAdapter = new SpecialAdapter(context, specialList);
                                 ryZhuanti.setAdapter(specialAdapter);
                                 specialAdapter.setOnItemOnClick(new SpecialAdapter.OnItemOnClick() {
@@ -343,8 +361,8 @@ public class FragmentIndexChoice extends Fragment {
                                 try {
                                     String format = JavaUtils.format(s);
                                     tvTuijianAuthor.setText(recommenDatas.get(0).release + " | " + format);
-                                    recommendAdapter = new RecommendAdapter(context, recommenDatas);
-                                    grideViewOther.setAdapter(recommendAdapter);
+                                    rDatas.addAll(recommenDatas);
+                                    recommendRcyAdp.notifyDataSetChanged();
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }

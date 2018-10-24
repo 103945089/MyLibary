@@ -5,6 +5,8 @@ import android.widget.ListView;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
+
+import java.util.ArrayList;
 import java.util.List;
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
@@ -13,13 +15,16 @@ import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
 import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.cv.GoLoginDialog;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
-public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView {
+public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, LiveMoreAdapter.OnLikeClick {
     private ListView listView;
     private SpringView springView;
     private int page = 1;
     private LiveMoreAdapter liveMoreAdapter;
+    private int p=0;
+    private List<MoreBean.MoreDatas> moreDatas = new ArrayList<>();
     @Override
     protected int getContentResId() {
         return R.layout.activity_hotvideo;
@@ -34,6 +39,9 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
     protected void initView() {
         listView = findViewById(R.id.list_hotvideo);
         springView = findViewById(R.id.springview_hotvideo);
+
+        liveMoreAdapter = new LiveMoreAdapter(this,moreDatas,LiveNewsMoreActivity.this);
+        listView.setAdapter(liveMoreAdapter);
     }
 
     @Override
@@ -66,8 +74,11 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
 
     @Override
     public void loadLiveMoreSuccess(List<MoreBean.MoreDatas> moreDatas) {
-        liveMoreAdapter = new LiveMoreAdapter(this,moreDatas);
-        listView.setAdapter(liveMoreAdapter);
+        if (page==1){
+            this.moreDatas.clear();
+        }
+        this.moreDatas.addAll(moreDatas);
+        liveMoreAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -96,5 +107,33 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
 
     }
 
+    @Override
+    public void likeSuccess() {
+        MoreBean.MoreDatas moreDatas = this.moreDatas.get(p);
+        if (moreDatas.is_laud==1){
+            moreDatas.setIs_laud(0);
+            moreDatas.laud_num--;
+        }else {
+            moreDatas.setIs_laud(1);
+            moreDatas.laud_num++;
 
+        }
+        liveMoreAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void likeErro() {
+        new GoLoginDialog(LiveNewsMoreActivity.this).show();
+    }
+
+    @Override
+    public void clickLike(int id,int poi) {
+        p=poi;
+        getPresenter().likeIt(LiveNewsMoreActivity.this,id,2);
+    }
+
+    @Override
+    public void clickColl(int id, int poi) {
+
+    }
 }

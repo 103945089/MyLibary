@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
@@ -59,10 +60,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 .skipMemoryCache(true);
 
         if (isLiveNews == true){
-            Glide.with(context).load(commentBeans.get(position).head_pic).apply(mRequestOptions).into(holder.img_user);
+            GlideUtil.INSTANCE.loadHead(context,commentBeans.get(position).head_pic,holder.img_user);
             holder.tv_username.setText(commentBeans.get(position).member_name);
         }else {
-            Glide.with(context).load(commentBeans.get(position).avatar).apply(mRequestOptions).into(holder.img_user);
+            GlideUtil.INSTANCE.loadHead(context,commentBeans.get(position).avatar,holder.img_user);
             holder.tv_username.setText(commentBeans.get(position).username);
         }
         holder.tv_num.setText(commentBeans.get(position).laud_num + "");

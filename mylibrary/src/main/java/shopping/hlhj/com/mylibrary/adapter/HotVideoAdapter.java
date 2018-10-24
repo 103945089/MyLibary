@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -76,6 +77,19 @@ public class HotVideoAdapter extends BaseAdapter {
             holder.time.setText(format);
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+        switch (position%2){
+            case 0:
+                RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) holder.relativeLayout.getLayoutParams();
+                lp1.setMarginStart(0);
+                holder.relativeLayout.setLayoutParams(lp1);
+                break;
+            case 1:
+                RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) holder.relativeLayout.getLayoutParams();
+                lp2.setMarginStart(10);
+                holder.relativeLayout.setLayoutParams(lp2);
+                break;
+            default:
         }
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {

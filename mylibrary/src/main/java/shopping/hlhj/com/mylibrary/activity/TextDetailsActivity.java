@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -66,6 +67,9 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
             Gson g = new Gson();
             id = g.fromJson(getIntent().getStringExtra("paramStr"), ParamsBean.class).getID();
         }
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.softInputMode= WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
+        getWindow().setAttributes(lp);
     }
 
     @Override
@@ -213,7 +217,9 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
         tvTittleTextView.setText(detailDatas.title);
         tv_Time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm") + "");
         tv_auther.setText(detailDatas.release);
-        webView.loadDataWithBaseURL(null, detailDatas.content, "text/html", "uft-8", null);
+        String prompt = detailDatas.content;
+        prompt=prompt.replace("<img", "<img style='max-width:100%;height:auto;'");
+        webView.loadDataWithBaseURL(null, prompt, "text/html", "uft-8", null);
         title = detailDatas.title;
     }
 

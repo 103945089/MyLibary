@@ -16,11 +16,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.tenma.ventures.bean.TMUser;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.activity.SearchActivity;
 import shopping.hlhj.com.mylibrary.adapter.IndexAdapter;
+import shopping.hlhj.com.mylibrary.bean.CatBean;
+import shopping.hlhj.com.mylibrary.data.Constant;
 
 public class FragmentIndex extends Fragment{
 
@@ -41,24 +48,52 @@ public class FragmentIndex extends Fragment{
     }
 
     private void initView() {
+        //模拟数据
+        TMUser tmUser = new TMUser();
+        tmUser.setMember_id(63);
+        tmUser.setMember_code("1D0916EF9A29336083BFB0017C90EAEA");
+        tmUser.setToken("2CF4F4F7FE64C2703B6AD9D5E5D85E07");
+        TMSharedPUtil.saveTMUser(getContext(),tmUser);
+        TMSharedPUtil.saveTMToken(getContext(),"2CF4F4F7FE64C2703B6AD9D5E5D85E07");
+
+
         tabLayouts = rootView.findViewById(R.id.main_tab);
         loDv=rootView.findViewById(R.id.loDv);
         mainviewPager = rootView.findViewById(R.id.main_viewpager);
         img_search = rootView.findViewById(R.id.img_search);
         rl_fragment_index = rootView.findViewById(R.id.rl_fragment_index);
+
         if (null != TMSharedPUtil.getTMThemeColor(context)){
             tabLayouts.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
             loDv.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
             rl_fragment_index.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
         }
+
+        final IndexAdapter adapter = new IndexAdapter(getChildFragmentManager());
+
+        OkGo.<String>get(Constant.CATLIST)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        CatBean catBean = new Gson().fromJson(body, CatBean.class);
+                        for (int i = 0; i < catBean.getData().size(); i++) {
+                            CatFgm catFgm = CatFgm.getInstance(catBean.getData().get(i).getId(), catBean.getData().get(i).getNav_name());
+                            if (i==0){
+                                adapter.addFragment(new FragmentIndexChoice(),catBean.getData().get(i).getNav_name());
+                            }else {
+                                adapter.addFragment(catFgm,catBean.getData().get(i).getNav_name());
+                            }
+                            mainviewPager.setAdapter(adapter);
+
+                        }
+                    }
+                });
+
         tabLayouts.setupWithViewPager(mainviewPager);
         tabLayouts.setTabMode(TabLayout.MODE_FIXED);
-        IndexAdapter adapter = new IndexAdapter(getChildFragmentManager());
-        adapter.addFragment(new FragmentIndexChoice(),"精选");
-        adapter.addFragment(new FragmentIndexSports(),"体育");
-        adapter.addFragment(new FragmentIndexScience(),"科技");
-        mainviewPager.setAdapter(adapter);
         mainviewPager.setOffscreenPageLimit(2);
+
     }
 
     private void initData() {

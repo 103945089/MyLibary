@@ -23,8 +23,8 @@ public abstract class BaseActivity<T extends BasePresenter<? extends BaseView>> 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         ActivityCollector.addActivity(this);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         super.onCreate(savedInstanceState);
         initWidows();
         mContext = this;

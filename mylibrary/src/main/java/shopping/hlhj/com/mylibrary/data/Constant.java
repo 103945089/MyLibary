@@ -65,8 +65,13 @@ public class Constant {
     //添加历史浏览记录
     public static String ADD_HIS=IMG_URL+"/member/Memberfootprint/addFootprint/";
 
-
+    //点赞
     public static String ITS_GOOD=POST_URL+"/Api/laud";
+    //收藏
+    public static String CollMine =POST_URL+"/Api/collection";
+    //导航栏
+    public static String CATLIST=POST_URL+"/Api/obtain_nav";
+    public static String Cat_DEtail=POST_URL+"/Api/nav_content";
 
     //APPID
     public static String APP_ID="hlhj.new.kankan";

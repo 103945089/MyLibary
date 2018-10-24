@@ -34,7 +34,7 @@ public class MoreAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return hotMoreDatas.size() == 0 ? null : hotMoreDatas.size();
+        return  hotMoreDatas.size();
     }
 
     @Override
@@ -57,11 +57,13 @@ public class MoreAdapter extends BaseAdapter{
             holder.tvHotMoreTitle = convertView.findViewById(R.id.tv_hotmore_title);
             holder.tvHotMoreTime = convertView.findViewById(R.id.tv_hotmore_time);
             holder.linearLayout = convertView.findViewById(R.id.ll_hotmore);
+            holder.imgLogo=convertView.findViewById(R.id.imgLogo);
             convertView.setTag(holder);
         }else {
             holder = (MoreViewHolder) convertView.getTag();
         }
         if (isSpecial == true){
+            holder.imgLogo.setVisibility(View.GONE);
             Glide.with(context).load(hotMoreDatas.get(position).channel_thumb).into(holder.imgHotMore);
             holder.tvHotMoreTitle.setText(hotMoreDatas.get(position).name);
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +75,8 @@ public class MoreAdapter extends BaseAdapter{
                 }
             });
         }else if (isSpecial == false){
+            holder.imgLogo.setVisibility(View.VISIBLE);
+
             Glide.with(context).load(hotMoreDatas.get(position).cover).into(holder.imgHotMore);
             holder.tvHotMoreTitle.setText(hotMoreDatas.get(position).title);
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +99,7 @@ public class MoreAdapter extends BaseAdapter{
     }
 
     class MoreViewHolder {
-        ImageView imgHotMore;
+        ImageView imgHotMore,imgLogo;
         TextView tvHotMoreTitle,tvHotMoreTime;
         LinearLayout linearLayout;
     }

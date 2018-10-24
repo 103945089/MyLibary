@@ -33,6 +33,7 @@ import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.FullyGridLayoutManager;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
 import shopping.hlhj.com.mylibrary.adapter.MoreVideoAdp;
@@ -60,7 +61,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     private LinearLayout ll_videodetail;
     private RecyclerView commentList,recommendList;
     private TextView tv_title, tv_time, tv_author, tv_comment_normal,tvLaudNum;
-    private ImageView img_btn,btZan;
+    private ImageView img_btn,btZan,btExit;
     private SpringView springView;
     private int id;
     private int page = 1;
@@ -103,6 +104,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         recommendList=findViewById(R.id.recommendList);
         btSend=findViewById(R.id.btSendComment);
         btZan=findViewById(R.id.btLike);
+        btExit=findViewById(R.id.btExit);
         etContent=findViewById(R.id.etContent);
         commentAdapter = new VideoCommentAdp(commentDataList);
         commentAdapter.setEmptyView(LayoutInflater.from(this).inflate(R.layout.comment_empty,null));
@@ -112,7 +114,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
 
         recommendAdapter=new MoreVideoAdp(recommenDatas);
         recommendList.setAdapter(recommendAdapter);
-        recommendList.setLayoutManager(new GridLayoutManager(this,2));
+        recommendList.setLayoutManager(new FullyGridLayoutManager(this,2));
         recommendList.setNestedScrollingEnabled(false);
     }
 
@@ -160,12 +162,12 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
                             , 1 + ""
                             , "aaa",
                             TMSharedPUtil.getTMToken(FhpVideoDetailAty.this));
-                    btColl.setImageResource(R.drawable.ic_collection);
-                    collectflag = false;
+                 /*   btColl.setImageResource(R.drawable.ic_collection);
+                    collectflag = false;*/
                 } else {
                     collectPresenter.cancelColl(cid, TMSharedPUtil.getTMToken(FhpVideoDetailAty.this));
-                    btColl.setImageResource(R.drawable.ic_sc_normal);
-                    collectflag = true;
+                   /* btColl.setImageResource(R.drawable.ic_sc_normal);
+                    collectflag = true;*/
                 }
             }
         });
@@ -199,7 +201,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         btZan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isZan){
+                if (!isZan){
                     OkGo.<String>post(Constant.ITS_GOOD)
                             .params("id",id)
                             .params("token",TMSharedPUtil.getTMToken(mContext))
@@ -212,6 +214,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
                                     JSONObject jsonObject = JSON.parseObject(body);
                                     int code = jsonObject.getInteger("code");
                                     if (code == 200){
+                                        isZan=true;
                                         btZan.setImageResource(R.drawable.ic_zan1);
                                         likeNum++;
                                         tvLaudNum.setText("点赞数:"+(likeNum));
@@ -237,6 +240,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
                                     JSONObject jsonObject = JSON.parseObject(body);
                                     int code = jsonObject.getInteger("code");
                                     if (code == 200){
+                                        isZan=false;
                                         btZan.setImageResource(R.drawable.ic_pl_zan);
                                         likeNum--;
                                         tvLaudNum.setText("点赞数:"+(likeNum));
@@ -252,16 +256,22 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
                 }
             }
         });
+        btExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
     public void loadDataSuccess(DetailBean.DetailDatas detailDatas) {
         tittle=detailDatas.title;
         GSYVideoHelper.GSYVideoHelperBuilder builder = new GSYVideoHelper.GSYVideoHelperBuilder();
+        Log.e("fhp",detailDatas.video_url);
         builder
 //                .setVideoTitle(detailDatas.title)
                 .setAutoFullWithSize(true)
-                .setFullHideStatusBar(false)
                 .setCacheWithPlay(true)
                 .setUrl(detailDatas.video_url)
                 .build(vdPlayer);
@@ -277,8 +287,10 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
 
         /*点赞按钮显示*/
         if (detailDatas.is_laud==1){
+            isZan=true;
             btZan.setImageResource(R.drawable.ic_zan1);
         }else {
+            isZan=false;
             btZan.setImageResource(R.drawable.ic_pl_zan);
         }
 //        commentDataList.addAll(detailDatas.comment);
@@ -310,7 +322,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
 
     @Override
     public void loadSendCommentSuccess(String msg) {
-
+        etContent.setText("");
     }
 
     @Override
@@ -340,17 +352,17 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     @Override
     public void addCollectError(@NotNull Exception e) {
 //todo 收藏接口访问失败回调
-        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         btColl.setImageResource(R.drawable.ic_sc_normal);
         collectflag = true;
+        goLoginDialog.show();
     }
 
     @Override
     public void addCollectError() {
 //todo 收藏接口访问失败回调
-        Toast.makeText(this, "收藏失败", Toast.LENGTH_SHORT).show();
         btColl.setImageResource(R.drawable.ic_sc_normal);
         collectflag = true;
+        goLoginDialog.show();
     }
 
     @Override

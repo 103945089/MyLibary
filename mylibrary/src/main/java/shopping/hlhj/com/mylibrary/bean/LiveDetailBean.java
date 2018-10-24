@@ -52,6 +52,15 @@ public class LiveDetailBean implements Serializable{
         public int comment_status;
         public int vote_status;
         public int is_laud;
+        public int is_collection;
+
+        public int getIs_collection() {
+            return is_collection;
+        }
+
+        public void setIs_collection(int is_collection) {
+            this.is_collection = is_collection;
+        }
 
         @Override
         public String toString() {
@@ -66,6 +75,7 @@ public class LiveDetailBean implements Serializable{
                     ", comment_status=" + comment_status +
                     ", vote_status=" + vote_status +
                     ", is_laud=" + is_laud +
+                    ", is_collection=" + is_collection +
                     '}';
         }
 

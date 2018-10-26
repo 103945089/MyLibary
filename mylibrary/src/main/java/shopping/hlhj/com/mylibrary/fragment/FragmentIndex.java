@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.tenma.ventures.bean.TMUser;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
@@ -49,13 +50,13 @@ public class FragmentIndex extends Fragment{
 
     private void initView() {
         //模拟数据
-        TMUser tmUser = new TMUser();
-        tmUser.setMember_id(63);
-        tmUser.setMember_code("1D0916EF9A29336083BFB0017C90EAEA");
-        tmUser.setToken("2CF4F4F7FE64C2703B6AD9D5E5D85E07");
+/*        TMUser tmUser = new TMUser();
+        tmUser.setMember_id(69);
+        tmUser.setMember_code("A930AD3C0ADB2430E234F096DBCFA357");
+        tmUser.setToken("19105607C568A5597ACC3B856921F5DF");
         TMSharedPUtil.saveTMUser(getContext(),tmUser);
-        TMSharedPUtil.saveTMToken(getContext(),"2CF4F4F7FE64C2703B6AD9D5E5D85E07");
-
+        TMSharedPUtil.saveTMToken(getContext(),"19105607C568A5597ACC3B856921F5DF");
+        TMSharedPUtil.saveTMThemeColor(getContext(),"#f20909");*/
 
         tabLayouts = rootView.findViewById(R.id.main_tab);
         loDv=rootView.findViewById(R.id.loDv);
@@ -68,7 +69,22 @@ public class FragmentIndex extends Fragment{
             loDv.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
             rl_fragment_index.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
         }
+        tabLayouts.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                GSYVideoManager.releaseAllVideos();
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         final IndexAdapter adapter = new IndexAdapter(getChildFragmentManager());
 
         OkGo.<String>get(Constant.CATLIST)

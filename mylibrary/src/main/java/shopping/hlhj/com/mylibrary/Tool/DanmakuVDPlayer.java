@@ -23,6 +23,8 @@ import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,6 +52,7 @@ import master.flame.danmaku.ui.widget.DanmakuView;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.DanamakuAdapter;
 import shopping.hlhj.com.mylibrary.bean.DanMuBean;
+import shopping.hlhj.com.mylibrary.bean.DanMuStrBean;
 
 
 /**
@@ -70,7 +73,7 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
     private DanmakuContext mDanmakuContext;
 
     public OnEditClickListener onEditClickListener;
-    private boolean isLay=false;
+    public static boolean isLay=false;
     private boolean isEditShow=false;
 
     private TextView mSendDanmaku, mToogleDanmaku;
@@ -139,16 +142,26 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
         btEdit.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction()==MotionEvent.ACTION_DOWN){
-                    if (true){
-                        isEditShow = !isEditShow;
-                        resoveEdit(isEditShow);
-                    }else {
+                if (isLay){
+                    if (event.getAction()==MotionEvent.ACTION_DOWN){
+                        if (true){
+                            isEditShow = !isEditShow;
+                            resoveEdit(isEditShow);
+                        }else {
+                            if (onEditClickListener!=null){
+//                                onEditClickListener.onEditClick();
+                            }
+                        }
+                    }
+                }else {
+                    if (event.getAction()==MotionEvent.ACTION_DOWN){
                         if (onEditClickListener!=null){
                             onEditClickListener.onEditClick();
                         }
                     }
+
                 }
+
 
                 return true;
             }
@@ -156,9 +169,11 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
         btSend.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 if (event.getAction()==MotionEvent.ACTION_DOWN){
                     Log.e("fhp","是否为空---------------1-");
                     if (onEditClickListener!=null){
+
                         Log.e("fhp","是否为空----------------");
                         onEditClickListener.sendDanMu(editText.getText().toString());
                         addDanmaku(editText.getText().toString(),true);
@@ -166,6 +181,15 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
                         loEdit.setVisibility(View.GONE);
                         isEditShow=false;
 
+                    }else {
+                        DanMuStrBean danMuStrBean = new DanMuStrBean();
+                        danMuStrBean.setDanmu(editText.getText().toString());
+                        EventBus.getDefault().post(danMuStrBean);
+//                        onEditClickListener.sendDanMu(editText.getText().toString());
+                        addDanmaku(editText.getText().toString(),true);
+                        editText.setText("");
+                        loEdit.setVisibility(View.GONE);
+                        isEditShow=false;
                     }
                 }
                 return true;
@@ -549,14 +573,14 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
                     if (!getDanmakuView().isShown()){
                         getDanmakuView().show();
                     }
-                    btSwitch.setImageResource(R.drawable.ic_barrage_close);
+                    btSwitch.setImageResource(R.drawable.ic_close);
                     mToogleDanmaku.setText("弹幕关");
                 } else {
                     if (getDanmakuView().isShown()) {
                         getDanmakuView().hide();
                     }
                     mToogleDanmaku.setText("弹幕开");
-                    btSwitch.setImageResource(R.drawable.ic_barrage_open);
+                    btSwitch.setImageResource(R.drawable.ic_open);
                 }
             }
         });
@@ -681,6 +705,7 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
 
     }
     public void addDanmaku(String str,boolean islive) {
+        Log.e("fhp","只进来一次？");
         BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         if (danmaku == null || mDanmakuView == null) {
             return;
@@ -693,7 +718,8 @@ public class DanmakuVDPlayer extends StandardGSYVideoPlayer {
         danmaku.textSize = 25f * (mParser.getDisplayer().getDensity() - 0.6f);
         danmaku.textColor = Color.RED;
         danmaku.textShadowColor = Color.WHITE;
-        danmaku.borderColor = Color.GREEN;
+//        danmaku.borderColor = Color.GREEN;
+
         mDanmakuView.addDanmaku(danmaku);
 
     }

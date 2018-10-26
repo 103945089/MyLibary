@@ -53,6 +53,24 @@ public class LiveDetailBean implements Serializable{
         public int vote_status;
         public int is_laud;
         public int is_collection;
+        public int read_num;
+        private String live_thumb;
+
+        public String getLive_thumb() {
+            return live_thumb;
+        }
+
+        public void setLive_thumb(String live_thumb) {
+            this.live_thumb = live_thumb;
+        }
+
+        public int getRead_num() {
+            return read_num;
+        }
+
+        public void setRead_num(int read_num) {
+            this.read_num = read_num;
+        }
 
         public int getIs_collection() {
             return is_collection;

@@ -1,10 +1,14 @@
 package shopping.hlhj.com.mylibrary.activity;
 
+import android.graphics.Color;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import java.util.List;
 
@@ -18,7 +22,10 @@ public class SpecialMoreActivity extends BaseActivity<SpecialPresenter> implemen
     private ListView listView;
     private SpringView springView;
     private int page = 1;
+    private TextView tvTitle;
+    private View btExit;
     private MoreAdapter moreAdapter;
+    private View loBack;
     @Override
     protected int getContentResId() {
         return R.layout.activity_hotvideo;
@@ -33,6 +40,14 @@ public class SpecialMoreActivity extends BaseActivity<SpecialPresenter> implemen
     protected void initView() {
         listView = findViewById(R.id.list_hotvideo);
         springView = findViewById(R.id.springview_hotvideo);
+        btExit=findViewById(R.id.btExit);
+        tvTitle=findViewById(R.id.tvTitle);
+        tvTitle.setText("专题列表");
+        loBack=findViewById(R.id.loBack);
+
+        if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){
+            loBack.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(this)));
+        }
     }
 
     @Override
@@ -45,6 +60,13 @@ public class SpecialMoreActivity extends BaseActivity<SpecialPresenter> implemen
 
     @Override
     protected void setOnClick() {
+
+        btExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {

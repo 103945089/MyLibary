@@ -53,6 +53,8 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                 .tag(context)
                 .params("live_id", id)
                 .params("page", page)
+                .params("token",TMSharedPUtil.getTMToken(context))
+                .headers("token",TMSharedPUtil.getTMToken(context))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -63,7 +65,9 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                             List<CommentBean.CommentData> commentBeans = new Gson().fromJson(data.toString(), new TypeToken<List<CommentBean.CommentData>>() {
                             }.getType());
                             if (commentBeans != null && commentBeans.size() > 0) {
-                                getView().loadCommentSuccess(commentBeans);
+                                if (getView()!=null){
+                                    getView().loadCommentSuccess(commentBeans);
+                                }
                             } else {
                                 getView().loadFailed("1");
                             }

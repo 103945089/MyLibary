@@ -56,87 +56,96 @@
         android:id="@+id/spView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/ll_search"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/ll_search_histroy"
+            android:layout_height="match_parent">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/rl_search_histroy"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:id="@+id/ll_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:layout_gravity="center">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="搜索历史"
-                        android:layout_centerVertical="true"
-                        android:textSize="14sp"/>
-
-                    <ImageView
-                        android:id="@+id/img_delAll"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_del"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:layout_marginRight="10dp"
-                        android:padding="5dp"/>
-
-                </RelativeLayout>
-
-                <GridView
-                    android:id="@+id/grideview_histroy"
-                    android:layout_width="match_parent"
-                    android:numColumns="2"
                     android:visibility="visible"
-                    android:horizontalSpacing="2dp"
-                    android:verticalSpacing="2dp"
-                    android:layout_height="wrap_content"/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    />
+                    <LinearLayout
+                        android:id="@+id/ll_search_histroy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-            </LinearLayout>
+                        <RelativeLayout
+                            android:id="@+id/rl_search_histroy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:layout_gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="搜索历史"
+                                android:layout_centerVertical="true"
+                                android:textSize="14sp"/>
 
-            <LinearLayout
-                android:id="@+id/ll_search_hot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="热门搜索"
-                    android:textSize="14sp"
-                    android:padding="8dp"/>
-                <GridView
-                    android:id="@+id/grideview_hot"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:numColumns="2"
-                    android:horizontalSpacing="2dp"
-                    android:verticalSpacing="2dp"
-                    android:visibility="visible"/>
-            </LinearLayout>
+                            <ImageView
+                                android:id="@+id/img_delAll"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/btn_delete"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerInParent="true"
+                                android:layout_marginRight="10dp"
+                                android:padding="5dp"/>
 
-            <GridView
-                android:id="@+id/gride_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+                        </RelativeLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/grideview_histroy"
+                            android:layout_width="match_parent"
+                            android:numColumns="2"
+                            android:visibility="visible"
+                            android:horizontalSpacing="2dp"
+                            android:verticalSpacing="2dp"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_search_hot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="热门搜索"
+                            android:textSize="14sp"
+                            android:padding="8dp"/>
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/grideview_hot"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:numColumns="2"
+                            android:horizontalSpacing="2dp"
+                            android:verticalSpacing="2dp"
+                            android:visibility="visible"/>
+                    </LinearLayout>
+
+                    <GridView
+                        android:id="@+id/gride_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
+
 
     </com.liaoinstan.springview.widget.SpringView>
 

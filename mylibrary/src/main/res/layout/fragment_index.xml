@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/loBack"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content">
@@ -23,12 +24,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="80dp"
-                android:layout_marginRight="80dp"
                 app:tabBackground="@color/transparent"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"
                 app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/text_grey" />
+                app:tabTextColor="@color/white" />
 
             <ImageView
                 android:id="@+id/img_search"

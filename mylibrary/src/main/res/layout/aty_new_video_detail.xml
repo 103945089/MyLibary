@@ -28,95 +28,102 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:padding="10dp"
-            android:src="@drawable/ic_sc_normal" />
+            android:src="@drawable/ic_nottocollect" />
     </RelativeLayout>
-    <ScrollView
-        android:layout_above="@+id/bottomBar"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/spView"
         android:layout_below="@id/loBack"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <android.support.v4.widget.NestedScrollView
+            android:layout_above="@+id/bottomBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
             <LinearLayout
-                android:id="@+id/ll_videodetail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                >
-                <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
-                    android:id="@+id/hot_gsyvideo"
-                    android:layout_width="match_parent"
-                    android:layout_height="190dp" />
-
-                <TextView
-                    android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/ll_videodetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="2"
-                    android:padding="5dp"
-                    android:text=""
-                    android:textColor="@color/text_black"
-                    android:textSize="14sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical"
+                    >
+                    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+                        android:id="@+id/hot_gsyvideo"
+                        android:layout_width="match_parent"
+                        android:layout_height="190dp" />
 
                     <TextView
-                        android:id="@+id/tv_time"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_title"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_below="@+id/tv_author"
-                        android:text="2018/05/06"
-                        android:textColor="@color/text_grey"
-                        android:textSize="12sp" />
+                        android:visibility="gone"
+                        android:lines="2"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textColor="@color/text_black"
+                        android:textSize="14sp" />
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_below="@+id/tv_author"
+                            android:text="2018/05/06"
+                            android:textColor="@color/text_grey"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_author"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:padding="3dp"
+                            android:text="黄瑞坡改"
+                            android:textColor="#333"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/tvLaudNum"
+                            android:text="点赞数：0"
+                            android:textColor="#666"
+                            android:layout_marginRight="10dp"
+                            android:textSize="12sp"
+                            android:layout_alignBottom="@id/tv_time"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
                     <TextView
-                        android:id="@+id/tv_author"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="10dp"
-                        android:padding="3dp"
-                        android:text="黄瑞坡改"
+                        android:textSize="17sp"
+                        android:text="最新评论"
+                        android:layout_marginTop="10dp"
                         android:textColor="#333"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:id="@+id/tvLaudNum"
-                        android:text="点赞数：0"
-                        android:textColor="#666"
-                        android:layout_marginRight="10dp"
-                        android:textSize="12sp"
-                        android:layout_alignBottom="@id/tv_time"
-                        android:layout_alignParentRight="true"
-                        android:layout_width="wrap_content"
+                        android:textStyle="bold"
+                        android:background="#f4f4f4"
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
-                </RelativeLayout>
-                <TextView
-                    android:textSize="17sp"
-                    android:text="最新评论"
-                    android:layout_marginTop="10dp"
-                    android:textColor="#333"
-                    android:textStyle="bold"
-                    android:background="#f4f4f4"
-                    android:padding="10dp"
+                </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/commentList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recommendList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </LinearLayout>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/commentList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recommendList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.liaoinstan.springview.widget.SpringView>
     <RelativeLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"

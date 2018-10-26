@@ -7,6 +7,7 @@
 
     <shopping.hlhj.com.mylibrary.Tool.DanmakuVDPlayer
         android:id="@+id/videoPlayer"
+        android:transitionName="vdp"
         android:layout_width="match_parent"
         android:layout_height="195dp" />
 
@@ -34,19 +35,17 @@
             android:textSize="14sp" />
 
         <RelativeLayout
+            android:id="@+id/lo_1"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/tv_live_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLength="50"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text=""
                 android:textColor="@color/text_grey"
                 android:textSize="12sp" />
 
@@ -65,9 +64,10 @@
         </RelativeLayout>
 
         <TextView
+
             android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@drawable/fengexian" />
+            android:layout_height="1dp"
+            android:background="#c0c0c0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,7 +123,6 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:text="123"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -161,9 +160,9 @@
         <TextView
             android:id="@+id/tv_fenxian"
             android:layout_width="match_parent"
-            android:layout_height="2sp"
+            android:layout_height="1dp"
             android:layout_marginTop="2dp"
-            android:background="@drawable/fengexian" />
+            android:background="#c0c0c0" />
 
     </LinearLayout>
     <com.liaoinstan.springview.widget.SpringView

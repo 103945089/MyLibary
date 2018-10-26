@@ -17,6 +17,8 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
+import com.tenma.ventures.share.bean.TMLinkShare;
+import com.tenma.ventures.share.util.TMShareUtil;
 
 import java.util.List;
 import shopping.hlhj.com.mylibrary.R;
@@ -75,6 +77,17 @@ public class LiveMoreAdapter extends BaseAdapter{
         }else {
             holder = (LiveMoreViewHolder) convertView.getTag();
         }
+        holder.imgMoreShared.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TMLinkShare tmLinkShare = new TMLinkShare();
+                tmLinkShare.setThumb(Constant.IMG_URL+moreDatas.get(position).getCover());
+                tmLinkShare.setTitle(moreDatas.get(position).getLive_title());
+                tmLinkShare.setDescription(moreDatas.get(position).getLive_title());
+                tmLinkShare.setUrl(moreDatas.get(position).getLive_source());
+                TMShareUtil.getInstance(context).shareLink(tmLinkShare);
+            }
+        });
         Glide.with(context).load(Constant.IMG_URL + moreDatas.get(position).live_thumb).into(holder.imgLiveMore);
         holder.tvLiveMoreTitle.setText(moreDatas.get(position).live_title);
         holder.tvLooknum.setText(moreDatas.get(position).read_num + "");
@@ -93,6 +106,8 @@ public class LiveMoreAdapter extends BaseAdapter{
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                moreDatas.get(position).setRead_num(moreDatas.get(position).getRead_num()+1);
+                notifyDataSetChanged();
                 Intent intent = new Intent(context, LiveNewsActivity.class);
                 intent.putExtra("id",moreDatas.get(position).id);
                 context.startActivity(intent);
@@ -118,7 +133,7 @@ public class LiveMoreAdapter extends BaseAdapter{
 
         iosInfoBean.setNativeX(true);
         iosInfoBean.setParamStr(new Gson().toJson(paramsBean));
-        iosInfoBean.setSrc("");
+        iosInfoBean.setSrc("HLHJLookLiveDetilController");
         androidInfoBean.setWwwFolder("");
 
         extendBean.setAndroidInfo(androidInfoBean);

@@ -47,7 +47,7 @@ class CollectPresenter(baseView:CollectView?) :BasePresenter<CollectPresenter.Co
     /**
      * 添加收藏
      */
-    fun addColl(member_code:String,title:String,intro:String
+    fun addColl(member_code:String,title:String?,intro:String
                 ,app_id:String,article_id:String,extend:String,tag:String,type:String,pic:String,token: String){
 
         OkGo.post<String>(Constant.ADD_COLL)

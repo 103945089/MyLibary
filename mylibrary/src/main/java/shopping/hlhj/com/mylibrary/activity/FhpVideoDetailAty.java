@@ -1,6 +1,7 @@
 package shopping.hlhj.com.mylibrary.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -25,6 +27,8 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoHelper;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
+import com.tenma.ventures.share.bean.TMLinkShare;
+import com.tenma.ventures.share.util.TMShareUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +46,9 @@ import shopping.hlhj.com.mylibrary.adapter.VideoCommentAdp;
 import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
+import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.bean.ParamsBean;
 import shopping.hlhj.com.mylibrary.bean.RecommendBean;
 import shopping.hlhj.com.mylibrary.cv.GoLoginDialog;
 import shopping.hlhj.com.mylibrary.data.Constant;
@@ -80,6 +86,9 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     private List<MoreBean.MoreDatas> recommenDatas = new ArrayList<>();
     private GoLoginDialog goLoginDialog;
     private boolean isZan=false;
+    private View loBack,btGoShare;
+    private View footView;
+    private String thumb;
     private int likeNum=0;
     @Override
     protected int getContentResId() {
@@ -89,7 +98,6 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     @Override
     protected void beforeinit() {
         id = getIntent().getExtras().getInt("id");
-
     }
 
     @Override
@@ -97,6 +105,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         goLoginDialog = new GoLoginDialog(FhpVideoDetailAty.this);
         tvLaudNum=findViewById(R.id.tvLaudNum);
         vdPlayer=findViewById(R.id.hot_gsyvideo);
+        loBack=findViewById(R.id.loBack);
         btColl=findViewById(R.id.btColl);
         tv_time=findViewById(R.id.tv_time);
         tv_author=findViewById(R.id.tv_author);
@@ -106,16 +115,46 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         btZan=findViewById(R.id.btLike);
         btExit=findViewById(R.id.btExit);
         etContent=findViewById(R.id.etContent);
+
+        btGoShare=findViewById(R.id.btGoShare);
+
+        if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){
+            loBack.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(this)));
+        }
         commentAdapter = new VideoCommentAdp(commentDataList);
         commentAdapter.setEmptyView(LayoutInflater.from(this).inflate(R.layout.comment_empty,null));
         commentList.setAdapter(commentAdapter);
         commentList.setNestedScrollingEnabled(false);
         commentList.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
 
+
         recommendAdapter=new MoreVideoAdp(recommenDatas);
         recommendList.setAdapter(recommendAdapter);
         recommendList.setLayoutManager(new FullyGridLayoutManager(this,2));
         recommendList.setNestedScrollingEnabled(false);
+
+
+        //todo ExtenStr的配置
+        ParamsBean paramsBean = new ParamsBean();
+        paramsBean.setID(id);
+        ExtendBean extendBean = new ExtendBean();
+        ExtendBean.AndroidInfoBean androidInfoBean = new ExtendBean.AndroidInfoBean();
+        ExtendBean.IosInfoBean iosInfoBean = new ExtendBean.IosInfoBean();
+        androidInfoBean.setNativeX(true);
+        androidInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        androidInfoBean.setSrc("shopping.hlhj.com.mylibrary.activity.FhpVideoDetailAty");
+        androidInfoBean.setWwwFolder("");
+
+        iosInfoBean.setNativeX(true);
+        iosInfoBean.setParamStr(new Gson().toJson(paramsBean));
+        iosInfoBean.setSrc("HRDetailsViewController ");
+        androidInfoBean.setWwwFolder("");
+
+        extendBean.setAndroidInfo(androidInfoBean);
+        extendBean.setIosInfo(iosInfoBean);
+
+        extendStr = new Gson().toJson(extendBean);
+
     }
 
     @Override
@@ -142,10 +181,24 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         getPresenter().loadHotCommentData(this,id,page);
         getPresenter().loadMoreVideoData(this,1);
         collectPresenter=new CollectPresenter(this);
+        collectPresenter.isColl(TMSharedPUtil.getTMUser(this).getMember_code(),Constant.APP_ID,id+"",TMSharedPUtil.getTMToken(this));
     }
 
     @Override
     protected void setOnClick() {
+        btGoShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TMLinkShare tmLinkShare = new TMLinkShare();
+                tmLinkShare.setThumb(thumb);
+                tmLinkShare.setDescription(tittle);
+                tmLinkShare.setTitle(tittle);
+                tmLinkShare.setUrl(Constant.IMG_URL+"/application/hlhj_webcast/kankan/index.html?id="+id);
+
+                TMShareUtil.getInstance(FhpVideoDetailAty.this).shareLink(tmLinkShare);
+            }
+        });
+
         btColl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +219,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
                     collectflag = false;*/
                 } else {
                     collectPresenter.cancelColl(cid, TMSharedPUtil.getTMToken(FhpVideoDetailAty.this));
-                   /* btColl.setImageResource(R.drawable.ic_sc_normal);
+                   /* btColl.setImageResource(R.drawable.ic_nottocollect);
                     collectflag = true;*/
                 }
             }
@@ -267,6 +320,9 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     @Override
     public void loadDataSuccess(DetailBean.DetailDatas detailDatas) {
         tittle=detailDatas.title;
+        thumb=detailDatas.getCover();
+        int read_num = detailDatas.read_num;
+
         GSYVideoHelper.GSYVideoHelperBuilder builder = new GSYVideoHelper.GSYVideoHelperBuilder();
         Log.e("fhp",detailDatas.video_url);
         builder
@@ -283,7 +339,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
             }
         });
         tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm"));
-        tv_author.setText(detailDatas.release);
+        tv_author.setText(detailDatas.title);
 
         /*点赞按钮显示*/
         if (detailDatas.is_laud==1){
@@ -311,11 +367,30 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
 
     @Override
     public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
-        if (page==1){
+        /*if (page==1){
             commentDataList.clear();
             commentDataList.addAll(commentData);
         }else {
             commentDataList.addAll(commentData);
+        }*/
+        if (commentData.size()>=3){
+            footView=LayoutInflater.from(this).inflate(R.layout.check_more,null);
+
+            commentDataList.add(0,commentData.get(0));
+            commentDataList.add(0,commentData.get(1));
+            commentDataList.add(0,commentData.get(2));
+            commentAdapter.addFooterView(footView);
+            footView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(FhpVideoDetailAty.this, AllCommentAty.class);
+                    intent.putExtra("id",id);
+                    startActivity(intent);
+                }
+            });
+        }else {
+            commentDataList.addAll(commentData);
+            commentAdapter.removeAllFooterView();
         }
         commentAdapter.notifyDataSetChanged();
     }
@@ -323,6 +398,8 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     @Override
     public void loadSendCommentSuccess(String msg) {
         etContent.setText("");
+        getPresenter().loadHotCommentData(this,id,1);
+        commentDataList.clear();
     }
 
     @Override
@@ -345,14 +422,14 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     public void notCollected() {
         //Todo  未收藏，让按钮变成未收藏样式
         Log.e("fhp","未收藏----------");
-        btColl.setImageResource(R.drawable.ic_sc_normal);
+        btColl.setImageResource(R.drawable.ic_nottocollect);
         collectflag = true;
     }
 
     @Override
     public void addCollectError(@NotNull Exception e) {
 //todo 收藏接口访问失败回调
-        btColl.setImageResource(R.drawable.ic_sc_normal);
+        btColl.setImageResource(R.drawable.ic_nottocollect);
         collectflag = true;
         goLoginDialog.show();
     }
@@ -360,7 +437,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     @Override
     public void addCollectError() {
 //todo 收藏接口访问失败回调
-        btColl.setImageResource(R.drawable.ic_sc_normal);
+        btColl.setImageResource(R.drawable.ic_nottocollect);
         collectflag = true;
         goLoginDialog.show();
     }
@@ -368,7 +445,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     @Override
     public void cancelCollect() {
         //todo 取消收藏成功 将图标变为未收藏
-        btColl.setImageResource(R.drawable.ic_sc_normal);
+        btColl.setImageResource(R.drawable.ic_nottocollect);
         collectflag = true;
         Toast.makeText(this, "取消收藏成功", Toast.LENGTH_SHORT);
     }

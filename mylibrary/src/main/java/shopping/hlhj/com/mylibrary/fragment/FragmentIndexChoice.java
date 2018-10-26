@@ -3,11 +3,14 @@ package shopping.hlhj.com.mylibrary.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -35,6 +38,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoHelper;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -84,16 +90,15 @@ public class FragmentIndexChoice extends Fragment {
     public static HashMap<Integer,Boolean> seleHash=new HashMap<>();
     private View view;
     private Context context;
-    private HotVideoAdapter hotVideoAdapter;
     private List<HotAdSpecial.HotAdSpecialData.HotBean> hotDatas=new ArrayList<>();
     private HotVideoRcyAdp hotVideoRcyAdp;
     private SpecialAdapter specialAdapter;
-    private RecommendAdapter recommendAdapter;
     private LiveNewsAdapter liveNewsAdapter;
     private int page = 1;
     private int liveId,tuijianId,bannerId;
     private RecommendRcyAdp recommendRcyAdp;
-
+    private int a=1;
+    private StandardGSYVideoPlayer videoPlayer;
     private List<RecommendBean.RecommendData.RecommenDatas> rDatas=new ArrayList<>();
     @Nullable
     @Override
@@ -102,6 +107,7 @@ public class FragmentIndexChoice extends Fragment {
         context = getActivity();
         initView();
         initData();
+        a++;
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -125,41 +131,70 @@ public class FragmentIndexChoice extends Fragment {
         springView = view.findViewById(R.id.springview);
         Imgtuijian = view.findViewById(R.id.img_tuijian);
         scrollView = view.findViewById(R.id.scroller);
-        springView.setHeader(new DefaultHeader(context));
+        videoPlayer=view.findViewById(R.id.videoPlayer);
+        springView.setHeader(new DefaultHeader(context,R.drawable.my_arrow,R.drawable.my_arrow));
         springView.setFooter(new DefaultFooter(context));
 
+        videoPlayer.getBackButton().setVisibility(View.GONE);
 
     }
 
     private void initData() {
-        titles = new ArrayList<>();
-        scrollView.smoothScrollTo(0,0);        //解决起始位置不是在顶部
-        GridLayoutManager manager = new GridLayoutManager(context, 1);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        ryZhuanti.setLayoutManager(manager);
+            titles = new ArrayList<>();
+            scrollView.smoothScrollTo(0,0);        //解决起始位置不是在顶部
+            GridLayoutManager manager = new GridLayoutManager(context, 1);
+            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            ryZhuanti.setLayoutManager(manager);
 
 
-        hotVideoRcyAdp=new HotVideoRcyAdp(hotDatas);
-        grideHot.setLayoutManager(new FullyGridLayoutManager(getContext(),2));
-        grideHot.setAdapter(hotVideoRcyAdp);
-        grideHot.setNestedScrollingEnabled(false);
-        getData();
+            hotVideoRcyAdp=new HotVideoRcyAdp(hotDatas);
+            grideHot.setLayoutManager(new FullyGridLayoutManager(getContext(),2));
+            grideHot.setAdapter(hotVideoRcyAdp);
+            grideHot.setNestedScrollingEnabled(false);
+            Log.e("fhp","初始化一次?");
 
-        recommendRcyAdp=new RecommendRcyAdp(rDatas);
-        grideViewOther.setAdapter(recommendRcyAdp);
-        grideViewOther.setLayoutManager(new FullyGridLayoutManager(getContext(),2));
-        grideViewOther.setNestedScrollingEnabled(false);
+            recommendRcyAdp=new RecommendRcyAdp(rDatas);
+            grideViewOther.setAdapter(recommendRcyAdp);
+            grideViewOther.setLayoutManager(new FullyGridLayoutManager(getContext(),2));
+            grideViewOther.setNestedScrollingEnabled(false);
+            a++;
+
+            getData();
+
+
 
     }
 
     public void getData(){
         loadBannerAdLive();
+        Log.e("fhppp","lOading一次");
         loadHotAdSpecial();
         loadRecommend();
         setOnClick();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setOnClick() {
+        scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                Rect scrollBounds = new Rect();
+                scrollView.getHitRect(scrollBounds);
+
+                if (videoPlayer.getLocalVisibleRect(scrollBounds)) {
+
+                    //子控件至少有一个像素在可视范围内
+                    videoPlayer.onVideoResume();
+                    // Any portion of the childView, even a single pixel, is within the visible window
+                } else {
+
+                    videoPlayer.onVideoPause();
+                    //子控件完全不在可视范围内
+                    // NONE of the childView is within the visible window
+                }
+            }
+        });
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
@@ -270,7 +305,6 @@ public class FragmentIndexChoice extends Fragment {
 
                                     @Override
                                     public void onPageSelected(int position) {
-                                        Log.e("fhp","位置"+position);
                                         if (position<=titles.size()){
                                                                                     bannerTittle.setText(titles.get(position-1));
 
@@ -318,7 +352,9 @@ public class FragmentIndexChoice extends Fragment {
                                     }.getType());
 
                             if (hotBeans != null && hotBeans.size() > 0 && specialList != null && specialList.size() > 0) {
+                                hotDatas.clear();
                                 hotDatas.addAll(hotBeans);
+                                LOG.e("fhppp","接入一次");
                                 hotVideoRcyAdp.notifyDataSetChanged();
                                 specialAdapter = new SpecialAdapter(context, specialList);
                                 ryZhuanti.setAdapter(specialAdapter);
@@ -335,6 +371,13 @@ public class FragmentIndexChoice extends Fragment {
 
                     }
                 });
+    }
+
+    @Override
+    public void onPause() {
+        GSYVideoManager.releaseAllVideos();
+        super.onPause();
+
     }
 
     //推荐
@@ -361,7 +404,9 @@ public class FragmentIndexChoice extends Fragment {
                                 try {
                                     String format = JavaUtils.format(s);
                                     tvTuijianAuthor.setText(recommenDatas.get(0).release + " | " + format);
+                                    rDatas.clear();
                                     rDatas.addAll(recommenDatas);
+                                    rDatas.remove(0);
                                     recommendRcyAdp.notifyDataSetChanged();
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -386,6 +431,13 @@ public class FragmentIndexChoice extends Fragment {
             }
         }
         Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(0).getLive_thumb()).into(imgXinwen);
+        GSYVideoHelper.GSYVideoHelperBuilder builder = new GSYVideoHelper.GSYVideoHelperBuilder();
+        builder
+                .setAutoFullWithSize(true)
+                .setUrl(liveBeanList.get(0).getLive_source())
+                .build(videoPlayer);
+        videoPlayer.startPlayLogic();
+
         liveNewsAdapter = new LiveNewsAdapter(context,liveBeanList);
         gridLive.setNumColumns(liveBeanList.size());
         gridLive.setAdapter(liveNewsAdapter);
@@ -399,7 +451,12 @@ public class FragmentIndexChoice extends Fragment {
                         seleHash.put(i,false);
                     }
                 }
-
+                GSYVideoHelper.GSYVideoHelperBuilder builder = new GSYVideoHelper.GSYVideoHelperBuilder();
+                builder
+                        .setAutoFullWithSize(true)
+                        .setUrl(liveBeanList.get(position).getLive_source())
+                        .build(videoPlayer);
+                videoPlayer.startPlayLogic();
                 Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(position).getLive_thumb()).into(imgXinwen);
                 tvTime.setText(JavaUtils.StampstoTime(String.valueOf(liveBeanList.get(position).create_at),"yyyy-MM-dd HH:mm:ss"));
                 tvLiveNewsTitle.setText(liveBeanList.get(position).live_title);

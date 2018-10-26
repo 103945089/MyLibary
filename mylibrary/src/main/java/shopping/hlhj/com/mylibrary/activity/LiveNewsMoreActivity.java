@@ -1,10 +1,15 @@
 package shopping.hlhj.com.mylibrary.activity;
 
+import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +25,8 @@ import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
 public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, LiveMoreAdapter.OnLikeClick {
     private ListView listView;
+    private TextView tvTitle;
+    private View btExit,loBack;
     private SpringView springView;
     private int page = 1;
     private LiveMoreAdapter liveMoreAdapter;
@@ -39,9 +46,16 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
     protected void initView() {
         listView = findViewById(R.id.list_hotvideo);
         springView = findViewById(R.id.springview_hotvideo);
-
+        tvTitle=findViewById(R.id.tvTitle);
+        btExit=findViewById(R.id.btExit);
+        loBack=findViewById(R.id.loBack);
         liveMoreAdapter = new LiveMoreAdapter(this,moreDatas,LiveNewsMoreActivity.this);
         listView.setAdapter(liveMoreAdapter);
+
+        tvTitle.setText("全部直播");
+        if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){
+            loBack.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(this)));
+        }
     }
 
     @Override
@@ -54,6 +68,12 @@ public class LiveNewsMoreActivity extends BaseActivity<LiveNewsPresenter> implem
 
     @Override
     protected void setOnClick() {
+        btExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {

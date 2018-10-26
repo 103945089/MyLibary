@@ -49,9 +49,13 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                                     , new TypeToken<DetailBean.DetailDatas>() {
                                     }.getType());
                             if (null != detailDatas && !detailDatas.equals("")) {
-                                getView().loadDataSuccess(detailDatas);
+                                if (getView()!=null){
+                                    getView().loadDataSuccess(detailDatas);
+                                }
                             } else {
-                                getView().loadFailed(jsonObject.getString("message"));
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
                             }
                         }
                     }

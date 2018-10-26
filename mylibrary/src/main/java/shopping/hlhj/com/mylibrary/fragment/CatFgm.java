@@ -89,6 +89,7 @@ public class CatFgm extends Fragment {
     }
 
     private void dispatchData() {
+
         OkGo.<String>post(Constant.Cat_DEtail)
                 .params("id",getArguments().getInt("id"))
                 .params("page_now",page)
@@ -97,6 +98,7 @@ public class CatFgm extends Fragment {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        spView.onFinishFreshAndLoad();
                         String body = response.body();
                         JSONObject jsonObject = JSON.parseObject(body);
                         if (jsonObject.getInteger("code")==200){

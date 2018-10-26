@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liaoinstan.springview.widget.SpringView;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
@@ -28,8 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BaseActivity;
+import shopping.hlhj.com.mylibrary.MyGridView;
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.FullyGridLayoutManager;
 import shopping.hlhj.com.mylibrary.adapter.SearchAdapter;
+import shopping.hlhj.com.mylibrary.adapter.SearchRcyAdp;
 import shopping.hlhj.com.mylibrary.adapter.SearchResultAdapter;
 import shopping.hlhj.com.mylibrary.bean.Search;
 import shopping.hlhj.com.mylibrary.db.DBHelper;
@@ -44,14 +48,17 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     private LinearLayout llSearch, llSearchHot, llSearchHistroy;
     private RelativeLayout rlSearchHistroy;
     private FrameLayout fmSearchNomal;
-    private GridView gridView_histroy, gridView_hot;
+    private RecyclerView gridView_histroy,gridView_hot;
+    private SearchRcyAdp hotadp,hisAdp;
     private GridView gdSearch;
     private SpringView spView;
     private SearchResultAdapter resultAdapter;
     private String string;
     private int page = 1;
     private DBHelper dbHelper;
-    private List<String> strings = new ArrayList<>();
+    private List<String> hotDatas = new ArrayList<>();
+    private List<String> hisDatas=new ArrayList<>();
+
     private View loBack;
 
     @Override
@@ -82,6 +89,15 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         spView = findViewById(R.id.spView);
         img_delAll = findViewById(R.id.img_delAll);
         loBack=findViewById(R.id.loBack);
+
+        hotadp=new SearchRcyAdp(hotDatas,2);
+        hisAdp=new SearchRcyAdp(hisDatas,1);
+        gridView_hot.setAdapter(hotadp);
+        gridView_hot.setLayoutManager(new FullyGridLayoutManager(this,2));
+
+        gridView_histroy.setAdapter(hisAdp);
+        gridView_histroy.setLayoutManager(new FullyGridLayoutManager(this,2));
+
         if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){
             loBack.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(this)));
         }
@@ -92,14 +108,15 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
     protected void initData() {
         dbHelper = new DBHelper(this);
         dbHelper.getWritableDatabase();
+        hisDatas.addAll(dbHelper.findAll());
+        hisAdp.notifyDataSetChanged();
         List<String> stringList = dbHelper.findAll();
         if (stringList == null || stringList.size() == 0) {
             llSearchHistroy.setVisibility(View.GONE);
         }
+
         setPresenter(new SearchPresenter(SearchActivity.this));
         getPresenter().loadSearchHot(this);
-        SearchAdapter historyAdapter = new SearchAdapter(this, stringList, true);
-        gridView_histroy.setAdapter(historyAdapter);
 
     }
 
@@ -117,10 +134,11 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             public void onClick(View v) {
                 string = etSearch.getText().toString();
                 if (null == string || "" == string || TextUtils.isEmpty(string)) {
-                    fmSearchNomal.setVisibility(View.VISIBLE);
+                    Toast.makeText(getApplicationContext(),"请输入搜索内容",Toast.LENGTH_LONG).show();
+                    /*fmSearchNomal.setVisibility(View.VISIBLE);
                     llSearch.setVisibility(View.GONE);
                     llSearchHistroy.setVisibility(View.VISIBLE);
-                    llSearchHot.setVisibility(View.VISIBLE);
+                    llSearchHot.setVisibility(View.VISIBLE);*/
                 } else {
                     llSearch.setVisibility(View.VISIBLE);
                     fmSearchNomal.setVisibility(View.GONE);
@@ -155,10 +173,18 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
                 gridView_histroy.setVisibility(View.GONE);
             }
         });
-        gridView_hot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        hisAdp.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = strings.get(position).toString();
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                String s = dbHelper.findAll().get(position);
+                etSearch.setText(s.toString());
+                getPresenter().loadSearchData(SearchActivity.this, s, page);
+            }
+        });
+        hotadp.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                String s = hotDatas.get(position).toString();
                 etSearch.setText(s.toString());
                 getPresenter().loadSearchData(SearchActivity.this, s, page);
             }
@@ -192,12 +218,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     public void loadHotData(String[] data) {
-        strings.clear();
+        hotDatas.clear();
         for (String s : data) {
-            strings.add(s);
+            hotDatas.add(s);
         }
-        SearchAdapter hotAdapter = new SearchAdapter(this, strings, false);
-        gridView_hot.setAdapter(hotAdapter);
-
+        hotadp.notifyDataSetChanged();
     }
 }

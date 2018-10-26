@@ -28,7 +28,6 @@ public class FgmAty extends AppCompatActivity {
         MainFragment mainFragment = new MainFragment();
         fragments.add(mainFragment);
         pagerAdp=new PagerAdp(fragments,getSupportFragmentManager());
-
         viewPager.setAdapter(pagerAdp);
     }
 }

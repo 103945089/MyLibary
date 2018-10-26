@@ -1,6 +1,7 @@
 package shopping.hlhj.com.mylibrary.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import org.apache.cordova.LOG;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +42,7 @@ public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implem
     private ArticleAdapter articleAdapter;
     private CollectPresenter collectPresenter;
     private String extendStr;
+    private View btExit,loBack;
     @Override
     protected int getContentResId() {
         return R.layout.activity_article_detail;
@@ -61,7 +64,14 @@ public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implem
         tv_article_detail_jianjie = findViewById(R.id.tv_article_detail_jianjie);
         tv_article_detail_conetent = findViewById(R.id.tv_article_detail_conetent);
         gridArticle = findViewById(R.id.grid_article);
+        loBack=findViewById(R.id.loBack);
         imgArticle = findViewById(R.id.img_article);
+        btExit=findViewById(R.id.btExit);
+
+
+        if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){
+            loBack.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(this)));
+        }
 
         //todo ExtenStr的配置
         ParamsBean paramsBean = new ParamsBean();
@@ -95,7 +105,12 @@ public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implem
 
     @Override
     protected void setOnClick() {
-
+        btExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

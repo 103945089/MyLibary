@@ -75,7 +75,7 @@ public class RecommendRcyAdp extends BaseQuickAdapter<RecommendBean.RecommendDat
             case 1:
                 RelativeLayout view2 = (RelativeLayout) helper.getView(R.id.linear_item);
                 GridLayoutManager.LayoutParams lp2 = (GridLayoutManager.LayoutParams) view2.getLayoutParams();
-                lp2.setMarginStart(10);
+                lp2.setMarginStart(5);
                 view2.setLayoutParams(lp2);
                 break;
             default:

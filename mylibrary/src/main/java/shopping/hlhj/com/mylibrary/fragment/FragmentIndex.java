@@ -10,6 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +27,12 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.tenma.ventures.bean.TMUser;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.activity.SearchActivity;
+import shopping.hlhj.com.mylibrary.adapter.CatLeftAdp;
 import shopping.hlhj.com.mylibrary.adapter.IndexAdapter;
 import shopping.hlhj.com.mylibrary.bean.CatBean;
 import shopping.hlhj.com.mylibrary.data.Constant;
@@ -36,8 +43,14 @@ public class FragmentIndex extends Fragment{
     private ViewPager mainviewPager;
     private ImageView img_search;
     private Context context;
-    private View rootView,loDv;
-    private RelativeLayout rl_fragment_index;
+    private View rootView,loDv,btMore;
+    private RelativeLayout rl_fragment_index,loright;
+    private CatLeftAdp catLeftAdp;
+    private RecyclerView catLeftList;
+    private List<CatBean.DataBean> catLeftDatas=new ArrayList<>();
+    private DrawerLayout loDraw;
+    private View loleft;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,12 +76,24 @@ public class FragmentIndex extends Fragment{
         mainviewPager = rootView.findViewById(R.id.main_viewpager);
         img_search = rootView.findViewById(R.id.img_search);
         rl_fragment_index = rootView.findViewById(R.id.rl_fragment_index);
+        loright=rootView.findViewById(R.id.loleft);
+        btMore=rootView.findViewById(R.id.btMore);
+        catLeftList=rootView.findViewById(R.id.catList);
+        loDraw=rootView.findViewById(R.id.loDraw);
+        loleft=rootView.findViewById(R.id.loleft);
+
+
 
         if (null != TMSharedPUtil.getTMThemeColor(context)){
             tabLayouts.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
             loDv.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
             rl_fragment_index.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(context)));
         }
+        catLeftAdp=new CatLeftAdp(catLeftDatas);
+        catLeftList.setAdapter(catLeftAdp);
+        catLeftList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+
+
         tabLayouts.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -93,16 +118,39 @@ public class FragmentIndex extends Fragment{
                     public void onSuccess(Response<String> response) {
                         String body = response.body();
                         CatBean catBean = new Gson().fromJson(body, CatBean.class);
-                        for (int i = 0; i < catBean.getData().size(); i++) {
-                            CatFgm catFgm = CatFgm.getInstance(catBean.getData().get(i).getId(), catBean.getData().get(i).getNav_name());
-                            if (i==0){
-                                adapter.addFragment(new FragmentIndexChoice(),catBean.getData().get(i).getNav_name());
-                            }else {
-                                adapter.addFragment(catFgm,catBean.getData().get(i).getNav_name());
+                        if (catBean.getData().size()<=4){
+                            btMore.setVisibility(View.GONE);
+                            for (int i = 0; i < catBean.getData().size(); i++) {
+                                CatFgm catFgm = CatFgm.getInstance(catBean.getData().get(i).getId(), catBean.getData().get(i).getNav_name());
+                                if (i==0){
+                                    adapter.addFragment(new FragmentIndexChoice(),catBean.getData().get(i).getNav_name());
+                                }else {
+                                    adapter.addFragment(catFgm,catBean.getData().get(i).getNav_name());
+                                }
+                                mainviewPager.setAdapter(adapter);
+
                             }
-                            mainviewPager.setAdapter(adapter);
+                        }else {
+                            btMore.setVisibility(View.VISIBLE);
+                            for (int i = 0; i < 4; i++) {
+                                CatFgm catFgm = CatFgm.getInstance(catBean.getData().get(i).getId(), catBean.getData().get(i).getNav_name());
+                                if (i==0){
+                                    adapter.addFragment(new FragmentIndexChoice(),catBean.getData().get(i).getNav_name());
+                                }else {
+                                    adapter.addFragment(catFgm,catBean.getData().get(i).getNav_name());
+                                }
+                                mainviewPager.setAdapter(adapter);
+                            }
+
+                            for (int i = 0; i < catBean.getData().size(); i++) {
+                                if (i>3){
+                                    catLeftDatas.add(catBean.getData().get(i));
+                                }
+                            }
+                            catLeftAdp.notifyDataSetChanged();
 
                         }
+
                     }
                 });
 
@@ -113,6 +161,17 @@ public class FragmentIndex extends Fragment{
     }
 
     private void initData() {
+        btMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loDraw.isDrawerOpen(loleft)){
+                    loDraw.closeDrawer(loleft);
+                }else {
+                    loDraw.openDrawer(loleft);
+
+                }
+            }
+        });
         img_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

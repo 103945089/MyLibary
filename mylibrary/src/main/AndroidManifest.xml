@@ -30,6 +30,7 @@
         <activity android:name=".activity.AllCommentAty"
             android:screenOrientation="portrait"
             android:configChanges="screenSize|orientation|keyboardHidden"/>
+        <activity android:name=".activity.CatListAty" />
     </application>
 
 </manifest>

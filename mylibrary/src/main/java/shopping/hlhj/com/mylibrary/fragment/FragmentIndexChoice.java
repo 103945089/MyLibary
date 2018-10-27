@@ -52,8 +52,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import shopping.hlhj.com.mylibrary.Tool.FullyGridLayoutManager;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity;
@@ -82,7 +80,6 @@ public class FragmentIndexChoice extends Fragment {
     GridView  gridLive;
     RecyclerView grideHot,grideViewOther;
     SpringView springView;
-    Unbinder unbinder;
     ImageView Imgtuijian;
     ScrollView scrollView;
     private TextView bannerTittle;
@@ -108,7 +105,6 @@ public class FragmentIndexChoice extends Fragment {
         initView();
         initData();
         a++;
-        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -255,7 +251,6 @@ public class FragmentIndexChoice extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 
     //轮播&直播

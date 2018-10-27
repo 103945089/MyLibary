@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
 
 public abstract class BaseActivity<T extends BasePresenter<? extends BaseView>> extends AppCompatActivity implements BaseView{
     protected Context mContext;
@@ -28,7 +27,6 @@ public abstract class BaseActivity<T extends BasePresenter<? extends BaseView>> 
         super.onCreate(savedInstanceState);
         initWidows();
         mContext = this;
-        ButterKnife.bind(this);
         setContentView(getContentResId());
         beforeinit();
         initView();

@@ -86,7 +86,7 @@ publish{
     userOrg = 'hlhjtm'//bintray.com的用户名
     groupId = 'com.hlhj'//jcenter上的路径
     artifactId = 'kkxw'//项目名称
-    publishVersion = '1.0.6'//版本号
+    publishVersion = '1.0.7'//版本号
     desc = '11'//描述，不重要
     website = ''//项目主页
 }

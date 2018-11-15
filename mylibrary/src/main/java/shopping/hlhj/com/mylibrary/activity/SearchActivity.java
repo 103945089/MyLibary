@@ -2,13 +2,8 @@ package shopping.hlhj.com.mylibrary.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -16,7 +11,6 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,15 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BaseActivity;
-import shopping.hlhj.com.mylibrary.MyGridView;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.FullyGridLayoutManager;
-import shopping.hlhj.com.mylibrary.adapter.SearchAdapter;
 import shopping.hlhj.com.mylibrary.adapter.SearchRcyAdp;
 import shopping.hlhj.com.mylibrary.adapter.SearchResultAdapter;
 import shopping.hlhj.com.mylibrary.bean.Search;
 import shopping.hlhj.com.mylibrary.db.DBHelper;
-import shopping.hlhj.com.mylibrary.fragment.FragmentIndexChoice;
 import shopping.hlhj.com.mylibrary.presenter.SearchPresenter;
 
 public class SearchActivity extends BaseActivity<SearchPresenter> implements SearchPresenter.MyGridView {
@@ -63,7 +54,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
 
     @Override
     protected int getContentResId() {
-        return R.layout.activity_search;
+        return R.layout.activity_kk_search;
 
     }
 
@@ -125,7 +116,6 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         imgBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SearchActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -202,9 +192,15 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
         gdSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SearchActivity.this,HotVideoDetailActivity.class);
-                intent.putExtra("id",searchBeanList.get(position).id);
-                startActivity(intent);
+                if (null==searchBeanList.get(position).getVideo_url()||searchBeanList.get(position).getVideo_url().isEmpty()){
+                    Intent intent = new Intent(SearchActivity.this, TextDetailsActivity.class);
+                    intent.putExtra("id",searchBeanList.get(position).id);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(SearchActivity.this, FhpVideoDetailAty.class);
+                    intent.putExtra("id",searchBeanList.get(position).id);
+                    startActivity(intent);
+                }
             }
         });
     }

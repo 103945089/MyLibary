@@ -47,8 +47,8 @@ public class CommentBean implements Serializable {
         public int user_id;
         public int nid;     //热门和文章的评论
         public int uid;     //热门和文章的评论
-        public int create_at;
-        public int create_time; //热门和文章的评论
+        public String create_at;
+        public String create_time; //热门和文章的评论
         public int live_id;
         public int is_laud;
         public String avatar;       //热门和文章的评论
@@ -95,11 +95,11 @@ public class CommentBean implements Serializable {
             this.uid = uid;
         }
 
-        public int getCreate_time() {
+        public String getCreate_time() {
             return create_time;
         }
 
-        public void setCreate_time(int create_time) {
+        public void setCreate_time(String create_time) {
             this.create_time = create_time;
         }
 
@@ -151,11 +151,11 @@ public class CommentBean implements Serializable {
             this.user_id = user_id;
         }
 
-        public int getCreate_at() {
+        public String getCreate_at() {
             return create_at;
         }
 
-        public void setCreate_at(int create_at) {
+        public void setCreate_at(String create_at) {
             this.create_at = create_at;
         }
 

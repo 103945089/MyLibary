@@ -9,13 +9,15 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="#c11c1c"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp">
         <TextView
+            android:id="@+id/loDv"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="24dp" />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="48dp">
             <ImageView
                 android:id="@+id/btExit"
                 android:src="@drawable/nav_back"

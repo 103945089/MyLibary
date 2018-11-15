@@ -42,14 +42,22 @@ public class ArticlePresenter extends BasePresenter<ArticlePresenter.ArticleDeta
                             List<ArticleBean.ArticleDatas.ArticleDetailBean> articleDetailBeans = new Gson().fromJson(jsonArray1.toString()
                             ,new TypeToken<List<ArticleBean.ArticleDatas.ArticleDetailBean>>(){}.getType());
                             if (null != articleDatas && !"".equals(articleDatas)){
-                                getView().loadArticleDataSuccess(articleDatas);
+                                if (getView()!=null){
+                                    getView().loadArticleDataSuccess(articleDatas);
+                                }
                             }else {
-                                getView().loadFailed(jsonObject.getString("message"));
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
                             }
                             if (null != articleDetailBeans && articleDetailBeans.size() > 0){
-                                getView().loadDetailDataSuccess(articleDetailBeans);
+                                if (getView()!=null){
+                                    getView().loadDetailDataSuccess(articleDetailBeans);
+                                }
                             }else {
-                                getView().loadFailed(jsonObject.getString("message"));
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
                             }
                         }
                     }

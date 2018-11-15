@@ -24,12 +24,10 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.ArticleAdapter;
-import shopping.hlhj.com.mylibrary.adapter.HotVideoAdapter;
 import shopping.hlhj.com.mylibrary.bean.ArticleBean;
 import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.ParamsBean;
-import shopping.hlhj.com.mylibrary.fragment.FragmentIndexChoice;
 import shopping.hlhj.com.mylibrary.presenter.ArticlePresenter;
 import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 
@@ -100,6 +98,8 @@ public class ArticleDetailActivity extends BaseActivity<ArticlePresenter> implem
         collectPresenter=new CollectPresenter(this);
         setPresenter(new ArticlePresenter(this));
         getPresenter().loadArticleDetailData(this,id);
+
+
 
     }
 

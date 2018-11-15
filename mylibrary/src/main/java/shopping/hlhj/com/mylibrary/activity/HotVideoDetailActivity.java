@@ -41,11 +41,17 @@ import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.ParamsBean;
+import shopping.hlhj.com.mylibrary.bean.TuijianData;
 import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
 
 public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView, CollectPresenter.CollectView {
+
+    @Override
+    public void loadTuiJian(TuijianData data) {
+
+    }
 
     private StandardGSYVideoPlayer vdPlayer;
     private EditText etContent;
@@ -135,7 +141,7 @@ public class HotVideoDetailActivity extends BaseActivity<HotVideoPresenter> impl
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         GSYVideoManager.releaseAllVideos();
         super.onPause();
 

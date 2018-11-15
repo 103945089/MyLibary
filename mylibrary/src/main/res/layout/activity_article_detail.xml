@@ -7,7 +7,7 @@
         android:id="@+id/loBack"
         android:background="#f20909"
         android:layout_width="match_parent"
-        android:layout_height="44dp">
+        android:layout_height="48dp">
         <TextView
             android:id="@+id/tvTitle"
             android:textColor="#fff"

@@ -15,7 +15,7 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
-import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.FhpVideoDetailAty;
 import shopping.hlhj.com.mylibrary.bean.CatListBean;
 
 /**
@@ -42,7 +42,7 @@ public class CatListRcyAdp extends BaseQuickAdapter<CatListBean.DataBean,BaseVie
         helper.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext,HotVideoDetailActivity.class);
+                Intent intent = new Intent(mContext,FhpVideoDetailAty.class);
                 intent.putExtra("id",item.getId());
                 mContext.startActivity(intent);
             }

@@ -18,6 +18,7 @@ import shopping.hlhj.com.mylibrary.adapter.MoreAdapter;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.bean.TuijianData;
 import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
 
 public class HotVideoActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView{
@@ -28,6 +29,11 @@ public class HotVideoActivity extends BaseActivity<HotVideoPresenter> implements
     private SpringView springView;
     private int page = 1;
     private MoreAdapter moreAdapter;
+
+    @Override
+    public void loadTuiJian(TuijianData data) {
+
+    }
 
     @Override
     protected int getContentResId() {

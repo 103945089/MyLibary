@@ -41,9 +41,13 @@ public class SearchPresenter extends BasePresenter<SearchPresenter.MyGridView> {
                             List<Search.SearchData.SearchBean> searchBeanList = new Gson().fromJson(jsonArray.toString(),
                                     new TypeToken<List<Search.SearchData.SearchBean>>(){}.getType());
                             if (null != searchBeanList && searchBeanList.size() > 0){
-                               getView().loadSuccess(searchBeanList);
+                                if (getView()!=null){
+                                    getView().loadSuccess(searchBeanList);
+                                }
                             }else {
-                                getView().loadFailed(jsonObject.getString("message"));
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
                             }
                         }
                     }
@@ -63,7 +67,9 @@ public class SearchPresenter extends BasePresenter<SearchPresenter.MyGridView> {
                             String[] datas = new Gson().fromJson(data.toString(), new TypeToken<String[]>() {
                             }.getType());
                             if (data != null){
-                                getView().loadHotData(datas);
+                                if (getView()!=null){
+                                    getView().loadHotData(datas);
+                                }
                             }
                         }
                     }

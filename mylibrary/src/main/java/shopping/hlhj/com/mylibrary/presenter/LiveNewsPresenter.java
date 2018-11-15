@@ -69,10 +69,14 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                                     getView().loadCommentSuccess(commentBeans);
                                 }
                             } else {
-                                getView().loadFailed("1");
+                                if (getView()!=null){
+                                    getView().loadFailed("1");
+                                }
                             }
                         } else {
-                            getView().loadFailed("2");
+                            if (getView()!=null){
+                                getView().loadFailed("2");
+                            }
                         }
                     }
 
@@ -100,11 +104,17 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
                         if (code == 1){
-                            getView().loadSendCommentSuccess("200");
+                            if (getView()!=null){
+                                getView().loadSendCommentSuccess("200");
+                            }
                         }else {
-                            getView().loadFailed("评论失败");
+                            if (getView()!=null){
+                                getView().loadFailed("评论失败");
+                            }
                         }
-                        getView().loadFailed(jsonObject.getString("msg"));
+                        if (getView()!=null){
+                            getView().loadFailed(jsonObject.getString("msg"));
+                        }
                     }
 
                     @Override
@@ -131,7 +141,9 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                         if (code == 1) {
                             Gson gson = new Gson();
                             DanMuBean danMuBean = gson.fromJson(body, DanMuBean.class);
-                            getView().loadDanmu(danMuBean);
+                            if (getView()!=null){
+                                getView().loadDanmu(danMuBean);
+                            }
                         }
                     }
                 });
@@ -182,9 +194,13 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                                     , new TypeToken<List<MoreBean.MoreDatas>>() {
                                     }.getType());
                             if (moreDatas != null && moreDatas.size() > 0) {
-                                getView().loadLiveMoreSuccess(moreDatas);
+                                if (getView()!=null){
+                                    getView().loadLiveMoreSuccess(moreDatas);
+                                }
                             } else {
-                                getView().loadFailed(jsonObject.getString("message"));
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
                             }
                         }
                     }
@@ -207,7 +223,9 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                             JSONObject data = jsonObject.getJSONObject("data");
                             LiveDetailBean.LiveDetail liveDetailBean = new Gson().fromJson(data.toString(), new TypeToken<LiveDetailBean.LiveDetail>() {
                             }.getType());
-                            getView().loadLiveDetail(liveDetailBean);
+                            if (getView()!=null){
+                                getView().loadLiveDetail(liveDetailBean);
+                            }
                         }
                     }
                 });
@@ -226,9 +244,13 @@ public class LiveNewsPresenter extends BasePresenter<LiveNewsPresenter.LiveNewsV
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
                         if (code == 200){
-                            getView().likeSuccess();
+                            if (getView()!=null){
+                                getView().likeSuccess();
+                            }
                         }else if (code==500){
-                            getView().likeErro();
+                            if (getView()!=null){
+                                getView().likeErro();
+                            }
                         }
                     }
                     @Override

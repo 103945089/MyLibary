@@ -17,9 +17,11 @@ import java.text.ParseException;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
+import shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.FhpVideoDetailAty;
 import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
 import shopping.hlhj.com.mylibrary.R;
-import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.TextDetailsActivity;
 import shopping.hlhj.com.mylibrary.bean.RecommendBean;
 
 public class RecommendAdapter extends BaseAdapter{
@@ -76,9 +78,15 @@ public class RecommendAdapter extends BaseAdapter{
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,HotVideoDetailActivity.class);
-                intent.putExtra("id",recommenDatas.get(position).id);
-                context.startActivity(intent);
+                if (null==recommenDatas.get(position).video_url||recommenDatas.get(position).video_url.isEmpty()){
+                    Intent intent = new Intent(context,TextDetailsActivity.class);
+                    intent.putExtra("id",recommenDatas.get(position).id);
+                    context.startActivity(intent);
+                }else {
+                    Intent intent = new Intent(context,FhpVideoDetailAty.class);
+                    intent.putExtra("id",recommenDatas.get(position).id);
+                    context.startActivity(intent);
+                }
             }
         });
         return convertView;

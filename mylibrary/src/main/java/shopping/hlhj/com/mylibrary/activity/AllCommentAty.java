@@ -26,6 +26,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoHelper;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.tenma.ventures.bean.TMUser;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 import com.tenma.ventures.share.bean.TMLinkShare;
 import com.tenma.ventures.share.util.TMShareUtil;
@@ -44,6 +45,7 @@ import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.bean.TuijianData;
 import shopping.hlhj.com.mylibrary.cv.GoLoginDialog;
 import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.presenter.AllCommentPresenter;
@@ -76,12 +78,10 @@ public class AllCommentAty extends BaseActivity<HotVideoPresenter> implements Ho
     private String tittle;
     private CollectPresenter collectPresenter;
     private List<CommentBean.CommentData> commentDataList = new ArrayList<>();
-    private MoreVideoAdp recommendAdapter;
-    private List<MoreBean.MoreDatas> recommenDatas = new ArrayList<>();
     private GoLoginDialog goLoginDialog;
     private boolean isZan=false;
     private View loBack,btGoShare;
-    private View footView;
+    private View footView,tv11;
     private String thumb;
     private int likeNum=0;
     @Override
@@ -107,16 +107,17 @@ public class AllCommentAty extends BaseActivity<HotVideoPresenter> implements Ho
         btSend=findViewById(R.id.btSendComment);
         btZan=findViewById(R.id.btLike);
         btExit=findViewById(R.id.btExit);
+        tv11=findViewById(R.id.tv11);
         etContent=findViewById(R.id.etContent);
         springView=findViewById(R.id.spView);
         btGoShare=findViewById(R.id.btGoShare);
         recommendList.setVisibility(View.GONE);
-
+        tv11.setVisibility(View.GONE);
         commentAdapter=new VideoCommentAdp(commentDataList);
         btColl.setVisibility(View.GONE);
         commentList.setAdapter(commentAdapter);
         commentList.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-
+        commentList.setNestedScrollingEnabled(false);
         vdPlayer.getBackButton().setVisibility(View.GONE);
 
         if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){
@@ -125,7 +126,7 @@ public class AllCommentAty extends BaseActivity<HotVideoPresenter> implements Ho
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
 
         vdPlayer.onVideoPause();
         super.onPause();
@@ -144,11 +145,15 @@ public class AllCommentAty extends BaseActivity<HotVideoPresenter> implements Ho
     }
 
     @Override
+    public void loadTuiJian(TuijianData data) {
+
+    }
+
+    @Override
     protected void initData() {
         setPresenter(new HotVideoPresenter(this));
         getPresenter().loadVideoData(this,id, TMSharedPUtil.getTMUser(this).getMember_id());
         getPresenter().loadHotCommentData(this,id,page);
-        getPresenter().loadMoreVideoData(this,1);
         collectPresenter=new CollectPresenter(this);
     }
 
@@ -208,11 +213,13 @@ public class AllCommentAty extends BaseActivity<HotVideoPresenter> implements Ho
                     return;
                 }
                 if (null != etString && !"".equals(etString) && tmToken != null && !tmToken.equals("")) {
+                    TMUser tmUser = TMSharedPUtil.getTMUser(AllCommentAty.this);
                     getPresenter().sendComment(AllCommentAty.this
                             , id
-                            , TMSharedPUtil.getTMUser(AllCommentAty.this).getMember_id()
-                            , TMSharedPUtil.getTMUser(AllCommentAty.this).getHead_pic()
-                            , TMSharedPUtil.getTMUser(AllCommentAty.this).getMember_name()
+                            , tmUser.getMember_id()
+                            , tmUser.getHead_pic()
+                            , tmUser.getMember_nickname()
+                                    ==null|| tmUser.getMember_nickname().isEmpty()?tmUser.getMember_name():tmUser.getMember_nickname()
                             , etString);
                     getPresenter().loadHotCommentData(AllCommentAty.this, id, page);
                 }

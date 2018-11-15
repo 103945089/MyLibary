@@ -60,10 +60,14 @@ public class AllCommentPresenter extends BasePresenter<AllCommentPresenter.AllCo
                                 return;
                             }
                             if (commentBeans != null && commentBeans.size() > 0) {
-                                getView().loadCommentSuccess(commentBeans);
+                                if (getView()!=null){
+                                    getView().loadCommentSuccess(commentBeans);
+                                }
                             }
                         } else {
-                            getView().loadFailed("1");
+                            if (getView()!=null){
+                                getView().loadFailed("1");
+                            }
                         }
                     }
 

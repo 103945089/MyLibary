@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class FgmAty extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aty_fgm);
         viewPager=findViewById(R.id.viewPager);
+
         viewPager.setOffscreenPageLimit(3);
         MainFragment mainFragment = new MainFragment();
         fragments.add(mainFragment);

@@ -2,7 +2,6 @@ package shopping.hlhj.com.mylibrary.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -38,10 +37,9 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.BaseActivity;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.FullyGridLayoutManager;
+import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
-import shopping.hlhj.com.mylibrary.adapter.CommentAdapter;
 import shopping.hlhj.com.mylibrary.adapter.MoreVideoAdp;
-import shopping.hlhj.com.mylibrary.adapter.RecommendAdapter;
 import shopping.hlhj.com.mylibrary.adapter.VideoCommentAdp;
 import shopping.hlhj.com.mylibrary.bean.CollBean;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
@@ -49,7 +47,7 @@ import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.ParamsBean;
-import shopping.hlhj.com.mylibrary.bean.RecommendBean;
+import shopping.hlhj.com.mylibrary.bean.TuijianData;
 import shopping.hlhj.com.mylibrary.cv.GoLoginDialog;
 import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
@@ -83,7 +81,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     private CollectPresenter collectPresenter;
     private List<CommentBean.CommentData> commentDataList = new ArrayList<>();
     private MoreVideoAdp recommendAdapter;
-    private List<MoreBean.MoreDatas> recommenDatas = new ArrayList<>();
+    private List<TuijianData.DataBean.HotBean> recommenDatas = new ArrayList<>();
     private GoLoginDialog goLoginDialog;
     private boolean isZan=false;
     private View loBack,btGoShare;
@@ -96,8 +94,21 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
     }
 
     @Override
+    public void loadTuiJian(TuijianData data) {
+        recommenDatas.addAll(data.getData().getHot());
+        recommendAdapter.notifyDataSetChanged();
+
+    }
+    @Override
     protected void beforeinit() {
+
         id = getIntent().getExtras().getInt("id");
+        if (id==0){
+            Gson g = new Gson();
+            id = g.fromJson(getIntent().getStringExtra("paramStr"), ParamsBean.class).getID();
+        }
+/*        getWindow().setEnterTransition(new Fade());
+        getWindow().setExitTransition(new Fade());*/
     }
 
     @Override
@@ -122,7 +133,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
             loBack.setBackgroundColor(Color.parseColor(TMSharedPUtil.getTMThemeColor(this)));
         }
         commentAdapter = new VideoCommentAdp(commentDataList);
-        commentAdapter.setEmptyView(LayoutInflater.from(this).inflate(R.layout.comment_empty,null));
+        commentAdapter.setEmptyView(LayoutInflater.from(this).inflate(R.layout.comment_kankan_empty,null));
         commentList.setAdapter(commentAdapter);
         commentList.setNestedScrollingEnabled(false);
         commentList.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
@@ -133,6 +144,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         recommendList.setLayoutManager(new FullyGridLayoutManager(this,2));
         recommendList.setNestedScrollingEnabled(false);
 
+        vdPlayer.getBackButton().setVisibility(View.GONE);
 
         //todo ExtenStr的配置
         ParamsBean paramsBean = new ParamsBean();
@@ -147,7 +159,7 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
 
         iosInfoBean.setNativeX(true);
         iosInfoBean.setParamStr(new Gson().toJson(paramsBean));
-        iosInfoBean.setSrc("HRDetailsViewController ");
+        iosInfoBean.setSrc("HRDetailsViewController");
         androidInfoBean.setWwwFolder("");
 
         extendBean.setAndroidInfo(androidInfoBean);
@@ -159,12 +171,13 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
 
     @Override
     protected void onResume() {
+        Log.e("fhp","---走过么？");
         vdPlayer.onVideoResume();
         super.onResume();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         vdPlayer.onVideoPause();
         super.onPause();
     }
@@ -179,9 +192,10 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         setPresenter(new HotVideoPresenter(this));
         getPresenter().loadVideoData(this,id, TMSharedPUtil.getTMUser(this).getMember_id());
         getPresenter().loadHotCommentData(this,id,page);
-        getPresenter().loadMoreVideoData(this,1);
+        getPresenter().loadRecomend(this);
         collectPresenter=new CollectPresenter(this);
         collectPresenter.isColl(TMSharedPUtil.getTMUser(this).getMember_code(),Constant.APP_ID,id+"",TMSharedPUtil.getTMToken(this));
+
     }
 
     @Override
@@ -212,8 +226,8 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
                             , id + ""
                             , extendStr
                             , ""
-                            , 1 + ""
-                            , "aaa",
+                            , 2 + ""
+                            , thumb,
                             TMSharedPUtil.getTMToken(FhpVideoDetailAty.this));
                  /*   btColl.setImageResource(R.drawable.ic_collection);
                     collectflag = false;*/
@@ -323,6 +337,8 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
         thumb=detailDatas.getCover();
         int read_num = detailDatas.read_num;
 
+        collectPresenter.addHis(TMSharedPUtil.getTMUser(this).getMember_code(),tittle,tittle,Constant.APP_ID,id+"",
+                extendStr,"","2",thumb,TMSharedPUtil.getTMToken(this));
         GSYVideoHelper.GSYVideoHelperBuilder builder = new GSYVideoHelper.GSYVideoHelperBuilder();
         Log.e("fhp",detailDatas.video_url);
         builder
@@ -331,14 +347,15 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
                 .setCacheWithPlay(true)
                 .setUrl(detailDatas.video_url)
                 .build(vdPlayer);
-        vdPlayer.getBackButton().setVisibility(View.GONE);
+        GlideUtil.INSTANCE.loadVideo(FhpVideoDetailAty.this,vdPlayer);
+
         vdPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vdPlayer.startWindowFullscreen(FhpVideoDetailAty.this,false,false);
+                vdPlayer.startWindowFullscreen(FhpVideoDetailAty.this,false,true);
             }
         });
-        tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm"));
+        tv_time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm")+"       浏览量:"+detailDatas.read_num);
         tv_author.setText(detailDatas.title);
 
         /*点赞按钮显示*/
@@ -361,19 +378,11 @@ public class FhpVideoDetailAty extends BaseActivity<HotVideoPresenter> implement
 
     @Override
     public void loadHotMoreSuccess(List<MoreBean.MoreDatas> moreDatas) {
-        recommenDatas.addAll(moreDatas);
-        recommendAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void loadCommentSuccess(List<CommentBean.CommentData> commentData) {
-        /*if (page==1){
-            commentDataList.clear();
-            commentDataList.addAll(commentData);
-        }else {
-            commentDataList.addAll(commentData);
-        }*/
-        if (commentData.size()>=3){
+        if (commentData.size()>=2){
             footView=LayoutInflater.from(this).inflate(R.layout.check_more,null);
 
             commentDataList.add(0,commentData.get(0));

@@ -17,7 +17,7 @@ import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
-import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.FhpVideoDetailAty;
 import shopping.hlhj.com.mylibrary.activity.TextDetailsActivity;
 import shopping.hlhj.com.mylibrary.bean.RecommendBean;
 
@@ -52,7 +52,7 @@ public class RecommendRcyAdp extends BaseQuickAdapter<RecommendBean.RecommendDat
             helper.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, HotVideoDetailActivity.class);
+                    Intent intent = new Intent(mContext, FhpVideoDetailAty.class);
                     intent.putExtra("id",item.id);
                     mContext.startActivity(intent);
                 }

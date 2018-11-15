@@ -16,8 +16,8 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity;
-import shopping.hlhj.com.mylibrary.activity.HotVideoActivity;
-import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.FhpVideoDetailAty;
+import shopping.hlhj.com.mylibrary.activity.TextDetailsActivity;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 
 public class MoreAdapter extends BaseAdapter{
@@ -82,9 +82,16 @@ public class MoreAdapter extends BaseAdapter{
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context,HotVideoDetailActivity.class);
-                    intent.putExtra("id",hotMoreDatas.get(position).id);
-                    context.startActivity(intent);
+                    if (null==hotMoreDatas.get(position).getVideo_url()||hotMoreDatas.get(position).getVideo_url().isEmpty()){
+                        Intent intent = new Intent(context,TextDetailsActivity.class);
+                        intent.putExtra("id",hotMoreDatas.get(position).id);
+                        context.startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(context,FhpVideoDetailAty.class);
+                        intent.putExtra("id",hotMoreDatas.get(position).id);
+                        context.startActivity(intent);
+                    }
+
                 }
             });
         }

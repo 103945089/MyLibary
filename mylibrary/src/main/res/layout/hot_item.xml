@@ -12,7 +12,8 @@
         android:layout_height="120dp"
         android:scaleType="centerCrop"/>
     <RelativeLayout
-        android:transitionName="vdp"
+        android:id="@+id/loShare"
+        android:transitionName="shareImg"
         android:layout_alignLeft="@id/img_hot"
         android:layout_alignRight="@id/img_hot"
         android:layout_alignBottom="@id/img_hot"
@@ -22,6 +23,7 @@
         <ImageView
             android:id="@+id/btPlay"
             android:src="@drawable/ic_bf"
+
             android:layout_centerInParent="true"
             android:layout_width="35dp"
             android:layout_height="35dp" />

@@ -8,19 +8,24 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+
+import com.tenma.ventures.base.TMActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class BaseActivity<T extends BasePresenter<? extends BaseView>> extends AppCompatActivity implements BaseView{
+public abstract class BaseActivity<T extends BasePresenter<? extends BaseView>> extends TMActivity implements BaseView{
     protected Context mContext;
     private List<String> mListPermissions = new ArrayList<>();
     private PermissionsResultListener mListener;
     private int mRequestCode;
-
+    private View loDv;
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         ActivityCollector.addActivity(this);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        getWindow().setFormat(PixelFormat.TRANSLUCENT);
@@ -28,12 +33,27 @@ public abstract class BaseActivity<T extends BasePresenter<? extends BaseView>> 
         initWidows();
         mContext = this;
         setContentView(getContentResId());
+
+        loDv=findViewById(R.id.loDv);
+        if (loDv!=null){
+            ViewGroup.LayoutParams layoutParams = loDv.getLayoutParams();
+            layoutParams.height=getHeight();
+            loDv.setLayoutParams(layoutParams);
+        }
         beforeinit();
         initView();
         initData();
         setOnClick();
     }
-
+    private int getHeight(){
+        //状态栏
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height","dimen","android");
+        if(resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
     protected abstract int getContentResId();
 
     protected abstract void beforeinit();

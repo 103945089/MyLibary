@@ -1,5 +1,7 @@
 package shopping.hlhj.com.mylibrary.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +19,7 @@ import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
-import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.FhpVideoDetailAty;
 import shopping.hlhj.com.mylibrary.bean.HotAdSpecial;
 
 /**
@@ -26,13 +28,14 @@ import shopping.hlhj.com.mylibrary.bean.HotAdSpecial;
  */
 
 public class HotVideoRcyAdp extends BaseQuickAdapter<HotAdSpecial.HotAdSpecialData.HotBean,BaseViewHolder> {
-
-    public HotVideoRcyAdp(@Nullable List<HotAdSpecial.HotAdSpecialData.HotBean> data) {
+    private Activity activity;
+    public HotVideoRcyAdp(@Nullable List<HotAdSpecial.HotAdSpecialData.HotBean> data, Activity activity) {
         super(R.layout.hot_item,data);
+        this.activity=activity;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, final HotAdSpecial.HotAdSpecialData.HotBean item) {
+    protected void convert(final BaseViewHolder helper, final HotAdSpecial.HotAdSpecialData.HotBean item) {
         GlideUtil.INSTANCE.loadIMg(mContext,item.cover, (ImageView) helper.getView(R.id.img_hot));
         helper.setText(R.id.tvTittleHotItem,item.title);
         helper.setText(R.id.tv_type,item.release);
@@ -62,9 +65,10 @@ public class HotVideoRcyAdp extends BaseQuickAdapter<HotAdSpecial.HotAdSpecialDa
         helper.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, HotVideoDetailActivity.class);
+                Intent intent = new Intent(mContext, FhpVideoDetailAty.class);
                 intent.putExtra("id",item.id);
-                mContext.startActivity(intent);
+                mContext.startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation(activity,helper.getView(R.id.loShare),"shareImg").toBundle());
             }
         });
     }

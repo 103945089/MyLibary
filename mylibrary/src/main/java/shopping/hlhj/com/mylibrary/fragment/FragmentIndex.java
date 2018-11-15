@@ -30,6 +30,8 @@ import com.tenma.ventures.bean.utils.TMSharedPUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.activity.SearchActivity;
 import shopping.hlhj.com.mylibrary.adapter.CatLeftAdp;
@@ -43,14 +45,13 @@ public class FragmentIndex extends Fragment{
     private ViewPager mainviewPager;
     private ImageView img_search;
     private Context context;
-    private View rootView,loDv,btMore;
+    private View rootView,btMore;
     private RelativeLayout rl_fragment_index,loright;
     private CatLeftAdp catLeftAdp;
     private RecyclerView catLeftList;
     private List<CatBean.DataBean> catLeftDatas=new ArrayList<>();
     private DrawerLayout loDraw;
-    private View loleft;
-
+    private View loleft,loDv;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,12 +65,12 @@ public class FragmentIndex extends Fragment{
     private void initView() {
         //模拟数据
 /*        TMUser tmUser = new TMUser();
-        tmUser.setMember_id(69);
-        tmUser.setMember_code("A930AD3C0ADB2430E234F096DBCFA357");
-        tmUser.setToken("19105607C568A5597ACC3B856921F5DF");
+        tmUser.setMember_id(100);
+        tmUser.setMember_code("6E84443FA6503960355291508B146FDD");
+        tmUser.setToken("83B8BCE6B4977AD65C30533773CE425D");
         TMSharedPUtil.saveTMUser(getContext(),tmUser);
-        TMSharedPUtil.saveTMToken(getContext(),"19105607C568A5597ACC3B856921F5DF");
-        TMSharedPUtil.saveTMThemeColor(getContext(),"#f20909");*/
+        TMSharedPUtil.saveTMToken(getContext(),"83B8BCE6B4977AD65C30533773CE425D");
+        TMSharedPUtil.saveTMThemeColor(getContext(),"#000000");*/
 
         tabLayouts = rootView.findViewById(R.id.main_tab);
         loDv=rootView.findViewById(R.id.loDv);
@@ -81,7 +82,14 @@ public class FragmentIndex extends Fragment{
         catLeftList=rootView.findViewById(R.id.catList);
         loDraw=rootView.findViewById(R.id.loDraw);
         loleft=rootView.findViewById(R.id.loleft);
-
+        loDv=rootView.findViewById(R.id.loDv);
+        if (loDv!=null){
+            if (loDv!=null){
+                ViewGroup.LayoutParams layoutParams = loDv.getLayoutParams();
+                layoutParams.height=getHeight();
+                loDv.setLayoutParams(layoutParams);
+            }
+        }
 
 
         if (null != TMSharedPUtil.getTMThemeColor(context)){
@@ -119,6 +127,12 @@ public class FragmentIndex extends Fragment{
                         String body = response.body();
                         CatBean catBean = new Gson().fromJson(body, CatBean.class);
                         if (catBean.getData().size()<=4){
+                            if (catBean.getData().size()<=3){
+                                tabLayouts.setTabMode(TabLayout.MODE_FIXED);
+                            }else {
+                                tabLayouts.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+                            }
                             btMore.setVisibility(View.GONE);
                             for (int i = 0; i < catBean.getData().size(); i++) {
                                 CatFgm catFgm = CatFgm.getInstance(catBean.getData().get(i).getId(), catBean.getData().get(i).getNav_name());
@@ -131,6 +145,7 @@ public class FragmentIndex extends Fragment{
 
                             }
                         }else {
+                            tabLayouts.setTabMode(TabLayout.MODE_SCROLLABLE);
                             btMore.setVisibility(View.VISIBLE);
                             for (int i = 0; i < 4; i++) {
                                 CatFgm catFgm = CatFgm.getInstance(catBean.getData().get(i).getId(), catBean.getData().get(i).getNav_name());
@@ -155,8 +170,8 @@ public class FragmentIndex extends Fragment{
                 });
 
         tabLayouts.setupWithViewPager(mainviewPager);
-        tabLayouts.setTabMode(TabLayout.MODE_FIXED);
-        mainviewPager.setOffscreenPageLimit(2);
+        tabLayouts.setTabMode(TabLayout.MODE_SCROLLABLE);
+        mainviewPager.setOffscreenPageLimit(5);
 
     }
 
@@ -179,7 +194,15 @@ public class FragmentIndex extends Fragment{
             }
         });
     }
-
+    private int getHeight(){
+        //状态栏
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height","dimen","android");
+        if(resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

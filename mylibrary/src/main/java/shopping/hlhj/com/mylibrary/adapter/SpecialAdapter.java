@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.bean.HotAdSpecial;
 
 public class SpecialAdapter extends RecyclerView.Adapter<SpecialAdapter.ViewHolder>{
@@ -32,7 +33,7 @@ public class SpecialAdapter extends RecyclerView.Adapter<SpecialAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Glide.with(context).load(specialList.get(position).channel_thumb).into(holder.img_special);
+        GlideUtil.INSTANCE.loadIMg(context,specialList.get(position).channel_thumb,holder.img_special);
         holder.ll_special.setTag(position);
     }
 

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/loBack"
         android:background="#cc1e1e"
         android:layout_width="match_parent"
-        android:layout_height="44dp">
+        android:layout_height="48dp">
         <TextView
             android:text="详情"
             android:textColor="#fff"
@@ -51,6 +53,7 @@
                     >
                     <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
                         android:id="@+id/hot_gsyvideo"
+                        android:transitionName="shareImg"
                         android:layout_width="match_parent"
                         android:layout_height="190dp" />
 
@@ -114,6 +117,17 @@
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/commentList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv11"
+                    android:textSize="17sp"
+                    android:text="热门视频"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#333"
+                    android:textStyle="bold"
+                    android:background="#f4f4f4"
+                    android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <android.support.v7.widget.RecyclerView

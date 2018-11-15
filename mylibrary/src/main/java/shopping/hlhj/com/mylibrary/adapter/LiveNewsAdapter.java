@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.activity.LiveNewsActivity;
 import shopping.hlhj.com.mylibrary.bean.TopBanner;
 import shopping.hlhj.com.mylibrary.data.Constant;
@@ -59,7 +60,7 @@ public class LiveNewsAdapter extends BaseAdapter {
         } else {
             holder = (LiveNewsViewHolder) convertView.getTag();
         }
-        Glide.with(context).load(Constant.IMG_URL + liveBeanList.get(position).getLive_thumb()).into(holder.imgView);
+        GlideUtil.INSTANCE.loadIMg(context,liveBeanList.get(position).getLive_thumb(),holder.imgView);
         if (FragmentIndexChoice.seleHash.get(position)){
             holder.loSele.setBackground(context.getResources().getDrawable(R.drawable.select_red));
         }else {

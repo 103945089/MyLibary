@@ -10,11 +10,12 @@
         <ImageView
             android:id="@+id/img_hotmore"
             android:layout_width="match_parent"
+            android:transitionName="shareImg"
             android:layout_height="200dp"
             android:scaleType="centerCrop"/>
         <ImageView
             android:id="@+id/imgLogo"
-            android:src="@drawable/ic_zhibo_bofang"
+            android:src="@drawable/ic_bl_bofang"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

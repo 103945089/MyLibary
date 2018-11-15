@@ -27,9 +27,7 @@ import java.util.List;
 
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.adapter.CatListRcyAdp;
-import shopping.hlhj.com.mylibrary.adapter.MoreAdapter;
 import shopping.hlhj.com.mylibrary.bean.CatListBean;
-import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.data.Constant;
 
 /**

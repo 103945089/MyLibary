@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.bean.Search;
 import shopping.hlhj.com.mylibrary.db.DBHelper;
@@ -66,7 +67,7 @@ public class SearchResultAdapter extends BaseAdapter {
         } else {
             holder = (SearchViewHolder) convertView.getTag();
         }
-        Glide.with(context).load(searchBeanList.get(position).cover).into(holder.searchImg);
+        GlideUtil.INSTANCE.loadIMg(context,searchBeanList.get(position).getCover(),holder.searchImg);
         holder.searchtitle.setText(searchBeanList.get(position).title);
         holder.searchType.setText(searchBeanList.get(position).relese);
         String s = JavaUtils.StampstoTime(String.valueOf(searchBeanList.get(position).create_time), "yyyy-MM-dd HH:mm:ss");

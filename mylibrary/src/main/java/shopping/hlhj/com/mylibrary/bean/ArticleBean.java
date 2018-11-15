@@ -116,6 +116,15 @@ public class ArticleBean implements Serializable {
             public String title;
             public int create_time;
             public String video_url;
+            public String release;
+
+            public String getRelease() {
+                return release;
+            }
+
+            public void setRelease(String release) {
+                this.release = release;
+            }
 
             @Override
             public String toString() {

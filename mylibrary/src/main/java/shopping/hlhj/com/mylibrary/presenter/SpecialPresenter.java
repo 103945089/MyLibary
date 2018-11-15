@@ -39,9 +39,13 @@ public class SpecialPresenter extends BasePresenter<SpecialPresenter.SpecialMoer
                             List<MoreBean.MoreDatas> moreDatas = new Gson().fromJson(data.toString()
                             ,new TypeToken<List<MoreBean.MoreDatas>>(){}.getType());
                             if (null != moreDatas && moreDatas.size() > 0){
-                                getView().loadSpecialMoerSuccess(moreDatas);
+                                if (getView()!=null){
+                                    getView().loadSpecialMoerSuccess(moreDatas);
+                                }
                             }else {
-                                getView().loadFailed(jsonObject.getString("message"));
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
                             }
                         }
                     }

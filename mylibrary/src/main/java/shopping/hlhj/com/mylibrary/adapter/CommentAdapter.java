@@ -27,6 +27,7 @@ import java.util.List;
 import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
+import shopping.hlhj.com.mylibrary.Tool.MyTimeUtils;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.data.Constant;
@@ -36,10 +37,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private Context context;
     private List<CommentBean.CommentData> commentBeans;
     private boolean isLiveNews;
+    private NeedLoginListener listener;
     public CommentAdapter(Context context, List<CommentBean.CommentData> commentBeans,boolean isLiveNews) {
         this.context = context;
         this.commentBeans = commentBeans;
         this.isLiveNews = isLiveNews;
+    }
+
+    public void setListener(NeedLoginListener listener) {
+        this.listener = listener;
     }
 
     public void upData(Context context){
@@ -56,8 +62,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull final CommentViewHolder holder, final int position) {
-        RequestOptions mRequestOptions = RequestOptions.circleCropTransform().diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true);
 
         if (isLiveNews == true){
             GlideUtil.INSTANCE.loadHead(context,commentBeans.get(position).head_pic,holder.img_user);
@@ -111,6 +115,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                         commentBeans.get(position).is_laud=1;
                                         commentBeans.get(position).setLaud_num(commentBeans.get(position).laud_num + 1);
                                         notifyDataSetChanged();
+                                    }else if (code==500){
+                                        if (listener!=null){
+                                            listener.needLogin();
+                                        }
                                     }
                                 }
 
@@ -129,14 +137,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }else {
             holder.img_zan.setImageResource(R.drawable.ic_home_praise_normal);
         }
-
         holder.tv_comment_content.setText(commentBeans.get(position).content);
-        String s = JavaUtils.StampstoTime(String.valueOf(commentBeans.get(position).create_at), "yyyy-MM-dd HH:mm:ss");
-        try {
-            String format = JavaUtils.format(s);
-            holder.tv_time.setText(format);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (commentBeans.get(position).create_time!=null&&!commentBeans.get(position).create_time.isEmpty()){
+            holder.tv_time.setText(MyTimeUtils.convertTimeToCustom(Long.parseLong(commentBeans.get(position).create_time)));
         }
     }
 
@@ -160,5 +163,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             tv_time = itemView.findViewById(R.id.tv_time);
             ll_comment_lanud = itemView.findViewById(R.id.ll_comment_lanud);
         }
+    }
+
+    public interface NeedLoginListener{
+        public void needLogin();
     }
 }

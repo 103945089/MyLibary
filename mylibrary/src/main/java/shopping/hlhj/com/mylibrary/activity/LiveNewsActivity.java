@@ -1,14 +1,11 @@
 package shopping.hlhj.com.mylibrary.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,7 +30,6 @@ import com.tenma.ventures.share.bean.TMLinkShare;
 import com.tenma.ventures.share.util.TMShareUtil;
 
 import org.apache.cordova.LOG;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +47,6 @@ import shopping.hlhj.com.mylibrary.bean.LiveDetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.ParamsBean;
 import shopping.hlhj.com.mylibrary.cv.GoLoginDialog;
-import shopping.hlhj.com.mylibrary.cv.TextEditTextView;
 import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
@@ -87,7 +82,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private KeyboardWatcher keyboardWatcher;
     @Override
     protected int getContentResId() {
-        return R.layout.aty_livedetail_new;
+        return R.layout.aty_livedetail_kankan_new;
     }
 
     @Override
@@ -288,7 +283,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         GSYVideoManager.releaseAllVideos();
         super.onPause();
 

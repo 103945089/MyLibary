@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/img_shijiam"
-                    android:text="09月15日 10:00-09月31日 23:59" />
+                    android:text="" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -311,7 +311,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                android:text="航拍:琼州海峡因雾封航 上万辆车滞留海港"
                 android:textColor="@color/text_black"
                 android:textSize="16sp" />
 
@@ -319,7 +318,6 @@
                 android:id="@+id/tv_tuijian_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="萌萌快跑 | 30分钟前"
                 android:textColor="@color/text_grey"
                 android:textSize="12sp" />
 

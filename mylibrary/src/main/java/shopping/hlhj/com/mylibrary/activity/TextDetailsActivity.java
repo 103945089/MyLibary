@@ -1,6 +1,7 @@
 package shopping.hlhj.com.mylibrary.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,6 +19,9 @@ import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
+import com.tenma.ventures.share.bean.TMLinkShare;
+import com.tenma.ventures.share.util.TMShareUtil;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,11 +37,18 @@ import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.ExtendBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.ParamsBean;
+import shopping.hlhj.com.mylibrary.bean.TuijianData;
+import shopping.hlhj.com.mylibrary.cv.GoLoginDialog;
 import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.presenter.CollectPresenter;
 import shopping.hlhj.com.mylibrary.presenter.HotVideoPresenter;
 
-public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView, CollectPresenter.CollectView {
+public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> implements HotVideoPresenter.HotVideoView, CollectPresenter.CollectView, CommentAdapter.NeedLoginListener {
+
+    @Override
+    public void loadTuiJian(TuijianData data) {
+
+    }
 
     private RelativeLayout loNewHead;
     private ImageView btBack, btSend, btColl, btGoShare;
@@ -47,14 +58,16 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
     private WebView webView;
     private int id, page = 1;
     private int cid = 0;//收藏Id
+    private String thumb="";
     private String extendStr;//拓展字段，收藏使用
     private String title;
     private boolean collectflag = true;
     private SpringView springview_textdetail;
+    private View dv1;
     private CommentAdapter adapter;
     private CollectPresenter collectPresenter;
     private List<CommentBean.CommentData> commentDataList = new ArrayList<>();
-
+    private GoLoginDialog loginDialog;
     @Override
     protected int getContentResId() {
         return R.layout.aty_special_info_kankan;
@@ -77,6 +90,7 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
         loNewHead = findViewById(R.id.loNewHead);
         btBack = findViewById(R.id.btBack);
         btSend = findViewById(R.id.btSend);
+        dv1=findViewById(R.id.dv1);
         btColl = findViewById(R.id.btColl);
         btGoShare = findViewById(R.id.btGoShare);
         etContent = findViewById(R.id.etContent);
@@ -87,8 +101,24 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
         btMore = findViewById(R.id.btMore);
         webView = findViewById(R.id.webView);
         springview_textdetail = findViewById(R.id.springview_textdetail);
-    }
+        loginDialog=new GoLoginDialog(this);
+        adapter = new CommentAdapter(TextDetailsActivity.this, commentDataList, false);
+        comment_list.setAdapter(adapter);
 
+        String tmThemeColor = TMSharedPUtil.getTMThemeColor(this);
+        if (null!=tmThemeColor&&!tmThemeColor.isEmpty()){
+            dv1.setBackgroundColor(Color.parseColor(tmThemeColor));
+        }
+
+
+    }
+/*TMLinkShare tmLinkShare = new TMLinkShare();
+                tmLinkShare.setThumb(thumb);
+                tmLinkShare.setDescription(tittle);
+                tmLinkShare.setTitle(tittle);
+                tmLinkShare.setUrl(Constant.IMG_URL+"/application/hlhj_webcast/kankan/index.html?id="+id);
+
+                TMShareUtil.getInstance(FhpVideoDetailAty.this).shareLink(tmLinkShare);*/
     @Override
     protected void initData() {
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -108,6 +138,17 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
 
     @Override
     protected void setOnClick() {
+        btGoShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TMLinkShare tmLinkShare = new TMLinkShare();
+                tmLinkShare.setThumb(thumb);
+                tmLinkShare.setDescription(title);
+                tmLinkShare.setTitle(title);
+                tmLinkShare.setUrl(Constant.IMG_URL+"/application/hlhj_webcast/kankan/index.html?id="+id);
+                TMShareUtil.getInstance(TextDetailsActivity.this).shareLink(tmLinkShare);
+            }
+        });
         springview_textdetail.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
@@ -142,8 +183,9 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
                 String tmToken = TMSharedPUtil.getTMToken(getApplicationContext());
                 String string = etContent.getText().toString();
                 if (null == tmToken || "".equals(tmToken) || TextUtils.isEmpty(tmToken)) {
-                    Toast.makeText(TextDetailsActivity.this, "请登录", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(TextDetailsActivity.this, ConfirmLoginActivity.class));
+                    loginDialog.show();
+                   /* Toast.makeText(TextDetailsActivity.this, "请登录", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(TextDetailsActivity.this, ConfirmLoginActivity.class));*/
                     return;
                 }
                 if (null == string || "".equals(string) || TextUtils.isEmpty(string)) {
@@ -157,7 +199,7 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
                             , TMSharedPUtil.getTMUser(TextDetailsActivity.this).getHead_pic()
                             , TMSharedPUtil.getTMUser(TextDetailsActivity.this).getMember_name()
                             , string);
-                    getPresenter().loadHotCommentData(TextDetailsActivity.this, id, page);
+
                 }
             }
         });
@@ -175,7 +217,7 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
                             , extendStr
                             , ""
                             , 1 + ""
-                            , "aaa",
+                            , thumb,
                             TMSharedPUtil.getTMToken(TextDetailsActivity.this));
                     btColl.setImageResource(R.drawable.ic_collection);
                     collectflag = false;
@@ -215,17 +257,24 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
     @Override
     public void loadDataSuccess(DetailBean.DetailDatas detailDatas) {
         tvTittleTextView.setText(detailDatas.title);
+        thumb=detailDatas.getCover();
         tv_Time.setText(JavaUtils.StampstoTime(String.valueOf(detailDatas.create_time), "yyyy-MM-dd HH:mm") + "");
         tv_auther.setText(detailDatas.release);
         String prompt = detailDatas.content;
         prompt=prompt.replace("<img", "<img style='max-width:100%;height:auto;'");
         webView.loadDataWithBaseURL(null, prompt, "text/html", "uft-8", null);
         title = detailDatas.title;
+
+        collectPresenter.addHis(TMSharedPUtil.getTMUser(this).getMember_code(),
+                TMSharedPUtil.getTMUser(this).getMember_id()+"",title,Constant.APP_ID,id+"",extendStr,""
+                ,"1","",TMSharedPUtil.getTMToken(this));
     }
 
     @Override
     public void loadFailed(String msg) {
-
+        if (msg.equals("评论失败")){
+            loginDialog.show();
+        }
     }
 
     @Override
@@ -235,21 +284,23 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
 
     @Override
     public void loadCommentSuccess(@Nullable List<CommentBean.CommentData> commentData) {
-        if (commentData==null)return;
+        if (commentData==null){
+            return;
+        }
         if (page == 1){
             commentDataList.clear();
             commentDataList.addAll(commentData);
         }else {
             commentDataList.addAll(commentData);
         }
-        adapter = new CommentAdapter(TextDetailsActivity.this, commentDataList, false);
-        comment_list.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void loadSendCommentSuccess(String msg) {
         etContent.setText("");
         Toast.makeText(TextDetailsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+        getPresenter().loadHotCommentData(TextDetailsActivity.this, id, 1);
     }
 
     @Override
@@ -279,7 +330,7 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
     @Override
     public void addCollectError(@NotNull Exception e) {
         //todo 收藏接口访问失败回调
-        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        loginDialog.show();
         btColl.setImageResource(R.drawable.ic_sc_normal);
         collectflag = true;
     }
@@ -287,7 +338,7 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
     @Override
     public void addCollectError() {
         //todo 收藏接口访问失败回调
-        Toast.makeText(this, "收藏失败", Toast.LENGTH_SHORT).show();
+        loginDialog.show();
         btColl.setImageResource(R.drawable.ic_sc_normal);
         collectflag = true;
     }
@@ -304,5 +355,10 @@ public class TextDetailsActivity extends BaseActivity<HotVideoPresenter> impleme
     public void cancelCollectErro() {
         //todo 取消收藏失败
         Toast.makeText(this, "取消收藏失败", Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void needLogin() {
+        loginDialog.show();
     }
 }

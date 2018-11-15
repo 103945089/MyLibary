@@ -15,41 +15,43 @@ import shopping.hlhj.com.mylibrary.R;
 import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
 import shopping.hlhj.com.mylibrary.activity.ArticleDetailActivity;
-import shopping.hlhj.com.mylibrary.activity.HotVideoDetailActivity;
+import shopping.hlhj.com.mylibrary.activity.FhpVideoDetailAty;
+import shopping.hlhj.com.mylibrary.activity.TextDetailsActivity;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
 import shopping.hlhj.com.mylibrary.bean.RecommendBean;
+import shopping.hlhj.com.mylibrary.bean.TuijianData;
 
 /**
  * Created by Never Fear   on 2018\10\23 0023.
  * Never More....
  */
 
-public class MoreVideoAdp extends BaseQuickAdapter<MoreBean.MoreDatas,BaseViewHolder> {
+public class MoreVideoAdp extends BaseQuickAdapter<TuijianData.DataBean.HotBean,BaseViewHolder> {
 
-    public MoreVideoAdp(@Nullable List<MoreBean.MoreDatas> data) {
+    public MoreVideoAdp(@Nullable List<TuijianData.DataBean.HotBean> data) {
         super(R.layout.hot_item,data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, final MoreBean.MoreDatas item) {
-        GlideUtil.INSTANCE.loadIMg(mContext,item.cover, (ImageView) helper.getView(R.id.img_hot));
-        helper.setText(R.id.tvTittleHotItem,item.title);
-        helper.setText(R.id.tv_type,item.getName());
+    protected void convert(BaseViewHolder helper, final TuijianData.DataBean.HotBean item) {
+        GlideUtil.INSTANCE.loadIMg(mContext,item.getCover(), (ImageView) helper.getView(R.id.img_hot));
+        helper.setText(R.id.tvTittleHotItem,item.getTitle());
+        helper.setText(R.id.tv_type,item.getRelease());
 
-        String s = JavaUtils.StampstoTime(String.valueOf(item.create_time), "yyyy-MM-dd HH:mm:ss"); //UNIX时间 需要转换
+        String s = JavaUtils.StampstoTime(String.valueOf(item.getCreate_time()), "yyyy-MM-dd HH:mm:ss"); //UNIX时间 需要转换
         try {
             String format = JavaUtils.format(s);
             helper.setText(R.id.tv_time,format);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (item.video_url==null||item.video_url.isEmpty()){
+        if (item.getVideo_url()==null||item.getVideo_url().isEmpty()){
             helper.setVisible(R.id.btPlay,false);
             helper.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext,ArticleDetailActivity.class);
-                    intent.putExtra("id",item.id);
+                    Intent intent = new Intent(mContext,TextDetailsActivity.class);
+                    intent.putExtra("id",item.getId());
                     mContext.startActivity(intent);
                 }
             });
@@ -59,8 +61,8 @@ public class MoreVideoAdp extends BaseQuickAdapter<MoreBean.MoreDatas,BaseViewHo
             helper.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext,HotVideoDetailActivity.class);
-                    intent.putExtra("id",item.id);
+                    Intent intent = new Intent(mContext,FhpVideoDetailAty.class);
+                    intent.putExtra("id",item.getId());
                     mContext.startActivity(intent);
                 }
             });

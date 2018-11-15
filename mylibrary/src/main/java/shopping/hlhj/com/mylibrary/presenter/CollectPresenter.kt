@@ -32,7 +32,11 @@ class CollectPresenter(baseView:CollectView?) :BasePresenter<CollectPresenter.Co
                         if (code==200){
                             try {
                                 val collBean = Gson().fromJson(body, CollBean::class.java)
-                                view?.hasCollected(collBean)
+                                if (collBean.msg.contains("已")){
+                                    view?.hasCollected(collBean)
+                                }else if (collBean.msg.contains("未")){
+                                    view?.notCollected()
+                                }
                             }catch (e:Exception){
                                 view?.notCollected()
                             }
@@ -105,8 +109,8 @@ class CollectPresenter(baseView:CollectView?) :BasePresenter<CollectPresenter.Co
     /**
      * 添加历史浏览记录
      */
-    fun addHis(member_code:String,title:String,intro:String
-               ,app_id:String,article_id:String,extend:String,tag:String,type:String,pic:String?,token: String){
+    fun addHis(member_code:String?,title:String?,intro:String?
+               ,app_id:String?,article_id:String?,extend:String?,tag:String?,type:String,pic:String?,token: String){
 
         OkGo.post<String>(Constant.ADD_HIS)
                 .params("member_code",member_code)

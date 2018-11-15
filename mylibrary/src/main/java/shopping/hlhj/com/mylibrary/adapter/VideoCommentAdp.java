@@ -2,6 +2,7 @@ package shopping.hlhj.com.mylibrary.adapter;
 
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -17,7 +18,10 @@ import java.util.List;
 
 import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.R;
+import shopping.hlhj.com.mylibrary.Tool.GlideUtil;
 import shopping.hlhj.com.mylibrary.Tool.JavaUtils;
+import shopping.hlhj.com.mylibrary.Tool.MyTimeUtils;
+import shopping.hlhj.com.mylibrary.Tool.TimeUtil;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.cv.GoLoginDialog;
 import shopping.hlhj.com.mylibrary.data.Constant;
@@ -36,6 +40,8 @@ public class VideoCommentAdp  extends BaseQuickAdapter<CommentBean.CommentData,B
     @Override
     protected void convert(BaseViewHolder helper, final CommentBean.CommentData item) {
         helper.setText(R.id.tv_num,item.laud_num+"");
+        helper.setText(R.id.tv_username,item.username);
+        GlideUtil.INSTANCE.loadHead(mContext,item.avatar, (ImageView) helper.getView(R.id.img_user));
         helper.getView(R.id.img_zan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,13 +105,19 @@ public class VideoCommentAdp  extends BaseQuickAdapter<CommentBean.CommentData,B
         }else {
             helper.setImageResource(R.id.img_zan,R.drawable.ic_home_praise_normal);
         }
+
         helper.setText(R.id.tv_comment_content,item.content);
-        String s = JavaUtils.StampstoTime(String.valueOf(item.create_at), "yyyy-MM-dd HH:mm:ss");
+
+        if (item.create_time!=null&&!item.create_time.isEmpty()){
+            helper.setText(R.id.tv_time, MyTimeUtils.convertTimeToCustom(Long.parseLong(item.create_time)));
+
+        }
+        /*String s = JavaUtils.StampstoTime(String.valueOf(item.create_at), "yyyy-MM-dd HH:mm:ss");
         try {
             String format = JavaUtils.format(s);
             helper.setText(R.id.tv_time,format);
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

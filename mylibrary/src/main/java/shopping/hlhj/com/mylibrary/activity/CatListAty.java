@@ -18,6 +18,7 @@ import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.tenma.ventures.base.TMActivity;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import shopping.hlhj.com.mylibrary.data.Constant;
  * Never More....
  */
 
-public class CatListAty extends AppCompatActivity {
+public class CatListAty extends TMActivity {
     private RecyclerView listView;
     private SpringView spView;
     public String tittle="";
@@ -44,15 +45,22 @@ public class CatListAty extends AppCompatActivity {
     private View btExit,loBack;
     private List<CatListBean.DataBean> moreDatas=new ArrayList<>();
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aty_cat);
-
+        if (null!=getActionBar()){
+            getActionBar().hide();
+        }
         initView();
 
 
 
-
+        btExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initView(){
@@ -62,6 +70,7 @@ public class CatListAty extends AppCompatActivity {
         btExit=findViewById(R.id.btExit);
         mTittle=findViewById(R.id.tvTitle);
         loBack=findViewById(R.id.loBack);
+        btExit=findViewById(R.id.btExit);
 
         mTittle.setText(getIntent().getStringExtra("tv"));
         if (TMSharedPUtil.getTMThemeColor(this)!=null&&!TMSharedPUtil.getTMThemeColor(this).isEmpty()){

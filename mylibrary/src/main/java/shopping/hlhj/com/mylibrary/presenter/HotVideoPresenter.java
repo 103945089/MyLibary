@@ -21,6 +21,7 @@ import shopping.hlhj.com.mylibrary.BaseView;
 import shopping.hlhj.com.mylibrary.bean.CommentBean;
 import shopping.hlhj.com.mylibrary.bean.DetailBean;
 import shopping.hlhj.com.mylibrary.bean.MoreBean;
+import shopping.hlhj.com.mylibrary.bean.TuijianData;
 import shopping.hlhj.com.mylibrary.data.Constant;
 
 public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoView> {
@@ -61,12 +62,26 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                     }
                 });
     }
-
+    public void loadRecomend(Context context){
+        OkGo.<String>post(Constant.TUIJIAN_URL)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        Integer code = jsonObject.getInteger("code");
+                        if (code==200){
+                            TuijianData tuijianData = new Gson().fromJson(response.body(), TuijianData.class);
+                            getView().loadTuiJian(tuijianData);
+                        }
+                    }
+                });
+    }
     //加载更多  热门type = 1 推荐 = 8
     public void loadMoreVideoData(Context context, int page) {
-        OkGo.<String>get(Constant.HOT_MORE)
+        OkGo.<String>post(Constant.HOT_MORE)
                 .tag(context)
-                .params("type", 8)
+                .params("type", 1)
                 .params("page", page)
                 .execute(new StringCallback() {
                     @Override
@@ -79,9 +94,13 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                             List<MoreBean.MoreDatas> moreDatas = new Gson().fromJson(data.toString()
                                     , new TypeToken<List<MoreBean.MoreDatas>>() {}.getType());
                             if (null != moreDatas && moreDatas.size() > 0){
-                                getView().loadHotMoreSuccess(moreDatas);
+                                if (getView()!=null){
+                                    getView().loadHotMoreSuccess(moreDatas);
+                                }
                             }else {
-                                getView().loadFailed(jsonObject.getString("message"));
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
                             }
                         }
                     }
@@ -112,14 +131,21 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                             List<CommentBean.CommentData> commentBeans = new Gson().fromJson(data.toString(), new TypeToken<List<CommentBean.CommentData>>() {
                             }.getType());
                             if (null == commentBeans || "".equals(commentBeans)){
-                                getView().loadFailed("暂无更多评论");
+                                if (getView()!=null){
+
+                                    getView().loadFailed("暂无更多评论");
+                                }
                                 return;
                             }
                             if (commentBeans != null && commentBeans.size() > 0) {
-                                getView().loadCommentSuccess(commentBeans);
+                                if (getView()!=null){
+                                    getView().loadCommentSuccess(commentBeans);
+                                }
                             }
                         } else {
-                            getView().loadFailed("1");
+                            if (getView()!=null){
+                                getView().loadFailed("1");
+                            }
                         }
                     }
 
@@ -148,11 +174,16 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
                         String body = response.body();
                         JSONObject jsonObject = JSON.parseObject(body);
                         int code = jsonObject.getInteger("code");
-                        if (code == 200){
-                            getView().loadSendCommentSuccess(jsonObject.getString("message"));
-                        }else {
-                            getView().loadFailed(jsonObject.getString("message"));
+                        if (getView()!=null){
+                            if (code == 200){
+                                getView().loadSendCommentSuccess(jsonObject.getString("message"));
+                            }else {
+
+                                getView().loadFailed("评论失败");
+                            }
                         }
+
+
                     }
                 });
     }
@@ -168,5 +199,7 @@ public class HotVideoPresenter extends BasePresenter<HotVideoPresenter.HotVideoV
         void loadCommentSuccess(@Nullable List<CommentBean.CommentData> commentData);
 
         void loadSendCommentSuccess(String msg);
+
+        void loadTuiJian(TuijianData data);
     }
 }

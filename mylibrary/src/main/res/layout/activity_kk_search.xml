@@ -52,9 +52,60 @@
                 android:layout_height="30dp" />
         </RelativeLayout>
     </LinearLayout>
-<!--111111111111111111111111111111111111111111111111111111111111111111111111111111111111-->
+    <LinearLayout
+        android:id="@+id/loTime"
+        android:paddingBottom="10dp"
+        android:layout_below="@id/loBack"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:paddingLeft="15dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/btS"
+            android:text="开始时间"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/time_border"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/btE"
+            android:text="截止时间"
+            android:textSize="15sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/time_border"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/btYes"
+            android:text="确定"
+            android:layout_marginLeft="20dp"
+            android:visibility="gone"
+            android:background="@drawable/time_border"
+            android:paddingTop="5dp"
+            android:textColor="#fff"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!--111111111111111111111111111111111111111111111111111111111111111111111111111111111111-->
     <com.liaoinstan.springview.widget.SpringView
-        android:layout_below="@+id/loBack"
+        android:layout_below="@+id/loTime"
         android:id="@+id/spView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -70,7 +121,6 @@
                     android:layout_height="wrap_content"
                     android:visibility="visible"
                     android:orientation="vertical">
-
                     <LinearLayout
                         android:id="@+id/ll_search_histroy"
                         android:layout_width="match_parent"
@@ -152,8 +202,9 @@
     </com.liaoinstan.springview.widget.SpringView>
 
     <FrameLayout
-        android:id="@+id/fm_search_nomarl"
         android:layout_below="@+id/loBack"
+        android:id="@+id/fm_search_nomarl"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">

@@ -53,6 +53,36 @@ public class SearchPresenter extends BasePresenter<SearchPresenter.MyGridView> {
                     }
                 });
     }
+    public void loadSearchData(Context context,String key,String start_time,String end_time,int page){
+        OkGo.<String>get(Constant.SEARCH_URL)
+                .tag(context)
+                .params("end_time",end_time)
+                .params("start_time",start_time)
+                .params("key",key)
+                .params("page",page)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        JSONObject jsonObject = JSON.parseObject(body);
+                        int code = jsonObject.getInteger("code");
+                        if (code == 200){
+                            JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("hot");
+                            List<Search.SearchData.SearchBean> searchBeanList = new Gson().fromJson(jsonArray.toString(),
+                                    new TypeToken<List<Search.SearchData.SearchBean>>(){}.getType());
+                            if (null != searchBeanList && searchBeanList.size() > 0){
+                                if (getView()!=null){
+                                    getView().loadSuccess(searchBeanList);
+                                }
+                            }else {
+                                if (getView()!=null){
+                                    getView().loadFailed(jsonObject.getString("message"));
+                                }
+                            }
+                        }
+                    }
+                });
+    }
 
     public void loadSearchHot(Context context){
         OkGo.<String>get(Constant.SEARCH_HOT)

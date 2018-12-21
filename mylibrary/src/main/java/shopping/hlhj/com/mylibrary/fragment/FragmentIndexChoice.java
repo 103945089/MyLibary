@@ -506,6 +506,11 @@ public class FragmentIndexChoice extends Fragment {
         });
         liveNewsAdapter = new LiveNewsAdapter(context,liveBeanList);
         gridLive.setNumColumns(liveBeanList.size());
+        if (liveBeanList.size()==1){
+            gridLive.setVisibility(View.GONE);
+        }else {
+            gridLive.setVisibility(View.VISIBLE);
+        }
         gridLive.setAdapter(liveNewsAdapter);
         if (null!=liveBeanList&&liveBeanList.size()>0){
             tvTime.setVisibility(View.VISIBLE);

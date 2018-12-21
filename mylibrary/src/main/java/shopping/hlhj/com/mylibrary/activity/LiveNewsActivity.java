@@ -53,7 +53,7 @@ import shopping.hlhj.com.mylibrary.presenter.LiveNewsPresenter;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener, CollectPresenter.CollectView, KeyboardWatcher.OnKeyboardToggleListener {
+public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements LiveNewsPresenter.LiveNewsView, DanmakuVDPlayer.OnEditClickListener, CollectPresenter.CollectView, KeyboardWatcher.OnKeyboardToggleListener, CommentAdapter.NeedLoginListener {
 
     private DanmakuVDPlayer vdPlayer;
     private TextView tv_live_titel, tv_live_content, tv_live_contentmore, tv_look, tv_live_num, tv_livecomment_normal;
@@ -70,7 +70,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private int page = 1;
 
     private int lanud_num;
-
+    private int isComment=1;
     public static boolean isDanmu=false;
 
     private int cid = 0;//收藏Id
@@ -80,6 +80,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private List<CommentBean.CommentData> commentDataList = new ArrayList<>();
     private String thumb,url;
     private KeyboardWatcher keyboardWatcher;
+    private GoLoginDialog goLoginDialog;
     @Override
     protected int getContentResId() {
         return R.layout.aty_livedetail_kankan_new;
@@ -118,6 +119,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         springView = findViewById(R.id.live_spring);
         btSend = findViewById(R.id.img_send);
 
+        goLoginDialog=new GoLoginDialog(this);
         orientationUtils = new OrientationUtils(this, vdPlayer);
         vdPlayer.setOnEditClickListener(LiveNewsActivity.this);
 
@@ -143,6 +145,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
         extendStr = new Gson().toJson(extendBean);
 
     }
+
 
     @Override
     public void onKeyboardShown(int keyboardSize) {
@@ -246,7 +249,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                     String string = etContent.getText().toString();
                     if (null == tmToken || "".equals(tmToken) || TextUtils.isEmpty(tmToken)) {
                         Toast.makeText(LiveNewsActivity.this, "请登录", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LiveNewsActivity.this, ConfirmLoginActivity.class));
+                        goLoginDialog.show();
                         return;
                     }
                     if (null == string || "".equals(string) || TextUtils.isEmpty(string)) {
@@ -255,14 +258,19 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                     }
                     if (null != string && !"".equals(string) && tmToken != null && !tmToken.equals("")) {
                         getPresenter().sendComment(LiveNewsActivity.this, liveId, string, tmToken);
-                        getPresenter().loadLiveCommentData(LiveNewsActivity.this, liveId, page);
+                        btSend.setClickable(false);
+//                        getPresenter().loadLiveCommentData(LiveNewsActivity.this, liveId, page);
                     }
                 }else {
+                    if (isComment!=1){
+                        Toast.makeText(LiveNewsActivity.this, "该直播未开启评论", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     String tmToken = TMSharedPUtil.getTMToken(getApplicationContext());
                     String string = etContent.getText().toString();
                     if (null == tmToken || "".equals(tmToken) || TextUtils.isEmpty(tmToken)) {
                         Toast.makeText(LiveNewsActivity.this, "请登录", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LiveNewsActivity.this, ConfirmLoginActivity.class));
+                        goLoginDialog.show();
                         return;
                     }
                     if (null == string || "".equals(string) || TextUtils.isEmpty(string)) {
@@ -284,8 +292,8 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void onPause() {
-        GSYVideoManager.releaseAllVideos();
         super.onPause();
+        vdPlayer.onVideoPause();
 
     }
 
@@ -293,6 +301,14 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     protected void onDestroy() {
         LOG.e("fhp","已经关了？？？");
         super.onDestroy();
+
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        vdPlayer.onVideoResume();
 
     }
 
@@ -305,11 +321,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     public void loadLiveDetail(LiveDetailBean.LiveDetail liveDetailBean) {
         url=liveDetailBean.getLive_source();
         thumb=Constant.IMG_URL+liveDetailBean.getLive_thumb();
-       /* if (liveDetailBean.getIs_collection()==0){
-            img_collect.setImageResource(R.drawable.ic_sc_normal);
-        }else {
-            img_collect.setImageResource(R.drawable.ic_collection);
-        }*/
+
        if (liveDetailBean.getIs_laud()==1){
            img_zan.setImageResource(R.drawable.ic_home_praise_select);
             dianzanflag=true;
@@ -341,6 +353,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
 
     @Override
     public void loadSendCommentSuccess(String msg) {
+        btSend.setClickable(true);
         if (msg.equals("200")) {
             getPresenter().loadLiveCommentData(LiveNewsActivity.this,liveId,1);
             etContent.setText("");
@@ -428,14 +441,19 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
             commentDataList.addAll(commentData);
         }
         commentAdapter = new CommentAdapter(this, commentDataList, true);
+        commentAdapter.setListener(this);
         recyclerview.setAdapter(commentAdapter);
     }
 
 
     @Override
     public void loadFailed(String msg) {
+        btSend.setClickable(true);
+
         if (msg.equals("评论失败")){
-            new GoLoginDialog(this).show();
+            GoLoginDialog goLoginDialog = new GoLoginDialog(this);
+
+            goLoginDialog.show();
         }
         Toast.makeText(LiveNewsActivity.this, msg.toString(), LENGTH_SHORT);
 //        if (msg.equals("1")) {
@@ -513,7 +531,8 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     @Override
     public void addCollectError(Exception e) {
         //todo 收藏接口访问失败回调
-        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        goLoginDialog.show();
+
         img_collect.setImageResource(R.drawable.ic_sc_normal);
         collectflag = true;
     }
@@ -521,7 +540,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     @Override
     public void addCollectError() {
         //todo 收藏接口访问失败回调
-        Toast.makeText(this, "收藏失败", Toast.LENGTH_SHORT).show();
+        goLoginDialog.show();
         img_collect.setImageResource(R.drawable.ic_sc_normal);
         collectflag = true;
     }
@@ -571,5 +590,10 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     @Override
     public void likeErro() {
         new GoLoginDialog(LiveNewsActivity.this).show();
+    }
+
+    @Override
+    public void needLogin() {
+        goLoginDialog.show();
     }
 }

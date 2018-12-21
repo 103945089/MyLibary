@@ -6,14 +6,14 @@ import com.tenma.ventures.config.TMServerConfig;
 public class Constant {
 //    public static String POST_URL = "http://review.360tianma.com/hlhj_webcast";
 //    public static String IMG_URL = "http://review.360tianma.com/";
-    public static String POST_URL = "http://linhai.360tianma.com/hlhj_webcast";
-    public static String IMG_URL = "http://linhai.360tianma.com/";
+//    public static String POST_URL = "http://linhai.360tianma.com/hlhj_webcast";
+//    public static String IMG_URL = "http://linhai.360tianma.com/";
 //    public static String POST_URL = "http://tianma.wufenhuyu.com/hlhj_webcast";
 //    public static String IMG_URL = "http://tianma.wufenhuyu.com";
 //    public static String POST_URL = "http://tmgkgy.360tianma.com/hlhj_webcast";
 //    public static String IMG_URL = "http://tmgkgy.360tianma.com";
-//    public static String POST_URL = TMServerConfig.BASE_URL+"/hlhj_webcast";
-//    public static String IMG_URL = TMServerConfig.BASE_URL;
+    public static String POST_URL = TMServerConfig.BASE_URL+"/hlhj_webcast";
+    public static String IMG_URL = TMServerConfig.BASE_URL;
 
     //轮播&直播
     public static String BANNER_URL = POST_URL + "/Api/live_top";

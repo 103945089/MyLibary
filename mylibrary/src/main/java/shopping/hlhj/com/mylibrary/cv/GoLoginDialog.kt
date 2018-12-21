@@ -48,5 +48,7 @@ class GoLoginDialog(context: Context) : Dialog(context, R.style.CustomDialog){
     interface OnCancelListener{
         fun cancle()
     }
+    interface OnYesListener{
 
+    }
 }

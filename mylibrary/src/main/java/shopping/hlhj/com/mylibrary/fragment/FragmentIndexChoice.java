@@ -42,6 +42,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoHelper;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
+import com.tenma.ventures.base.TMFragment;
 import com.tenma.ventures.bean.utils.TMSharedPUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -75,7 +76,7 @@ import shopping.hlhj.com.mylibrary.bean.TopBanner;
 import shopping.hlhj.com.mylibrary.data.Constant;
 import shopping.hlhj.com.mylibrary.R;
 
-public class FragmentIndexChoice extends Fragment {
+public class FragmentIndexChoice extends TMFragment {
     Banner mBanner;
     TextView tvLiveNewsTitle,tvShipingMore,tvTime,tvRemenMore,tvZhuantiMore,tvTuijianTitle,tvTuijianAuthor;
     ImageView imgXinwen;
@@ -205,7 +206,7 @@ public class FragmentIndexChoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setOnClick() {
-        scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+       /* scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
@@ -228,7 +229,7 @@ public class FragmentIndexChoice extends Fragment {
                     // NONE of the childView is within the visible window
                 }
             }
-        });
+        });*/
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
@@ -428,10 +429,22 @@ public class FragmentIndexChoice extends Fragment {
 
     @Override
     public void onPause() {
-        GSYVideoManager.releaseAllVideos();
         super.onPause();
-
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            if (videoPlayer!=null)
+            videoPlayer.startPlayLogic();
+        }else {
+            GSYVideoManager.releaseAllVideos();
+        }
+    }
+
+
     //推荐
     public void loadRecommend() {
         OkGo.<String>post(Constant.TUIJIAN_URL)
@@ -495,8 +508,9 @@ public class FragmentIndexChoice extends Fragment {
                 .setThumbPlay(true)
                 .build(videoPlayer);
         Log.e("fhppp","载入了一次视频？？");
-
-        GlideUtil.INSTANCE.loadVideo(getContext(),videoPlayer);
+        if (getUserVisibleHint()){
+            GlideUtil.INSTANCE.loadVideo(getContext(),videoPlayer);
+        }
 
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -510,6 +524,13 @@ public class FragmentIndexChoice extends Fragment {
             gridLive.setVisibility(View.GONE);
         }else {
             gridLive.setVisibility(View.VISIBLE);
+        }
+        if (liveBeanList.size()==0){
+            View v = (View) view.findViewById(R.id.loLiv);
+            v.setVisibility(View.GONE);
+        }else {
+            View v = (View) view.findViewById(R.id.loLiv);
+            v.setVisibility(View.VISIBLE);
         }
         gridLive.setAdapter(liveNewsAdapter);
         if (null!=liveBeanList&&liveBeanList.size()>0){

@@ -68,7 +68,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     private CommentAdapter commentAdapter;
     private OrientationUtils orientationUtils;
     private int page = 1;
-
+    private String vurl=null;
     private int lanud_num;
     private int isComment=1;
     public static boolean isDanmu=false;
@@ -293,23 +293,75 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
     @Override
     public void onPause() {
         super.onPause();
-        vdPlayer.onVideoPause();
-
+        GSYVideoManager.releaseAllVideos();
     }
 
     @Override
     protected void onDestroy() {
         LOG.e("fhp","已经关了？？？");
         super.onDestroy();
-
+        GSYVideoManager.releaseAllVideos();
     }
 
     @Override
     protected void onResume() {
 
         super.onResume();
-        vdPlayer.onVideoResume();
+        if (vurl==null)return;
+        GSYVideoOptionBuilder builder = new GSYVideoOptionBuilder();
+        builder
+//                .setThumbImageView(imageView)
+                .setIsTouchWiget(true)
+                .setRotateViewAuto(false)
+                .setLockLand(false)
+                .setUrl(vurl)
+                .setAutoFullWithSize(true)
+                .setShowFullAnimation(false)
+                .setNeedLockFull(true)
+                .setCacheWithPlay(false)
+                .setVideoTitle("")
+                .setVideoAllCallBack(new GSYSampleCallBack() {
+                    @Override
+                    public void onPrepared(String url, Object... objects) {
+                        super.onPrepared(url, objects);
+                        orientationUtils.setEnable(true);
+                    }
 
+                    @Override
+                    public void onQuitFullscreen(String url, Object... objects) {
+                        super.onQuitFullscreen(url, objects);
+                        DanmakuVDPlayer.isLay=false;
+                        if (orientationUtils != null) {
+                            orientationUtils.backToProtVideo();
+                        }
+                    }
+                }).setLockClickListener(new LockClickListener() {
+            @Override
+            public void onClick(View view, boolean lock) {
+                orientationUtils.setEnable(!lock);
+            }
+        }).build(vdPlayer);
+        vdPlayer.btnFull.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orientationUtils.resolveByClick();
+                DanmakuVDPlayer.isLay=true;
+                vdPlayer.setOnEditClickListener(LiveNewsActivity.this);
+                if (orientationUtils.getIsLand() > 0) {
+                    orientationUtils.backToProtVideo();
+                }
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                vdPlayer.startWindowFullscreen(LiveNewsActivity.this, false, true);
+            }
+        });
+        vdPlayer.getStartButton().performClick();
+
+        vdPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -348,6 +400,7 @@ public class LiveNewsActivity extends BaseActivity<LiveNewsPresenter> implements
                 , TMSharedPUtil.getTMUser(this).getHead_pic()
                 , TMSharedPUtil.getTMToken(this));
         Log.d("--------------",title.toString());
+        vurl=liveDetailBean.live_source;
         initGsy(liveDetailBean);
     }
 

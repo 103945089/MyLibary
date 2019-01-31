@@ -65,10 +65,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         if (isLiveNews == true){
             GlideUtil.INSTANCE.loadHead(context,commentBeans.get(position).head_pic,holder.img_user);
-            holder.tv_username.setText(commentBeans.get(position).member_name);
+            holder.tv_username.setText(commentBeans.get(position).member_nickname);
         }else {
             GlideUtil.INSTANCE.loadHead(context,commentBeans.get(position).avatar,holder.img_user);
-            holder.tv_username.setText(commentBeans.get(position).username);
+            holder.tv_username.setText(commentBeans.get(position).member_nickname);
         }
         holder.tv_num.setText(commentBeans.get(position).laud_num + "");
         holder.ll_comment_lanud.setOnClickListener(new View.OnClickListener() {
@@ -138,8 +138,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             holder.img_zan.setImageResource(R.drawable.ic_home_praise_normal);
         }
         holder.tv_comment_content.setText(commentBeans.get(position).content);
-        if (commentBeans.get(position).create_time!=null&&!commentBeans.get(position).create_time.isEmpty()){
-            holder.tv_time.setText(MyTimeUtils.convertTimeToCustom(Long.parseLong(commentBeans.get(position).create_time)));
+        if (commentBeans.get(position).create_at!=null&&!commentBeans.get(position).create_at.isEmpty()){
+            holder.tv_time.setText(MyTimeUtils.convertTimeToCustom(Long.parseLong(commentBeans.get(position).create_at)));
         }
     }
 
@@ -147,7 +147,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public int getItemCount() {
         return commentBeans.size() == 0 ? 0 : commentBeans.size();
     }
-
     class CommentViewHolder extends RecyclerView.ViewHolder{
         ImageView img_user,img_zan;
         TextView tv_username,tv_num,tv_comment_content,tv_time;

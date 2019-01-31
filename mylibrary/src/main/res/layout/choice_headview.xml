@@ -43,6 +43,7 @@
         android:background="@color/gray_tra" />
 
     <LinearLayout
+        android:id="@+id/loLiv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -59,7 +60,7 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/ic_zb_shiping" />
+                android:src="@drawable/ic_zbkk_shiping" />
 
             <TextView
                 android:id="@+id/tv_xinwen"

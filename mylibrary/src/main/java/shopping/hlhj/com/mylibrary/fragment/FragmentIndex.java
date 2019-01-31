@@ -62,6 +62,14 @@ public class FragmentIndex extends Fragment{
         return rootView;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser){
+            GSYVideoManager.releaseAllVideos();
+        }
+    }
+
     private void initView() {
         //模拟数据
 /*        TMUser tmUser = new TMUser();
